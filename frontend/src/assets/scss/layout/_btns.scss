@@ -1,0 +1,117 @@
+.btn {
+    padding: 0.5rem 2.5rem;
+    background-color: $secondary-variant-color;
+    color: set-text-color($secondary-variant-color);
+    outline: none;
+    border: none;
+    border-radius: 6px;
+    display: block;
+    cursor: pointer;
+
+    @include shadow-sm;
+    @include transition-ease;
+
+    &__submit {
+        width: 50%;
+        margin: 0 auto;
+        // background-color: $secondary-variant-color;
+        // color: set-text-color($secondary-variant-color);
+    }
+
+    &__contrast {
+        background-color: $secondary-color;
+        color: set-text-color($secondary-color);
+    }
+
+    &__disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+
+    &:hover {
+        transform: scale(1.05);
+        @include shadow-md;
+    }
+}
+
+.nav-btn {
+    transform: scale(1.7);
+    position: relative;
+    height: 28px;
+    width: 20px;
+    margin-right: 1rem;
+    cursor: pointer;
+    @include transition-ease;
+
+    &__burger {
+        $burger-color: set-text-color(set-text-color($primary-color));
+
+        position: absolute;
+        right: 0;
+        top: 0.7rem;
+        width: 16px;
+        height: 3px;
+        border-radius: 10px;
+        background-color: $burger-color;
+        @include transition-ease;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -7px;
+            width: 29px;
+            height: 3px;
+            border-radius: 10px;
+            background-color: $burger-color;
+            @include transition-ease;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            right: -7px;
+            width: 29px;
+            height: 3px;
+            border-radius: 10px;
+            background-color: $burger-color;
+            @include transition-ease;
+        }
+
+        // &.opened {
+        //     $burger-color-opend: set-text-color($primary-color);
+
+        //     transform: rotate(720deg);
+        //     background: transparent;
+
+        //     &::before {
+        //         width: 28px;
+        //         transform: rotate(45deg) translate(5px, 8px);
+        //         background-color: $burger-color-opend;
+        //     }
+
+        //     &::after {
+        //         width: 28px;
+        //         transform: rotate(-45deg) translate(3px, -7px);
+        //         background-color: $burger-color-opend;
+        //     }
+        // }
+    }
+}
+
+select.select-btn {
+    font-size: 1.05rem;
+
+    &::after {
+        content: "";
+        width: 0.8em;
+        height: 0.5em;
+        background-color: var(--select-arrow);
+        clip-path: polygon(100% 0%, 0 0%, 50% 100%);
+    }
+
+    option {
+        font-size: 1.05rem;
+    }
+}

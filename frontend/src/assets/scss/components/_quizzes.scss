@@ -1,0 +1,71 @@
+.no-quizzes {
+    padding: 50px 0;
+    text-align: center;
+}
+
+.section-category-list {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+}
+
+.quiz-card {
+    &__body {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__img {
+        max-height: 180px !important;
+    }
+
+    &__link {
+        color: set-text-color($surface-color);
+        font-weight: 600;
+        font-size: 1.18rem;
+        @include transition-ease;
+
+        &:hover {
+            color: $primary-color;
+        }
+    }
+
+    &__description {
+        font-size: 1rem;
+        opacity: 0.8;
+        margin-bottom: 5px;
+    }
+
+    &__header {
+        margin-bottom: 15px;
+    }
+}
+
+.vertical-menu {
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+        list-style: none;
+        padding: 10px;
+        text-align: center;
+        letter-spacing: 2px;
+        background-color: $background-color;
+        color: set-text-color($background-color);
+
+        &:not(.active):hover {
+            background-color: rgba($secondary-variant-color, 0.4);
+            color: set-text-color($secondary-variant-color)
+        }
+
+        &.active {
+            cursor: default;
+            background-color: $secondary-variant-color;
+            color: set-text-color($secondary-variant-color)
+        }
+
+        cursor: pointer;
+    }
+}

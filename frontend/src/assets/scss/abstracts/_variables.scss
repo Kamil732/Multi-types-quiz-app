@@ -1,0 +1,21 @@
+$primary-color: #42A5F5;
+$primary-color-dark-mode: darken($primary-color, 20%);
+$primary-variant-color: #ABCDEF;
+$primary-variant-color-dark-mode: darken(#ABCDEF, 15%);
+
+$secondary-color: #77e444;
+$secondary-color-dark-mode: darken($secondary-color, 15%);
+$secondary-variant-color: #18ECB2;
+$secondary-variant-color-dark-mode: darken($secondary-variant-color, 12%);
+
+$background-color: #fafafa;
+$background-color-dark-mode: darken($background-color, 85%);
+
+$surface-color: #fff;
+$surface-color-dark-mode: darken($surface-color, 25%);
+
+$error-color: lighten(#B00020, 8%);
+$error-color-dark-mode: darken($error-color, 10%);
+
+$input-focus-color: #3a3afd;
+$input-focus-color-dark-mode: #3a3afd;

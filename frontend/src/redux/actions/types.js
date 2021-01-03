@@ -1,0 +1,26 @@
+// Authentication
+export const USER_LOADING = 'USER_LOADING'
+export const USER_LOADED = 'USER_LOADED'
+export const AUTH_ERROR = 'AUTH_ERROR'
+export const TOKEN_REFRESH = 'TOKEN_REFRESH'
+
+export const SIGNUP_SUCCESS = 'SIGNUP_SUCCESS'
+export const SIGNUP_FAIL = 'SIGNUP_FAIL'
+
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGIN_FAIL = 'LOGIN_FAIL'
+
+export const LOGOUT = 'LOGOUT'
+
+// Quizzes
+export const QUIZZES_ERROR = 'QUIZZES_ERROR'
+export const QUIZZES_LOADING = 'QUIZZES_LOADING'
+export const GET_QUIZZES = 'GET_QUIZZES'
+
+export const CATEGORY_SECTION_ERROR = 'CATEGORY_SECTION_ERROR'
+export const CATEGORY_SECTION_LOADING = 'CATEGORY_SECTION_LOADING'
+export const GET_CATEGORY_SECTION = 'GET_CATEGORY_SECTION'
+
+// Errors
+export const ADD_ERROR = 'ADD_ERROR'
+export const CLEAR_ERRORS = 'CLEAR_ERRORS'

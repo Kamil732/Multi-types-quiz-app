@@ -1,0 +1,175 @@
+body.dark-mode {
+    color: set-text-color($background-color-dark-mode);
+    background: $background-color-dark-mode;
+
+    .menu-nav {
+        background-color: $surface-color-dark-mode;
+        color: set-text-color($surface-color-dark-mode);
+
+        &__item.active {
+            background-color: $secondary-color-dark-mode;
+        }
+
+        &__link {
+            background-color: $surface-color-dark-mode;
+            color: set-text-color($surface-color-dark-mode)
+        }
+    }
+
+    .nav-btn__burger {
+        $burger-color: set-text-color(set-text-color($primary-color-dark-mode));
+
+        background-color: $burger-color;
+
+        &::after, &::before {
+            background-color: $burger-color;
+        }
+    }
+
+    .form-control {
+        &__input {
+            background-color: lighten($primary-variant-color-dark-mode, 25%);
+
+            &:focus {
+                z-index: 1;
+                box-shadow: 0 0 7px $input-focus-color-dark-mode;
+            }
+        }
+
+        .icon-form .icon {
+            background: $primary-variant-color-dark-mode;
+        }
+    }
+
+    .dropdown {
+        &__menu {
+            border-bottom-color: set-text-color($surface-color-dark-mode);
+            border-top-color: set-text-color($surface-color-dark-mode);
+
+            &__link {
+                color: set-text-color($surface-color-dark-mode);
+
+                &.active {
+                    color: set-text-color($secondary-color-dark-mode);
+                    background-color: $secondary-color-dark-mode;
+                }
+            }
+        }
+    }
+
+    .vertical-menu__item {
+        background: lighten($background-color-dark-mode, 10%);
+        color: set-text-color($background-color-dark-mode);
+
+        &:not(.active):hover {
+            background-color: rgba($secondary-variant-color-dark-mode, 0.4);
+            color: set-text-color($secondary-variant-color-dark-mode);
+        }
+
+        &.active {
+            background-color: $secondary-variant-color-dark-mode;
+            color: set-text-color($secondary-variant-color-dark-mode);
+        }
+    }
+
+    .card__body, .card-inline {
+        background: $surface-color-dark-mode;
+        color: set-text-color($surface-color-dark-mode);
+    }
+
+    .card__header {
+        $color: lighten($surface-color-dark-mode, 15%);
+        background-color: $color;
+        color: set-text-color($color);
+    }
+
+    .card-inline {
+        border: 1px solid #808080;
+    }
+
+    .btn {
+        background: $secondary-variant-color-dark-mode;
+        color: set-text-color($secondary-variant-color-dark-mode);
+
+        &__contrast {
+            background-color: $secondary-color-dark-mode;
+            color: set-text-color($secondary-color-dark-mode);
+        }
+    }
+
+    .site-header {
+        background: $primary-color-dark-mode;
+        color: set-text-color($primary-color-dark-mode);
+        box-shadow: none;
+    }
+
+    .site-footer {
+        background: $primary-variant-color-dark-mode;
+        color: set-text-color($primary-variant-color-dark-mode);
+        box-shadow: none;
+    }
+
+    .quiz-card {
+        &__link:hover {
+            color: $primary-color-dark-mode;
+        }
+    }
+
+    .error-box {
+        background: $error-color-dark-mode;
+    }
+
+    .spin-loader {
+        border-top-color: $primary-color-dark-mode;
+    }
+
+    .circle-loader div {
+        background: $primary-color-dark-mode;
+    }
+}
+
+.dark-mode-toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+
+    &__checkbox {
+        opacity: 0;
+        width: 0;
+        height: 0;
+
+        &:checked + .dark-mode-toggle__slider {
+            background-color: #aaa;
+
+            &:before {
+                background-color: #fff;
+                transform: translateX(26px);
+            }
+        }
+    }
+
+    &__slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: #aaa;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+    }
+}

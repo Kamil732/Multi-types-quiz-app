@@ -1,0 +1,51 @@
+.form-control {
+    margin-bottom: 1.5rem;
+
+    &__label {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 1em;
+    }
+
+    &__input {
+        @include shadow-sm;
+        font-size: 1.05rem;
+        width: 100%;
+        padding: 10px;
+        height: 100%;
+        outline: none;
+        border: none;
+        background-color: lighten($primary-variant-color, 15%);
+
+        &:focus {
+            z-index: 1;
+            box-shadow: 0 0 7px $input-focus-color;
+        }
+    }
+
+    .icon-form {
+        @include shadow-sm;
+        display: grid;
+        grid-template-columns: 1fr 12fr;
+
+        .icon {
+            grid-row: 1/10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            background-color: $primary-variant-color;
+        }
+
+
+        .form-control__input {
+            grid-column: 2;
+        }
+    }
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

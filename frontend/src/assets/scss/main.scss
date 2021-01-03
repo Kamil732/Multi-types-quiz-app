@@ -1,0 +1,20 @@
+@import './abstracts/variables';
+@import './abstracts/config';
+
+@import './base/utilities';
+@import './base/base';
+
+@import './layout/darkMode';
+@import './layout/ads';
+@import './layout/loader';
+@import './layout/grid';
+@import './layout/cards';
+@import './layout/errors';
+@import './layout/forms';
+@import './layout/btns';
+@import './layout/pagination';
+
+@import './components/navigationMenu';
+@import './components/quizzes';
+
+@import './responsive'

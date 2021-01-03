@@ -1,0 +1,32 @@
+.pagination {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    &__item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: darken($background-color, 5%);
+        color: set-text-color($background-color);
+        cursor: pointer;
+
+        &:hover {
+            background: $secondary-color;
+            color: set-text-color($secondary-color);
+        }
+
+        &.active {
+            background: $secondary-color;
+            color: set-text-color($secondary-color);
+            cursor: default;
+            pointer-events: none;
+        }
+    }
+
+    &__link {
+        outline: none;
+        padding: 10px;
+    }
+}

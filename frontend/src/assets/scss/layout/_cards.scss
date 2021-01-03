@@ -1,0 +1,56 @@
+.card {
+    @include card;
+    min-width: 100%;
+    overflow: hidden;
+
+    &__header {
+        $color: darken($surface-color, 10%);
+        background-color: $color;
+        color: set-text-color($color);
+        height: auto;
+        font-size: 1.6rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-style: italic;
+        font-weight: 700;
+        padding: 0.7rem 1rem;
+    }
+
+    &__body {
+        background-color: $surface-color;
+        // border-bottom-left-radius: 10px;
+        // border-bottom-right-radius: 10px;
+        padding: 1.5rem;
+    }
+
+    &__footer {
+        $color: darken($surface-color, 10%);
+        background-color: $color;
+        color: set-text-color($color);
+        height: auto;
+        padding: 0.7rem;
+    }
+}
+
+.card-inline {
+    @include card;
+    margin-top: 1.25rem;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &__body {
+        padding: 0.7rem 1.3rem;
+        width: 100%;
+    }
+
+    &__img {
+        box-shadow: 2px 0 3px grey;
+        border-radius: 1rem 1rem 0 0;
+        object-fit: cover;
+        width: 100%;
+        z-index: 0;
+    }
+}
