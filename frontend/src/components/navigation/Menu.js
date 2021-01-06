@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import { logout } from '../../redux/actions/auth'
 import { FaUserAlt } from 'react-icons/fa'
 import ActiveTag from './ActiveTag'
-import DarkModeToggle from '../DarkModeToggle'
 
 class Menu extends Component {
     static propTypes = {
@@ -55,12 +54,6 @@ class Menu extends Component {
         return (
             <ul className="menu-nav">
                 {auth_links}
-
-                <li className="menu-nav__item">
-                    <span className="menu-nav__link">
-                        <DarkModeToggle />
-                    </span>
-                </li>
             </ul>
         )
     }

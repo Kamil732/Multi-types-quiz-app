@@ -12,12 +12,6 @@ class IsOwner(BasePermission):
     def has_permission(self, request, view):
         if not(request.method in SAFE_METHODS):
             author_slug = view.kwargs.get('author_slug')
-            slug = view.kwargs.get('slug')
 
-            try:
-                quiz = Quiz.objects.get(author__slug=author_slug, slug=slug)
-            except:
-                return False
-
-            return quiz.author == request.user
+            return author_slug == request.user.slug if request.user.is_authenticated else False
         return True

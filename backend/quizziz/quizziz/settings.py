@@ -161,14 +161,3 @@ REST_FRAMEWORK = {
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://192.168.1.31:3000']
-
-VALID_IMAGE_EXTENSIONS = (
-    '.jpg',
-    '.jpeg',
-    '.png',
-    '.gif',
-)
-
-
-def valid_url_extension(url, extension_list=VALID_IMAGE_EXTENSIONS):
-    return any([url.endswith(i) for i in extension_list])

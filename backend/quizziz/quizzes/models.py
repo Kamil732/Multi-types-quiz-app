@@ -3,8 +3,6 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.core.exceptions import ValidationError
 
-from quizziz.settings import valid_url_extension, VALID_IMAGE_EXTENSIONS
-
 
 class DisplayNameAbstract(models.Model):
     display_name = models.CharField(max_length=50, unique=True)
@@ -82,7 +80,7 @@ class Quiz(models.Model):
         Section, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
-    image_url = models.URLField(default=DEFAULT_IMAGE, blank=True)
+    image_url = models.URLField(default=DEFAULT_IMAGE)
     solved_times = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
     slug = models.SlugField(blank=True, max_length=120)
@@ -109,12 +107,6 @@ class Quiz(models.Model):
             self.slug = slugify(
                 f'{self.title} {quizzes if quizzes > 0 else ""}')
 
-        if not(self.description.strip()):
-            self.description = self.DEFAULT_DESCRIPTION
-
-        if not(self.image_url.strip()):
-            self.image_url = self.DEFAULT_IMAGE
-
         return super(self.__class__, self).save(*args, **kwargs)
 
 
@@ -129,10 +121,6 @@ class Question(models.Model):
     def save(self, *args, **kwargs):
         if not(self.slug):
             self.slug = slugify(self.question)
-
-        if self.image_url and not(valid_url_extension(self.image_url)):
-            raise EnvironmentError(
-                f"Field 'image_url' got wrong URL, it should end with {[i for i in VALID_IMAGE_EXTENSIONS]}")
 
         return super(self.__class__, self).save(*args, **kwargs)
 
@@ -156,26 +144,12 @@ class KnowledgeAnswer(Answer):
         Question, on_delete=models.CASCADE, related_name='knowledge_answers')
     is_correct = models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        if self.image_url and not(valid_url_extension(self.image_url)):
-            raise EnvironmentError(
-                f"Field 'image_url' got wrong URL, it should end with {[i for i in VALID_IMAGE_EXTENSIONS]}")
-
-        return super(self.__class__, self).save(*args, **kwargs)
-
 
 class PsychologyResults(models.Model):
     quiz = models.ForeignKey(
         Quiz, on_delete=models.CASCADE, related_name='psychology_results')
     result = models.CharField(max_length=50)
     description = models.TextField(blank=True)
-
-    def save(self, *args, **kwargs):
-        if self.image_url and not(valid_url_extension(self.image_url)):
-            raise EnvironmentError(
-                f"Field 'image_url' got wrong URL, it should end with {[i for i in VALID_IMAGE_EXTENSIONS]}")
-
-        return super(self.__class__, self).save(*args, **kwargs)
 
 
 class PsychologyAnswer(Answer):
@@ -215,10 +189,3 @@ class UniversalAnswer(Answer):
         Question, on_delete=models.CASCADE, related_name='universal_answers')
     points = models.CharField(
         max_length=2, choices=POINTS, default=POINTS[0][0])
-
-    def save(self, *args, **kwargs):
-        if self.image_url and not(valid_url_extension(self.image_url)):
-            raise EnvironmentError(
-                f"Field 'image_url' got wrong URL, it should end with {[i for i in VALID_IMAGE_EXTENSIONS]}")
-
-        return super(self.__class__, self).save(*args, **kwargs)

@@ -23,6 +23,11 @@
         }
     }
 
+    &__textarea {
+        min-height: 37px;
+        resize: vertical;
+    }
+
     .icon-form {
         @include shadow-sm;
         display: grid;

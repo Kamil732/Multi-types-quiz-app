@@ -16,12 +16,12 @@ class List extends Component {
             return <CircleLoader />
         } else if (this.props.quizzes.length > 0) {
             return this.props.quizzes.map((quiz, index) => (
-                <div className="card-inline quiz-card" key={index}>
+                <article className="card-inline quiz-card" key={index}>
                     <Link to={`quizzes/${quiz.author_slug}/${quiz.slug}`} className="card-inline__img-link">
                         <img className="card-inline__img quiz-card__img" src={quiz.image_url} alt={quiz.title} />
                     </Link>
 
-                    <div className="card-inline__body quiz-card__body">
+                    <section className="card-inline__body quiz-card__body">
                         <header className="quiz-card__header text-darken">
                             <span>
                                 Section:&ensp;
@@ -33,7 +33,7 @@ class List extends Component {
                                 <Link to={`?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link>
                             </span>
                         </header>
-                        <section>
+                        <aside>
                             <Link to={`quizzes/${quiz.author_slug}/${quiz.slug}`} className="quiz-card__link">
                                 <TextTruncate
                                     text={quiz.title}
@@ -48,15 +48,15 @@ class List extends Component {
                                 truncateText="…"
                                 containerClassName="quiz-card__description"
                             />
-                        </section>
+                        </aside>
                         <footer>
                             <p className="text-darken">
                                 <Link to={`users/${quiz.author_slug}`}>{quiz.author}</Link>&ensp;&bull;&ensp;
                                 <span>Solved {quiz.solved_times} time{quiz.solved_times !== 1 ? 's' : ''}</span>
                             </p>
                         </footer>
-                    </div>
-                </div>
+                    </section>
+                </article>
             ))
         }
 

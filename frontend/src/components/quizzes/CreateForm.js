@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import { AiFillEdit } from 'react-icons/ai'
 import { RiImageEditFill } from 'react-icons/ri'
+import { MdDescription } from 'react-icons/md'
 
 import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
 import { clearErrors } from '../../redux/actions/errors'
@@ -21,6 +22,7 @@ class CreateForm extends Component {
 
     state = {
         title: '',
+        description: '',
         section: '',
         category: '',
         image_url: '',
@@ -51,14 +53,14 @@ class CreateForm extends Component {
     onSubmit = e => {
         e.preventDefault()
 
-        const { title, section, category, image_url } = this.state
-        const quiz = { title, section, category, image_url }
+        const { title, description, section, category, image_url } = this.state
+        const quiz = { title, description, section, category, image_url }
 
         this.props.createQuiz(quiz)
     }
 
     render() {
-        const { title, section, category, image_url } = this.state
+        const { title, description, section, category, image_url } = this.state
 
         const sections = this.props.sections.map((section, index) => (
             <option value={section.name} key={index}>
@@ -157,6 +159,36 @@ class CreateForm extends Component {
                             >
                                 {categories}
                             </select>
+                        </div>
+
+                        {
+                            this.props.errors.description ? (
+                                <div className="error-box">
+                                    {
+                                        this.props.errors.description.map((error, index) => (
+                                            <p className="error-text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-control">
+                            <div className="icon-form">
+                                <span className="icon">
+                                    <MdDescription />
+                                </span>
+
+                                <textarea
+                                    type="text"
+                                    name="description"
+                                    value={description}
+                                    onChange={this.onChange}
+                                    className="form-control__input form-control__textarea"
+                                    placeholder="Pass the description..."
+                                    rows="5"
+                                    required
+                                />
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-6">

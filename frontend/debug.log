@@ -16,3 +16,4 @@
 [1231/152136.899:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\Kamil\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\797704a8-2a5d-4b90-8f39-52b66bf45bbf: System nie moze odnalezc okreslonej sciezki. (0x3)
 [1231/223451.280:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)
 [0103/182649.628:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)
+[0106/153717.791:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)

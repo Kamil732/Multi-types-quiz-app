@@ -1,9 +1,10 @@
+import requests
+
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 
-from quizziz.settings import valid_url_extension
 from quizzes.models import (
     Quiz,
     Question,
@@ -18,15 +19,32 @@ from quizzes.models import (
 
 
 class ImageValidatorSerailizer(serializers.Serializer):
-    image_url = serializers.URLField(required=False, allow_blank=True)
+    image_url = serializers.CharField(allow_blank=True)
+    success = serializers.BooleanField(default=False, read_only=True)
+
+    def validate(self, data):
+        image_url = data.get('image_url')
+        data['success'] = False
+
+        if not(image_url.strip()):
+            data['success'] = True
+            data['image_url'] = Quiz.DEFAULT_IMAGE
+        else:
+            try:
+                image_request = requests.head(image_url)
+
+                if not(image_request.status_code == requests.codes.ok):
+                    data['image_url'] = Quiz.DEFAULT_IMAGE
+                else:
+                    data['success'] = True
+            except:
+                data['image_url'] = Quiz.DEFAULT_IMAGE
+
+        return data
 
     class Meta:
         fields = ('image_url',)
-
-    # def create(self, validated_data):
-    #     return {
-    #         'is_valid': True,
-    #     }
+        read_only_fields = ('success',)
 
 
 class SectionSerializer(serializers.ModelSerializer):
@@ -48,6 +66,19 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class QuestionSerializer(serializers.ModelSerializer):
+    image_url = serializers.CharField(allow_blank=True)
+
+    def validate_image_url(self, value):
+        try:
+            image_request = requests.head(value)
+
+            if not(image_request.status_code == requests.codes.ok):
+                return ''
+        except:
+            return ''
+
+        return value
+
     class Meta:
         model = Question
         fields = (
@@ -59,16 +90,12 @@ class QuestionSerializer(serializers.ModelSerializer):
         read_only_fields = ('slug',)
 
 
-class QuizSerializer(ImageValidatorSerailizer):
+class QuizSerializer(serializers.Serializer):
     pub_date = serializers.SerializerMethodField('get_pub_date')
-
-    # section = SectionSerializer(read_only=True)
-    # section_id = serializers.IntegerField(write_only=True)
-
-    section = serializers.CharField()
-    category = serializers.CharField()
-    # category = CategorySerializer(read_only=True)
-    # category_id = serializers.IntegerField(write_only=True)
+    image_url = serializers.CharField(allow_blank=True)
+    description = serializers.CharField(allow_blank=True)
+    section = serializers.CharField(max_length=50)
+    category = serializers.CharField(max_length=50)
 
     def get_pub_date(self, obj):
         return f'{obj.pub_date.day}-{obj.pub_date.month}-{obj.pub_date.year}'
@@ -76,13 +103,29 @@ class QuizSerializer(ImageValidatorSerailizer):
     def validate_description(self, value):
         if not(value.strip()):
             return Quiz.DEFAULT_DESCRIPTION
+
         return value
+
+    def validate_section(self, value):
+        return Section.objects.get(
+            name=value)
+
+    def validate_category(self, value):
+        return Category.objects.get(
+            name=value)
 
     def validate_image_url(self, value):
         if not(value.strip()):
             return Quiz.DEFAULT_IMAGE
-        if not(valid_url_extension(value)):
-            raise serializers.ValidationError(_('URL have to direct to image'))
+        else:
+            try:
+                image_request = requests.head(value)
+
+                if not(image_request.status_code == requests.codes.ok):
+                    return Quiz.DEFAULT_IMAGE
+            except:
+                return Quiz.DEFAULT_IMAGE
+
         return value
 
     def to_representation(self, instance):
@@ -96,14 +139,14 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     author_slug = serializers.ReadOnlyField(source='author.slug')
 
-    def create(self, validated_data):
-        validated_data['section'] = Section.objects.get(
-            name=validated_data['section'])
+    # def create(self, validated_data):
+    #     validated_data['section'] = Section.objects.get(
+    #         name=validated_data['section'])
 
-        validated_data['category'] = Category.objects.get(
-            name=validated_data['category'])
+    #     validated_data['category'] = Category.objects.get(
+    #         name=validated_data['category'])
 
-        return super(self.__class__, self).create(validated_data)
+    #     return super(self.__class__, self).create(validated_data)
 
     class Meta:
         model = Quiz
@@ -119,9 +162,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'author',
             'author_slug',
             'section',
-            # 'section_id',
             'category',
-            # 'category_id',
         )
         read_only_fields = ('slug', 'solved_times',)
 
@@ -137,19 +178,6 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     def get_questions(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri(reverse('quiz-questions', args=[obj.author.slug, obj.slug]))
-
-    def update(self, instance, validated_data):
-        section_name = validated_data.pop('section')
-        section_id = Section.objects.filter(
-            name=section_name).values_list('id', flat=True).first()
-        instance.section_id = section_id
-
-        category_name = validated_data.pop('category')
-        category_id = Category.objects.filter(
-            name=category_name).values_list('id', flat=True).first()
-        instance.category_id = category_id
-
-        return instance
 
     class Meta:
         model = Quiz

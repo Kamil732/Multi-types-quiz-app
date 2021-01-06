@@ -1,5 +1,3 @@
-import requests
-
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -8,11 +6,9 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from quizzes.api.pagination import QuizListPagination
 from quizzes.models import Quiz, Section, Category, KnowledgeAnswer, Question
-from quizzes.api import serializers, permissions, mixins
-
-from quizziz.settings import valid_url_extension
+from .pagination import QuizListPagination
+from . import serializers, permissions, mixins
 
 
 class ImageValidatorAPIView(generics.GenericAPIView):
@@ -20,20 +16,20 @@ class ImageValidatorAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-        serializer.is_valid()  # raise_exception=True
+        serializer.is_valid(raise_exception=True)
 
-        image_url = serializer.data.get('image_url')
-        data = {}
+        # image_url = serializer.data.get('image_url')
+        # data = {}
 
-        try:
-            image_request = requests.head(image_url)
-            data['success'] = image_request.status_code == requests.codes.ok
-        except:
-            data['success'] = False
+        # try:
+        #     image_request = requests.head(image_url)
+        #     data['success'] = image_request.status_code == requests.codes.ok
+        # except:
+        #     data['success'] = False
 
-        data['image_url'] = image_url if data['success'] else Quiz.DEFAULT_IMAGE
+        # data['image_url'] = image_url if data['success'] else Quiz.DEFAULT_IMAGE
 
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class SectionViewSet(viewsets.ReadOnlyModelViewSet):
@@ -49,8 +45,6 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
-    permission_classes = (permissions.CreateIsAuthenticated,)
-
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
@@ -61,8 +55,6 @@ class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
 
 
 class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsOwner,)
-
     lookup_field = 'slug'
     lookup_url_kwarg = 'question_slug'
 

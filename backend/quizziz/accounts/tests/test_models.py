@@ -14,7 +14,5 @@ class TestAccounts(TestSetUp):
         res = self.client.get(self.my_profile_url, data={
         }, format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
 
-        print(res.data.get('picture'))
-
         self.assertURLEqual(res.data.get('picture'),
                             f'http://testserver{settings.MEDIA_URL}{Account.DEFAULT_PROFILE_PICTURE}')

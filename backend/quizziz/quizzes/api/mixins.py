@@ -1,6 +1,5 @@
 from quizzes.models import Quiz, Question
-
-from quizzes.api.permissions import CreateIsAuthenticated, IsOwner
+from quizzes.api.permissions import IsOwner
 from quizzes.api import serializers
 
 
@@ -9,6 +8,7 @@ class QuizMixin(object):
 
 
 class QuestionMixin(object):
+    permission_classes = (IsOwner,)
     serializer_class = serializers.QuestionSerializer
 
     def get_queryset(self, *args, **kwargs):

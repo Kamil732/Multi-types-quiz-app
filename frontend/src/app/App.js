@@ -5,11 +5,12 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import store from '../redux/store'
 import { Provider } from 'react-redux'
 import { loadUser } from '../redux/actions/auth'
+import { getCategorySection } from '../redux/actions/quizzes'
 
 import Header from '../containers/Header'
 import Routes from './Routes'
 import Footer from '../containers/Footer'
-import { getCategorySection } from '../redux/actions/quizzes';
+import DarkModeToggle from '../components/DarkModeToggle'
 
 class App extends Component {
 	componentDidMount() {
@@ -24,9 +25,13 @@ class App extends Component {
 				<Router>
 					<Header />
 
-					<div className="content-wrap container-mobile">
+					<aside>
+						<DarkModeToggle />
+					</aside>
+
+					<section className="content-wrap container-mobile">
 						<Routes />
-					</div>
+					</section>
 
 					<Footer />
 				</Router>

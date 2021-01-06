@@ -20,12 +20,11 @@ class Home extends Component {
         quizzes: PropTypes.object.isRequired,
     }
 
-    componentDidMount() {
-        this.props.getQuizzes(this.props.location.search)
-    }
+    componentDidMount = () => this.props.getQuizzes(this.props.location.search)
 
     componentDidUpdate(prevProps, _) {
-        if (prevProps.location !== this.props.location) this.props.getQuizzes(this.props.location.search)
+        if (prevProps.location !== this.props.location)
+            this.props.getQuizzes(this.props.location.search)
     }
 
     render() {
