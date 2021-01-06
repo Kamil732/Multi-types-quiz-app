@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import { AiFillEdit } from 'react-icons/ai'
 import { RiImageEditFill } from 'react-icons/ri'
@@ -22,7 +23,7 @@ class CreateForm extends Component {
 
     state = {
         title: '',
-        description: '',
+        description: 'Welcome to my quiz!',
         section: '',
         category: '',
         image_url: '',
@@ -57,6 +58,7 @@ class CreateForm extends Component {
         const quiz = { title, description, section, category, image_url }
 
         this.props.createQuiz(quiz)
+        this.props.history.push('/')
     }
 
     render() {
@@ -173,22 +175,18 @@ class CreateForm extends Component {
                             ) : ''
                         }
                         <div className="form-control">
-                            <div className="icon-form">
-                                <span className="icon">
-                                    <MdDescription />
-                                </span>
+                            <label className="form-control__label">Description:</label>
 
-                                <textarea
-                                    type="text"
-                                    name="description"
-                                    value={description}
-                                    onChange={this.onChange}
-                                    className="form-control__input form-control__textarea"
-                                    placeholder="Pass the description..."
-                                    rows="5"
-                                    required
-                                />
-                            </div>
+                            <textarea
+                                type="text"
+                                name="description"
+                                value={description}
+                                onChange={this.onChange}
+                                className="form-control__input form-control__textarea"
+                                placeholder="Pass the description..."
+                                rows="5"
+                                required
+                            />
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -242,4 +240,4 @@ const mapDispatchToProps = {
     createQuiz,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateForm)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateForm))
