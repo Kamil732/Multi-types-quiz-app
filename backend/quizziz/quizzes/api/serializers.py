@@ -93,18 +93,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 class QuizSerializer(serializers.Serializer):
     pub_date = serializers.SerializerMethodField('get_pub_date')
     image_url = serializers.CharField(allow_blank=True)
-    description = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
 
     def get_pub_date(self, obj):
         return f'{obj.pub_date.day}-{obj.pub_date.month}-{obj.pub_date.year}'
-
-    def validate_description(self, value):
-        if not(value.strip()):
-            return Quiz.DEFAULT_DESCRIPTION
-
-        return value
 
     def validate_section(self, value):
         return Section.objects.get(
