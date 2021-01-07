@@ -10,6 +10,17 @@
     gap: 60px;
 }
 
+.img-preview {
+    padding: 0 2rem;
+
+    &__img {
+        max-width: 100%;
+        height: auto;
+        border: 1px solid grey;
+        vertical-align: middle;
+    }
+}
+
 .quiz-card {
     &__body {
         display: flex;

@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom'
 
 import { AiFillEdit } from 'react-icons/ai'
 import { RiImageEditFill } from 'react-icons/ri'
-import { MdDescription } from 'react-icons/md'
 
 import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
 import { clearErrors } from '../../redux/actions/errors'
 import ImageView from './ImageView'
+import Textarea from '../../common/Textarea'
 
 class CreateForm extends Component {
     static propTypes = {
@@ -31,7 +31,6 @@ class CreateForm extends Component {
 
     componentDidMount = () => {
         if (this.props.sections.length > 0 && this.props.categories.length > 0) {
-            console.log(this.props.sections)
             this.setState({
                 section: this.props.sections[0].name,
                 category: this.props.categories[0].name,
@@ -177,8 +176,7 @@ class CreateForm extends Component {
                         <div className="form-control">
                             <label className="form-control__label">Description:</label>
 
-                            <textarea
-                                type="text"
+                            <Textarea
                                 name="description"
                                 value={description}
                                 onChange={this.onChange}

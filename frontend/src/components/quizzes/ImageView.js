@@ -16,7 +16,7 @@ class ImageView extends Component {
         success: null,
     }
 
-    getImageUrl = debounce(() => {
+    imageUrl = debounce(() => {
         this.setState({ loading: true })
         const { image_url } = this.props
 
@@ -38,39 +38,40 @@ class ImageView extends Component {
             }))
     }, 500)
 
-    onClick = e => {
-        e.preventDefault()
-        this.getImageUrl()
-    }
+    componentDidMount = () => this.imageUrl()
 
     componentDidUpdate(prevProps, _) {
         if (prevProps.image_url !== this.props.image_url)
-            this.getImageUrl()
+            this.imageUrl()
     }
 
     render() {
         const { loading, image_url, success } = this.state
 
         return (
-            <div className="image-view">
-                <h5>Current Image:</h5>
-                <button className="btn" onClick={this.onClick}>Refresh</button>
+            <div className="img-preview">
+                <h3>Current Image:</h3>
 
                 {
                     loading === true ? (
                         <SpinLoader />
                     ) : (
-                        <img
-                            src={image_url}
-                            alt=""
-                        />
-                    )
-                }
+                        <>
+                            <img
+                                src={image_url}
+                                alt=""
+                                className="img-preview__img"
+                            />
 
-                {
-                    success === false ? (
-                        <div>Error</div>
-                    ) : ''
+                            {
+                                success === false ? (
+                                    <div className="error-box">
+                                        <p className="error-text">The URL you entered either doesn't exist or is invalid</p>
+                                    </div>
+                                ) : ''
+                            }
+                        </>
+                    )
                 }
             </div>
         )
@@ -79,37 +80,3 @@ class ImageView extends Component {
 
 
 export default ImageView
-
-
-
-// import React, { Component } from 'react'
-// import PropTypes from 'prop-types'
-
-// class ImageView extends Component {
-//     static propTypes = {
-//         image_url: PropTypes.string.isRequired,
-//     }
-
-//     getImageUrl = image_url => {
-//         var image = new Image()
-//         image.src = image_url
-
-//         return image.width > 0 ? image_url : 'https://cdn.pixabay.com/photo/2017/01/24/00/21/question-2004314_960_720.jpg'
-//     }
-
-//     render() {
-//         const image_url = this.getImageUrl(this.props.image_url)
-
-//         return (
-//             <div className="image-view">
-//                 <h5>Current Image:</h5>
-
-//                 <img src={image_url} alt="" />
-//             </div>
-//         )
-//     }
-// }
-
-
-
-// export default ImageView

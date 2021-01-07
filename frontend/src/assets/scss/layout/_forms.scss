@@ -28,6 +28,14 @@
         resize: vertical;
     }
 
+    &__grippie {
+        border: 1px solid lightgray;
+        cursor: s-resize;
+        height: 11px;
+        overflow: hidden;
+        background-color: grey;
+    }
+
     .icon-form {
         @include shadow-sm;
         display: grid;
