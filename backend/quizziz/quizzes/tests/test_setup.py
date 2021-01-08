@@ -58,7 +58,7 @@ class TestSetUp(APITestCase):
 
         title = self.fake.sentence()
         description = self.fake.sentence()
-        image_url = f'https://fakeimg.pl/{self.fake.pyint(min_value=50, max_value=1920)}x{self.fake.pyint(min_value=50, max_value=1920)}/'
+        image_url = 'https://cdn.pixabay.com/photo/2020/12/19/03/27/person-5843476_960_720.jpg'
 
         self.quizzes_create_data = {
             'title': title,
@@ -68,9 +68,9 @@ class TestSetUp(APITestCase):
             'category': self.fake.random.choice(category_names),
         }
 
-        self.quizzes_create_no_image_url_and_desciprtion_data = {
+        self.quizzes_create_no_image_url_data = {
             'title': title,
-            'description': '',
+            'description': description,
             'image_url': '',
             'section': self.fake.random.choice(section_names),
             'category': self.fake.random.choice(category_names),
@@ -106,7 +106,7 @@ class TestSetUp(APITestCase):
 
         self.quizzes_questions_update_data = {
             'question': self.fake.sentence(),
-            'image_url': f'https://fakeimg.pl/{self.fake.pyint(min_value=50, max_value=1920)}x{self.fake.pyint(min_value=50, max_value=1920)}/',
+            'image_url': 'https://cdn.pixabay.com/photo/2020/12/28/22/48/buddha-5868759_960_720.jpg',
             'summery': description,
         }
 

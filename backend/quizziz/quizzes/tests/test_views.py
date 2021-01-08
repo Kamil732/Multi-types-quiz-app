@@ -27,12 +27,11 @@ class TestViews(TestSetUp):
         self.assertEqual(res.data.get('category').get('name'),
                          self.quizzes_create_data['category'])
 
-    def test_create_quiz_without_image_url_and_description(self):
-        res = self.client.post(self.quizzes_create_url, self.quizzes_create_no_image_url_and_desciprtion_data,
+    def test_create_quiz_without_image_url(self):
+        res = self.client.post(self.quizzes_create_url, self.quizzes_create_no_image_url_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
-        self.assertEqual(res.data.get('description'), Quiz.DEFAULT_DESCRIPTION)
         self.assertEqual(res.data.get('image_url'), Quiz.DEFAULT_IMAGE)
 
     def test_create_quiz_with_bad_image_url(self):

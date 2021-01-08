@@ -1,9 +1,9 @@
-import requests
-
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
+
+from quizziz.utils import valid_url_extension
 
 from quizzes.models import (
     Quiz,
@@ -29,16 +29,10 @@ class ImageValidatorSerailizer(serializers.Serializer):
         if not(image_url.strip()):
             data['success'] = True
             data['image_url'] = Quiz.DEFAULT_IMAGE
+        elif valid_url_extension(data['image_url']):
+            data['success'] = True
         else:
-            try:
-                image_request = requests.head(image_url)
-
-                if not(image_request.status_code == requests.codes.ok):
-                    data['image_url'] = Quiz.DEFAULT_IMAGE
-                else:
-                    data['success'] = True
-            except:
-                data['image_url'] = Quiz.DEFAULT_IMAGE
+            data['image_url'] = Quiz.DEFAULT_IMAGE
 
         return data
 
@@ -69,12 +63,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     image_url = serializers.CharField(allow_blank=True)
 
     def validate_image_url(self, value):
-        try:
-            image_request = requests.head(value)
-
-            if not(image_request.status_code == requests.codes.ok):
-                return ''
-        except:
+        if not(valid_url_extension(value)):
             return ''
 
         return value
@@ -108,16 +97,8 @@ class QuizSerializer(serializers.Serializer):
             name=value)
 
     def validate_image_url(self, value):
-        if not(value.strip()):
+        if not(value.strip()) or not(valid_url_extension(value)):
             return Quiz.DEFAULT_IMAGE
-        else:
-            try:
-                image_request = requests.head(value)
-
-                if not(image_request.status_code == requests.codes.ok):
-                    return Quiz.DEFAULT_IMAGE
-            except:
-                return Quiz.DEFAULT_IMAGE
 
         return value
 
