@@ -2,9 +2,22 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 
 from accounts.models import Account
+from quizzes.models import Quiz
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    quizzes_count = serializers.SerializerMethodField('get_quizzes_count')
+    quizzes_solves = serializers.SerializerMethodField('get_quizzes_solves')
+
+    def get_quizzes_count(self, obj):
+        return Quiz.objects.filter(author__email=obj.email).count()
+
+    def get_quizzes_solves(self, obj):
+        quizzes_solves = Quiz.objects.filter(
+            author__email=obj.email).values_list('solved_times', flat=True)
+
+        return sum(quizzes_solves)
+
     def validate_picture(self, value):
         if not(value):
             return Account.DEFAULT_PROFILE_PICTURE
@@ -12,7 +25,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('email', 'username', 'picture', 'bio',)
+        fields = ('email', 'username', 'picture', 'bio',
+                  'quizzes_count', 'quizzes_solves',)
 
 
 class RegisterSerializer(serializers.ModelSerializer):
