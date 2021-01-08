@@ -21,8 +21,5 @@ const mapStateToProps = state => ({
     userLoading: state.auth.loading,
 })
 
-const mapDispatchToProps = {
 
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PrivateRoute)
+export default connect(mapStateToProps, null)(PrivateRoute)

@@ -1,41 +1,48 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Redirect, withRouter } from 'react-router-dom'
 
 import UserData from '../../components/accounts/profile/UserData'
+import Title from '../../common/Title'
+import Ad from '../../components/Ad'
 
 class Profile extends Component {
     static propTypes = {
-        isAuthenticated: PropTypes.bool,
         user: PropTypes.object,
     }
 
     render() {
-        if (this.props.isAuthenticated === false) return <Redirect to="/" />
-        const { picture, username, email } = this.props.user
+        const { picture, username, bio, quizzes_count, quizzes_solves } = this.props.user
 
         return (
-            <div className="row">
-                <div className="col-sm-8">
-                    <UserData
-                        picture_url={picture}
-                        username={username}
-                        email={email}
-                    />
+            <>
+                <Title title="My Profile" />
+
+                <div className="row">
+                    <div className="col-sm-8">
+                        <UserData
+                            picture_url={picture}
+                            username={username}
+                            bio={bio}
+                            quizzes_count={quizzes_count}
+                            quizzes_solves={quizzes_solves}
+                        />
+                    </div>
+                    <div className="col-sm-4">
+                        <Ad />
+                    </div>
                 </div>
-            </div>
+            </>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    isAuthenticated: state.auth.isAuthenticated,
     user: state.auth.user,
 })
 
 const mapDispatchToProps = {
-    
+
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Profile))
+export default connect(mapStateToProps, mapDispatchToProps)(Profile)

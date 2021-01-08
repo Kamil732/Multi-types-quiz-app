@@ -179,6 +179,20 @@
             }
         }
     }
+
+    .profile {
+        flex-direction: row;
+
+        &__img {
+            margin-bottom: 0;
+            margin-right: 20px;
+            float: left;
+        }
+
+        &__content {
+            float: right;
+        }
+    }
 }
 
 @include media-laptop {
