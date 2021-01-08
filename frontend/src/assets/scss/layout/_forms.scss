@@ -7,7 +7,7 @@
     }
 
     &__input {
-        @include shadow-sm;
+        // @include shadow-sm;
         font-size: 1.05rem;
         width: 100%;
         padding: 10px;
@@ -15,6 +15,7 @@
         outline: none;
         border: none;
         background-color: lighten($primary-variant-color, 15%);
+        border: 1px solid #aaa;
 
         &:focus {
             z-index: 1;
@@ -27,10 +28,7 @@
         font-size: 14px;
         min-height: 37px;
         resize: vertical;
-        // box-shadow: 2px 0 2px grey;
         box-shadow: none;
-        border: 1px solid grey;
-        border-bottom: none;
 
         &::-webkit-resizer {
             display: none;
@@ -44,14 +42,15 @@
         cursor: s-resize;
         height: 12px;
         overflow: hidden;
-        background-color: gainsboro;
-        border: 1px solid grey;
+        background-color: #ddd;
+        border: 1px solid #aaa;
         border-top: none;
         border-radius: 0 0 5px 5px;
     }
 
     .icon-form {
-        @include shadow-sm;
+        // border: 1px solid #000;
+        // @include shadow-sm;
         display: grid;
         grid-template-columns: 1fr 12fr;
 
@@ -66,6 +65,8 @@
 
 
         .form-control__input {
+            border: 1px solid #aaa;
+
             grid-column: 2;
         }
     }
