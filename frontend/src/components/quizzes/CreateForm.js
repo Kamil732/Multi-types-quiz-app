@@ -21,12 +21,19 @@ class CreateForm extends Component {
         createQuiz: PropTypes.func.isRequired,
     }
 
-    state = {
-        title: '',
-        description: 'Welcome to my quiz!',
-        section: '',
-        category: '',
-        image_url: '',
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            title: '',
+            description: 'Welcome to my quiz!',
+            section: '',
+            category: '',
+            image_url: '',
+        }
+
+        this.onChange = this.onChange.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     componentDidMount = () => {
@@ -182,7 +189,7 @@ class CreateForm extends Component {
                                 onChange={this.onChange}
                                 className="form-control__input form-control__textarea"
                                 placeholder="Pass the description..."
-                                rows="5"
+                                rows="10"
                                 required
                             />
                         </div>

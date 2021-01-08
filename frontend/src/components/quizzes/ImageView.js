@@ -10,13 +10,19 @@ class ImageView extends Component {
         image_url: PropTypes.string.isRequired,
     }
 
-    state = {
-        loading: null,
-        image_url: '',
-        success: null,
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            loading: null,
+            image_url: '',
+            success: null,
+        }
+
+        this.setImageUrl = debounce(this.setImageUrl.bind(this), 500)
     }
 
-    imageUrl = debounce(() => {
+    setImageUrl() {
         this.setState({ loading: true })
         const { image_url } = this.props
 
@@ -36,13 +42,13 @@ class ImageView extends Component {
                 image_url: res.data['image_url'],
                 success: res.data['success'],
             }))
-    }, 500)
+    }
 
-    componentDidMount = () => this.imageUrl()
+    componentDidMount = () => this.setImageUrl()
 
     componentDidUpdate(prevProps, _) {
         if (prevProps.image_url !== this.props.image_url)
-            this.imageUrl()
+            this.setImageUrl()
     }
 
     render() {

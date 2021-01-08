@@ -1,8 +1,15 @@
 import React, { Component } from 'react'
 
 class DarkModeToggle extends Component {
-    state = {
-        isChecked: JSON.parse(localStorage.getItem('dark_mode'))
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            isChecked: JSON.parse(localStorage.getItem('dark_mode'))
+        }
+
+        this.toggleDarkMode = this.toggleDarkMode.bind(this)
+        this.onChange = this.onChange.bind(this)
     }
 
     toggleDarkMode = () => {

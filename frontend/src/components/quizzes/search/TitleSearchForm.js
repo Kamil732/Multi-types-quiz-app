@@ -10,10 +10,13 @@ class TitleSearchForm extends Component {
         super(props)
 
         const query = queryString.parse(this.props.location.search);
-
         this.state = {
             title: query.title__istartswith || '',
         }
+
+        this.onChange = this.onChange.bind(this)
+        this.searchQuiz = this.searchQuiz.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -26,7 +29,7 @@ class TitleSearchForm extends Component {
         const { title } = this.state
         window.scrollTo({ top: 0, behavior: 'smooth' })
 
-        setTimeout(() => this.searchQuiz('title__istartswith', title), 0)
+        this.searchQuiz('title__istartswith', title)
     }
 
     // componentDidUpdate(_, prevState) {

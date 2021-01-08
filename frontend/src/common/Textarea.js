@@ -1,33 +1,48 @@
-import React, { useRef } from 'react'
+import React, { Component } from 'react'
 
-function Textarea(props) {
-    const textarea = useRef(null)
-    const grippie = useRef(null)
+class Textarea extends Component {
+    constructor(props) {
+        super(props)
 
-    if (textarea.current && grippie.current) {
-        let resize = false
+        this.textarea = React.createRef()
+        this.grippie = React.createRef()
+        this.resize = false
 
-        grippie.current.onmousedown = () => resize = true
+        this.onMouseMove = this.onMouseMove.bind(this)
+        this.onMouseUp = this.onMouseUp.bind(this)
+    }
 
-        window.onmousemove = e => {
-            if (resize === true)
-                textarea.current.style.height = textarea.current.clientHeight + e.clientY - grippie.current.getBoundingClientRect().top + 'px'
-        }
+    onMouseMove(e) {
+        if (this.resize === true)
+            this.textarea.current.style.height = this.textarea.current.clientHeight + e.clientY - this.grippie.current.getBoundingClientRect().top + -30 + 'px'
+    }
 
-        window.onmouseup = () => {
-            if (resize === true) {
-                resize = false
-                textarea.current.focus()
-            }
+    onMouseUp() {
+        if (this.resize === true) {
+            this.resize = false
+            this.textarea.current.focus()
         }
     }
 
-    return (
-        <>
-            <textarea {...props} ref={textarea} />
-            <div className="form-control__grippie" ref={grippie}></div>
-        </>
-    )
+    componentDidMount() {
+        this.grippie.current.onmousedown = () => this.resize = true
+        window.addEventListener('mousemove', this.onMouseMove)
+        window.addEventListener('mouseup', this.onMouseUp)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('mousemove', this.onMouseMove)
+        window.removeEventListener('mouseup', this.onMouseUp)
+    }
+
+    render() {
+        return (
+            <>
+                <textarea {...this.props} ref={this.textarea} />
+                <div className="form-control__grippie" ref={this.grippie}></div>
+            </>
+        )
+    }
 }
 
 export default Textarea

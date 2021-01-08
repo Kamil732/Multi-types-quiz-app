@@ -5,8 +5,14 @@ import logo from '../assets/images/logo.png'
 import { default as NavigationMenu } from '../components/navigation/Menu'
 
 class Header extends Component {
-    state = {
-        isNavigationOpend: null,
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            isNavigationOpend: null,
+        }
+
+        this.toggleNavigation = this.toggleNavigation.bind(this)
     }
 
     toggleNavigation = () => {

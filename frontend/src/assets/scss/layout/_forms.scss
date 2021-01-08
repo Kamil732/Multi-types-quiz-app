@@ -2,9 +2,8 @@
     margin-bottom: 1.5rem;
 
     &__label {
-        font-size: 1.1rem;
-        opacity: 0.9;
-        margin-bottom: 1em;
+        font-size: 1.15rem;
+        // margin-bottom: 2rem;
     }
 
     &__input {
@@ -24,16 +23,31 @@
     }
 
     &__textarea {
+        margin: -1px 0 0;
+        font-size: 14px;
         min-height: 37px;
         resize: vertical;
+        // box-shadow: 2px 0 2px grey;
+        box-shadow: none;
+        border: 1px solid grey;
+        border-bottom: none;
+
+        &::-webkit-resizer {
+            display: none;
+        }
     }
 
     &__grippie {
-        border: 1px solid lightgray;
+        // background-size: cover;
+        background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjODg4Ij48L3JlY3Q+Cjwvc3ZnPg==");
+        margin-top: -4px;
         cursor: s-resize;
-        height: 11px;
+        height: 12px;
         overflow: hidden;
-        background-color: grey;
+        background-color: gainsboro;
+        border: 1px solid grey;
+        border-top: none;
+        border-radius: 0 0 5px 5px;
     }
 
     .icon-form {

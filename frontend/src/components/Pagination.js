@@ -14,6 +14,12 @@ class Pagination extends Component {
         history: PropTypes.object.isRequired,
     }
 
+    constructor(props) {
+        super(props)
+
+        this.changePage = this.changePage.bind(this)
+    }
+
     changePage = e => search(this.props, 'page', parseInt(e.selected) + 1)
 
     render() {
@@ -21,7 +27,6 @@ class Pagination extends Component {
 
         const query = queryString.parse(this.props.location.search)
         const initialPage = query.page - 1 || 0
-
 
         return (
             <ReactPaginate

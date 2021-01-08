@@ -16,13 +16,13 @@ export class Quizzes extends Component {
         quizzes: PropTypes.object,
     }
 
-    searchQuiz = () => {
-        // const extraConfig = {
-        //     'Authorization': `Bearer ${this.props.accessToken}`
-        // }
+    constructor(props) {
+        super(props)
 
-        this.props.getQuizzes(this.props.location.search, 'http://192.168.1.31:8000/api/accounts/current/quizzes/')
+        this.searchQuiz = this.searchQuiz.bind(this)
     }
+
+    searchQuiz = () => this.props.getQuizzes(this.props.location.search, 'http://192.168.1.31:8000/api/accounts/current/quizzes/')
 
     componentDidMount = () => this.searchQuiz()
 
