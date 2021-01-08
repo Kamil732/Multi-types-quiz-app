@@ -3,6 +3,7 @@ import axios from 'axios'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import CircleLoader from '../../components/loaders/CircleLoader'
+import Title from '../../common/Title'
 
 export class Detail extends Component {
     static propTypes = {
@@ -46,6 +47,7 @@ export class Detail extends Component {
 
         return (
             <>
+                <Title title={`Quiz Detail ${quiz.title}`} />
                 <div>
                     {quiz.title}
                 </div>

@@ -9,6 +9,7 @@ import { MdEmail } from 'react-icons/md'
 import register_img from '../../../assets/images/register_img.jpg'
 import { signUp } from '../../../redux/actions/auth'
 import { clearErrors } from '../../../redux/actions/errors'
+import Title from '../../../common/Title'
 
 class RegisterForm extends Component {
     static propTypes = {
@@ -40,6 +41,7 @@ class RegisterForm extends Component {
 
         return (
             <>
+                <Title title="Sign up" />
                 <img className="card-inline__img" src={register_img} alt="register" />
 
                 <div className="card-inline__body container auth-form">

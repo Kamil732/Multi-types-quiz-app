@@ -10,6 +10,7 @@ import CategorySearch from '../../components/quizzes/search/CategorySearch'
 import SectionSearch from '../../components/quizzes/search/SectionSearch'
 import Pagination from '../../components/Pagination'
 import Ad from '../../components/Ad'
+import Title from '../../common/Title'
 
 
 
@@ -29,26 +30,30 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="row">
-                <div className="col-md-8">
-                    <div className="card">
-                        <header className="card__header">Most Popular Quizzes</header>
-                        <section className="card__body">
-                            <QuizList quizzes={this.props.quizzes.results} loading={this.props.loading} />
-                        </section>
-                        <footer className="card__footer">
-                            <Pagination pageCount={this.props.quizzes.pageCount} />
-                        </footer>
+            <>
+                <Title title="Quiz List" />
+
+                <div className="row">
+                    <div className="col-md-8">
+                        <div className="card">
+                            <header className="card__header">Most Popular Quizzes</header>
+                            <section className="card__body">
+                                <QuizList quizzes={this.props.quizzes.results} loading={this.props.loading} />
+                            </section>
+                            <footer className="card__footer">
+                                <Pagination pageCount={this.props.quizzes.pageCount} />
+                            </footer>
+                        </div>
+                    </div>
+                    <div className="col-md-4 section-category-list">
+                        <TitleSearchForm />
+                        <Ad />
+                        <SectionSearch />
+                        <Ad />
+                        <CategorySearch />
                     </div>
                 </div>
-                <div className="col-md-4 section-category-list">
-                    <TitleSearchForm />
-                    <Ad />
-                    <SectionSearch />
-                    <Ad />
-                    <CategorySearch />
-                </div>
-            </div>
+            </>
         )
     }
 }
