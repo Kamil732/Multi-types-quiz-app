@@ -19,7 +19,7 @@ class Profile extends Component {
                 <Title title="My Profile" />
 
                 <div className="row">
-                    <div className="col-sm-8">
+                    <div className="col col-sm-8">
                         <UserData
                             picture_url={picture}
                             username={username}
@@ -28,7 +28,7 @@ class Profile extends Component {
                             quizzes_solves={quizzes_solves}
                         />
                     </div>
-                    <div className="col-sm-4">
+                    <div className="col col-sm-4">
                         <Ad />
                     </div>
                 </div>

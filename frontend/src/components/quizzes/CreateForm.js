@@ -93,7 +93,7 @@ class CreateForm extends Component {
                         ) : ''
                     }
 
-                    <div className="col-md-6">
+                    <div className="col col-md-6">
                         {
                             this.props.errors.title ? (
                                 <div className="error-box">
@@ -194,7 +194,7 @@ class CreateForm extends Component {
                             />
                         </div>
                     </div>
-                    <div className="col-md-6">
+                    <div className="col col-md-6">
                         <div className="form-control">
                             <div className="icon-form">
                                 <span className="icon">

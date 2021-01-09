@@ -25,6 +25,8 @@ class Header extends Component {
     render() {
         const { isNavigationOpend } = this.state
 
+        document.body.style.overflow = isNavigationOpend ? 'hidden' : 'auto'
+
         return (
             <header className="site-header">
                 <div className="mobile-nav">
@@ -39,7 +41,7 @@ class Header extends Component {
                 {
                     isNavigationOpend ? (
                         <div className="nav-background" onClick={this.toggleNavigation}></div>
-                    ) : ""
+                    ) : ''
                 }
 
                 <nav className={`nav ${isNavigationOpend ? 'opened' : ''}`}>

@@ -34,7 +34,7 @@ class Home extends Component {
                 <Title title="Quiz List" />
 
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col col-md-8">
                         <div className="card">
                             <header className="card__header">Most Popular Quizzes</header>
                             <section className="card__body">
@@ -45,7 +45,7 @@ class Home extends Component {
                             </footer>
                         </div>
                     </div>
-                    <div className="col-md-4 section-category-list">
+                    <div className="col col-md-4 card-col">
                         <TitleSearchForm />
                         <Ad />
                         <SectionSearch />
