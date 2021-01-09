@@ -74,7 +74,6 @@
                 width: auto;
                 border-left: 2px solid set-text-color(set-text-color($primary-color));
                 position: relative;
-                @include transition-ease;
 
                 &:first-child {
                     border: none;
@@ -114,8 +113,8 @@
                 font-weight: 600;
                 display: block;
                 background-color: transparent !important;
-                @include transition-ease;
                 opacity: 0.8;
+                transition: opacity, transform .3s ease-in;
 
                 &:hover {
                     opacity: 1;

@@ -15,12 +15,7 @@ class Header extends Component {
         this.toggleNavigation = this.toggleNavigation.bind(this)
     }
 
-    toggleNavigation = () => {
-        this.setState({
-            ...this.state,
-            isNavigationOpend: !this.state.isNavigationOpend,
-        })
-    }
+    toggleNavigation = () => this.setState({ isNavigationOpend: !this.state.isNavigationOpend })
 
     render() {
         const { isNavigationOpend } = this.state

@@ -29,7 +29,7 @@
         color: set-text-color($surface-color);
         font-weight: 600;
         font-size: 1.18rem;
-        @include transition-ease;
+        transition: color .2s ease-in-out;
 
         &:hover {
             color: $primary-color;

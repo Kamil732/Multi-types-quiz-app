@@ -7,9 +7,8 @@
     border-radius: 6px;
     display: block;
     cursor: pointer;
-
+    transition: transform .3s ease-in;
     @include shadow-sm;
-    @include transition-ease;
 
     &__submit {
         width: 50%;
@@ -41,7 +40,6 @@
     width: 20px;
     margin-right: 1rem;
     cursor: pointer;
-    @include transition-ease;
 
     &__burger {
         $burger-color: set-text-color(set-text-color($primary-color));
@@ -53,7 +51,6 @@
         height: 3px;
         border-radius: 10px;
         background-color: $burger-color;
-        @include transition-ease;
 
         &::before {
             content: '';
@@ -64,7 +61,6 @@
             height: 3px;
             border-radius: 10px;
             background-color: $burger-color;
-            @include transition-ease;
         }
 
         &::after {
@@ -76,27 +72,7 @@
             height: 3px;
             border-radius: 10px;
             background-color: $burger-color;
-            @include transition-ease;
         }
-
-        // &.opened {
-        //     $burger-color-opend: set-text-color($primary-color);
-
-        //     transform: rotate(720deg);
-        //     background: transparent;
-
-        //     &::before {
-        //         width: 28px;
-        //         transform: rotate(45deg) translate(5px, 8px);
-        //         background-color: $burger-color-opend;
-        //     }
-
-        //     &::after {
-        //         width: 28px;
-        //         transform: rotate(-45deg) translate(3px, -7px);
-        //         background-color: $burger-color-opend;
-        //     }
-        // }
     }
 }
 
@@ -107,7 +83,6 @@ select.select-btn {
         content: "";
         width: 0.8em;
         height: 0.5em;
-        background-color: var(--select-arrow);
         clip-path: polygon(100% 0%, 0 0%, 50% 100%);
     }
 
