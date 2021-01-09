@@ -44,6 +44,7 @@ class Home extends Component {
                                 <Pagination pageCount={this.props.quizzes.pageCount} />
                             </footer>
                         </div>
+                        <Ad />
                     </div>
                     <div className="col col-md-4 card-col">
                         <TitleSearchForm />

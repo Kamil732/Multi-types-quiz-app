@@ -1,19 +1,16 @@
 import React, { Component } from 'react';
 
 class Ad extends Component {
-    componentDidMount () {
-        (window.adsbygoogle = window.adsbygoogle || []).push({})
-    }
+    // componentDidMount () {
+    //     (window.adsbygoogle = window.adsbygoogle || []).push({})
+    // }
 
     render () {
+        const image_url = 'https://fakeimg.pl/250x100/'
+
         return (
             <div className='ad'>
-                <ins className='adsbygoogle'
-                    style={{ display: 'block' }}
-                    data-ad-client='ca-pub-xxxxxxxxxx'
-                    data-ad-slot='xxxxxxxxxx'
-                    data-ad-format='auto'
-                />
+                <img src={image_url} alt="" className="ad__img" />
             </div>
         );
     }
