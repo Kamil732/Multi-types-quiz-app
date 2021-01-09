@@ -24,12 +24,12 @@ export class Detail extends Component {
 
     async componentDidMount() {
         const params = {
-            author_username: this.props.match.params.author_username,
-            slug: this.props.match.params.slug,
+            author_slug: this.props.match.params.author_slug,
+            quiz_slug: this.props.match.params.quiz_slug,
         }
 
         try {
-            const quiz = await axios.get(`http://192.168.1.31:8000/api/quizzes/${params.author_username}/${params.slug}/`)
+            const quiz = await axios.get(`http://192.168.1.31:8000/api/quizzes/${params.author_slug}/${params.quiz_slug}/`)
 
             this.setState({
                 loading: false,
