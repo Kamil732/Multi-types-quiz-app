@@ -1,35 +1,25 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
 
 export class Detail extends Component {
-    static propTypes = {
-        match: PropTypes.shape({
-            params: PropTypes.shape({
-                author_username: PropTypes.string.isRequired,
-                slug: PropTypes.string.isRequired,
-            })
-        }),
-        location: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired,
-    }
+    constructor(props) {
+        super(props)
 
-    state = {
-        loading: true,
-        quiz: {},
-    }
-
-    async componentDidMount() {
-        const params = {
-            author_slug: this.props.match.params.author_slug,
-            quiz_slug: this.props.match.params.quiz_slug,
+        this.state = {
+            loading: true,
+            quiz: {},
         }
 
+        this.getQuizData = this.getQuizData.bind(this)
+    }
+
+    async getQuizData() {
+        const { author_slug, quiz_slug } = this.props.match.params
         try {
-            const quiz = await axios.get(`http://192.168.1.31:8000/api/quizzes/${params.author_slug}/${params.quiz_slug}/`)
+            const quiz = await axios.get(`http://192.168.1.31:8000/api/quizzes/${author_slug}/${quiz_slug}/`)
 
             this.setState({
                 loading: false,
@@ -38,6 +28,14 @@ export class Detail extends Component {
         } catch (err) {
             throw Error(err)
         }
+    }
+
+    componentDidMount = () => this.getQuizData()
+
+    componentDidUpdate(prevProps, _) {
+        if (prevProps.match.params.author_slug !== this.props.match.params.author_slug ||
+            prevProps.match.params.quiz_slug !== this.props.match.params.quiz_slug)
+            this.getQuizData()
     }
 
     render() {
