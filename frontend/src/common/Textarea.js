@@ -14,7 +14,7 @@ class Textarea extends Component {
 
     onMouseMove(e) {
         if (this.resize === true)
-            this.textarea.current.style.height = this.textarea.current.clientHeight + e.clientY - this.grippie.current.getBoundingClientRect().top + -30 + 'px'
+            this.textarea.current.style.height = this.textarea.current.clientHeight + e.clientY - this.grippie.current.getBoundingClientRect().top + 'px'
     }
 
     onMouseUp() {
