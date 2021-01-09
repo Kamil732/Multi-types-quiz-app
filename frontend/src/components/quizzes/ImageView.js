@@ -14,7 +14,7 @@ class ImageView extends Component {
         super(props)
 
         this.state = {
-            loading: null,
+            loading: true,
             image_url: '',
             success: null,
         }
@@ -22,7 +22,7 @@ class ImageView extends Component {
         this.setImageUrl = debounce(this.setImageUrl.bind(this), 500)
     }
 
-    setImageUrl() {
+    async setImageUrl() {
         this.setState({ loading: true })
         const { image_url } = this.props
 
@@ -36,12 +36,21 @@ class ImageView extends Component {
 
         const body = JSON.stringify({ image_url })
 
-        axios.post('http://192.168.1.31:8000/api/image-url-validation/', body, config)
-            .then(res => this.setState({
+        try {
+            const res = await axios.post('http://192.168.1.31:8000/api/image-url-validation/', body, config)
+
+            this.setState({
                 loading: false,
-                image_url: res.data['image_url'],
-                success: res.data['success'],
-            }))
+                image_url: res.data.image_url,
+                success: res.data.success,
+            })
+        } catch (err) {
+            this.setState({
+                loading: false,
+                image_url: '',
+                success: false,
+            })
+        }
     }
 
     componentDidMount = () => this.setImageUrl()
