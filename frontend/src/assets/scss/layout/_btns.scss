@@ -10,6 +10,19 @@
     transition: transform .3s ease-in;
     @include shadow-sm;
 
+    &__edit {
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        margin: 0 15px;
+        color: $primary-color;
+
+        &:hover, &:focus {
+            color: darken($primary-color, 20%)
+        }
+    }
+
     &__submit {
         width: 50%;
         margin: 0 auto;

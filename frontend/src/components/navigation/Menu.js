@@ -11,6 +11,7 @@ class Menu extends Component {
     static propTypes = {
         isNavigationOpened: PropTypes.bool,
         username: PropTypes.string,
+        slug: PropTypes.string,
         loading: PropTypes.bool,
         logout: PropTypes.func.isRequired,
     }
@@ -24,7 +25,7 @@ class Menu extends Component {
                 <ActiveTag to={['/quizzes/create']} tag="li" className="menu-nav__item">
                     <Link to="/quizzes/create" className="menu-nav__link" onClick={this.props.closeNavigation}>Create Quiz</Link>
                 </ActiveTag>
-                <ActiveTag to={['/my-profile', '/my-quizzes']} tag="li" className="menu-nav__item dropdown">
+                <ActiveTag to={[`/profile/${this.props.slug}`, '/my-quizzes']} tag="li" className="menu-nav__item dropdown">
                     <button className="menu-nav__link dropdown__btn">
                         <span className="dropdown__btn__icon">
                             <FaUserAlt />
@@ -33,7 +34,7 @@ class Menu extends Component {
                     </button>
 
                     <div className="dropdown__menu">
-                        <ActiveTag to={['/my-profile']} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>My Profile</ActiveTag>
+                        <ActiveTag to={[`/profile/${this.props.slug}`]} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>My Profile</ActiveTag>
                         <ActiveTag to={['/my-quizzes']} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>My Quizzes</ActiveTag>
                         <hr style={{ marginTop: '10px' }} />
                         <button className="dropdown__menu__link btn btn__contrast" onClick={() => { this.props.logout(); this.props.closeNavigation() } }>Logout</button>
@@ -61,6 +62,7 @@ class Menu extends Component {
 
 const mapStateToProps = state => ({
     username: state.auth.user.username,
+    slug: state.auth.user.slug,
     loading: state.auth.loading,
 })
 

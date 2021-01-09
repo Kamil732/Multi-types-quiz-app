@@ -34,7 +34,7 @@ class List extends Component {
                             </span>
                         </header>
                         <aside>
-                            <Link to={`quizzes/${quiz.author_slug}/${quiz.slug}`} className="quiz-card__link">
+                            <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`} className="quiz-card__link">
                                 <TextTruncate
                                     text={quiz.title}
                                     line={2}
@@ -51,7 +51,7 @@ class List extends Component {
                         </aside>
                         <footer>
                             <p className="text-darken">
-                                <Link to={`users/${quiz.author_slug}`}>{quiz.author}</Link>&ensp;&bull;&ensp;
+                                <Link to={`/profile/${quiz.author_slug}`}>{quiz.author}</Link>&ensp;&bull;&ensp;
                                 <span>Solved {quiz.solved_times} time{quiz.solved_times !== 1 ? 's' : ''}</span>
                             </p>
                         </footer>
