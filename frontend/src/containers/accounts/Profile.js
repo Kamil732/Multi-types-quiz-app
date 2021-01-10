@@ -8,6 +8,7 @@ import Ad from '../../components/Ad'
 import { withRouter } from 'react-router-dom'
 import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
+import NotFound from '../errors/NotFound'
 
 class Profile extends Component {
     static propTypes = {
@@ -48,7 +49,11 @@ class Profile extends Component {
                         data: profile.data,
                     })
                 } catch (err) {
-                    console.log(err)
+                    this.setState({
+                        loading: false,
+                        isOwner: false,
+                        data: {},
+                    })
                 }
             }
         }
@@ -64,7 +69,11 @@ class Profile extends Component {
     render() {
         const { loading, isOwner, data } = this.state
 
-        if (loading) return <CircleLoader />
+        if (loading === true)
+            return <CircleLoader />
+        else if (Object.keys(data).length === 0)
+            return <NotFound />
+
 
         return (
             <>
@@ -91,7 +100,6 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
-    // userSlug: state.auth.user.slug,
     userLoading: state.auth.loading,
     user: state.auth.user,
 })

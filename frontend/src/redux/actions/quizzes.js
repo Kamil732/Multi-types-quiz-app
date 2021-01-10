@@ -14,7 +14,6 @@ import getAccessToken from '../../helpers/getAccessToken'
 export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
     dispatch({ type: QUIZZES_LOADING })
 
-    // config['headers'] = Object.assign(config.headers, extraConfig)
     const config = getAccessToken(getState)
 
     try {

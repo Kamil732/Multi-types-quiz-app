@@ -1,6 +1,8 @@
 import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import NotFound from '../containers/errors/NotFound'
+
 import Home from '../containers/quizzes/Home'
 import { default as CreateQuiz } from '../containers/quizzes/Create'
 import { default as QuizDetail } from '../containers/quizzes/Detail'
@@ -22,6 +24,8 @@ function Routes() {
                 <Route exact path="/register" component={() => <Auth type="register" />} />
                 <Route exact path="/profile/:profile_slug" component={Profile} />
                 <PrivateRoute exact path="/my-quizzes" component={MyQuizzes} />
+
+                <Route path="*" component={NotFound} />
             </Switch>
 		</section>
     )
