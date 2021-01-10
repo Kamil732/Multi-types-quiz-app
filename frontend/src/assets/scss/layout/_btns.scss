@@ -7,20 +7,14 @@
     border-radius: 6px;
     display: block;
     cursor: pointer;
-    transition: transform .3s ease-in;
+    transition: all .3s ease-in;
     @include shadow-sm;
 
     &__edit {
-        background: transparent;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        margin: 0 15px;
-        color: $primary-color;
-
-        &:hover, &:focus {
-            color: darken($primary-color, 20%)
-        }
+        background: $primary-color;
+        margin: 10px auto;
+        padding: 0 auto !important;
+        color: set-text-color(set-text-color($primary-color));
     }
 
     &__submit {

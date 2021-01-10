@@ -15,21 +15,8 @@
     align-items: center;
     height: 100%;
 
-    &__content {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 100%;
-        width: 100%;
-    }
-
     &__img {
         margin-bottom: 20px;
-
-        &__edit:hover {
-            filter: brightness(70%);
-            cursor: pointer;
-        }
     }
 
     &__username {
