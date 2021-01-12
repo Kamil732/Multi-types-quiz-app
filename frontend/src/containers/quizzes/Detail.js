@@ -3,6 +3,7 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
+import NotFound from '../errors/NotFound'
 
 export class Detail extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ export class Detail extends Component {
 
         this.state = {
             loading: true,
-            quiz: {},
+            data: {},
         }
 
         this.getQuizData = this.getQuizData.bind(this)
@@ -19,14 +20,17 @@ export class Detail extends Component {
     async getQuizData() {
         const { author_slug, quiz_slug } = this.props.match.params
         try {
-            const quiz = await axios.get(`http://192.168.1.31:8000/api/quizzes/${author_slug}/${quiz_slug}/`)
+            const res = await axios.get(`http://192.168.1.31:8000/api/quizzes/${author_slug}/${quiz_slug}/`)
 
             this.setState({
                 loading: false,
-                quiz: quiz.data,
+                data: res.data,
             })
         } catch (err) {
-            throw Error(err)
+            this.setState({
+                loading: false,
+                data: [],
+            })
         }
     }
 
@@ -39,15 +43,18 @@ export class Detail extends Component {
     }
 
     render() {
-        const { loading, quiz } = this.state
+        const { loading, data } = this.state
 
-        if (loading) return <CircleLoader />
+        if (loading)
+            return <CircleLoader />
+        else if (Object.keys(data).length === 0)
+            return <NotFound />
 
         return (
             <>
-                <Title title={`Quiz Detail ${quiz.title}`} />
+                <Title title={`Quiz Detail ${data.title}`} />
                 <div>
-                    {quiz.title}
+                    {data.title}
                 </div>
             </>
         )
