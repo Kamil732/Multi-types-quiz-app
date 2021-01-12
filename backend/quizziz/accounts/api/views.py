@@ -27,7 +27,7 @@ class AccountAPI(generics.RetrieveAPIView):
     queryset = Account.objects.all()
 
 
-class CurrentAccountAPI(generics.RetrieveAPIView):
+class CurrentAccountAPI(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AccountSerializer
     permission_classes = (permissions.IsAuthenticated,)
 

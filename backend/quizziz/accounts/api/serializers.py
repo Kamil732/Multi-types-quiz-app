@@ -13,15 +13,10 @@ class AccountSerializer(serializers.ModelSerializer):
         return Quiz.objects.filter(author__email=obj.email).count()
 
     def get_quizzes_solves(self, obj):
-        quizzes_solves = Quiz.objects.filter(
+        quizzes_solves_list = Quiz.objects.filter(
             author__email=obj.email).values_list('solved_times', flat=True)
 
-        return sum(quizzes_solves)
-
-    def validate_picture(self, value):
-        if not(value):
-            return Account.DEFAULT_PROFILE_PICTURE
-        return value
+        return sum(quizzes_solves_list)
 
     class Meta:
         model = Account
