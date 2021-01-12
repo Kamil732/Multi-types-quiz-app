@@ -10,6 +10,7 @@ import {
 
 import { addError } from './errors'
 import getAccessToken from '../../helpers/getAccessToken'
+import { refreshToken } from './auth'
 
 export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
     dispatch({ type: QUIZZES_LOADING })
@@ -25,9 +26,13 @@ export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
             payload: res.data,
         })
     } catch (err) {
-        dispatch({
-            type: QUIZZES_ERROR,
-        })
+        await dispatch(refreshToken())
+        if (getState().auth.token)
+            await dispatch(getQuizzes())
+        else
+            dispatch({
+                type: QUIZZES_ERROR,
+            })
     }
 }
 

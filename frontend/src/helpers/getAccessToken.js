@@ -12,9 +12,8 @@ const tokenConfig = (getState) => {
     }
 
     // If token, add to headers config
-    if (token) {
+    if (token)
         config.headers['Authorization'] = `Bearer ${token}`
-    }
 
     return config
 }

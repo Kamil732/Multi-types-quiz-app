@@ -14,6 +14,26 @@ import {
 import { addError } from './errors'
 import getAccessToken from '../../helpers/getAccessToken'
 
+export const refreshToken = () => async (dispatch, getState) => {
+    const config = getAccessToken(getState)
+
+    try {
+        const refresh = getState().auth.refresh
+        const body = refresh ? JSON.stringify({ refresh }) : {}
+
+        const res = await axios.post('http://192.168.1.31:8000/api/accounts/login/refresh/', body, config)
+
+        dispatch({
+            type: TOKEN_REFRESH,
+            payload: res.data
+        })
+    } catch (err) {
+        dispatch({
+            type: AUTH_ERROR,
+        })
+    }
+}
+
 export const loadUser = () => async (dispatch, getState) => {
     // User Loading
     dispatch({ type: USER_LOADING });
@@ -21,7 +41,6 @@ export const loadUser = () => async (dispatch, getState) => {
     const config = getAccessToken(getState)
 
     try {
-
         const res = await axios.get('http://192.168.1.31:8000/api/accounts/current/', config)
 
         dispatch({
@@ -29,22 +48,9 @@ export const loadUser = () => async (dispatch, getState) => {
             payload: res.data,
         })
     } catch (err) {
-        try {
-            const refresh = getState().auth.refresh
-            const body = refresh ? JSON.stringify({ refresh }) : {}
-
-            const res = await axios.post('http://192.168.1.31:8000/api/accounts/login/refresh/', body, config)
-
-            dispatch({
-                type: TOKEN_REFRESH,
-                payload: res.data
-            })
-            dispatch(loadUser())
-        } catch (err) {
-            dispatch({
-                type: AUTH_ERROR,
-            })
-        }
+        await dispatch(refreshToken())
+        if (getState().auth.token)
+            await dispatch(loadUser())
     }
 }
 
