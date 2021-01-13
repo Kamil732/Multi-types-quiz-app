@@ -24,7 +24,6 @@ class ImageValidatorSerailizer(serializers.Serializer):
 
     def validate(self, data):
         image_url = data.get('image_url')
-        data['success'] = False
 
         if not(image_url.strip()):
             data['success'] = True
