@@ -10,10 +10,17 @@ import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import NotFound from '../errors/NotFound'
 
+import { updateUserData } from '../../redux/actions/auth'
+import { removeError, clearErrors } from '../../redux/actions/errors'
+
 class Profile extends Component {
     static propTypes = {
         userLoading: PropTypes.bool,
         user: PropTypes.object,
+        errors: PropTypes.object,
+        removeError: PropTypes.func.isRequired,
+        clearErrors: PropTypes.func.isRequired,
+        updateUserData: PropTypes.func.isRequired,
     }
 
     constructor(props) {
@@ -61,6 +68,8 @@ class Profile extends Component {
 
     componentDidMount = () => this.getProfileData()
 
+    componentWillUnmount = () => this.props.clearErrors()
+
     componentDidUpdate(prevProps, _) {
         if (prevProps.userLoading !== this.props.userLoading || prevProps.match.params.profile_slug !== this.props.match.params.profile_slug)
             this.getProfileData()
@@ -88,6 +97,9 @@ class Profile extends Component {
                             bio={data.bio}
                             quizzes_count={data.quizzes_count}
                             quizzes_solves={data.quizzes_solves}
+                            errors={this.props.errors}
+                            removeError={this.props.removeError}
+                            updateUserData={this.props.updateUserData}
                         />
                     </div>
                     <div className="col col-sm-4">
@@ -102,10 +114,13 @@ class Profile extends Component {
 const mapStateToProps = state => ({
     userLoading: state.auth.loading,
     user: state.auth.user,
+    errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
-
+    updateUserData,
+    removeError,
+    clearErrors,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Profile))

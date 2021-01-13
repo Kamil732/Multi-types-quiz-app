@@ -9,6 +9,8 @@ import {
     USER_LOADED,
     TOKEN_REFRESH,
     AUTH_ERROR,
+    USER_UPDATE,
+    USER_UPDATE_ERROR,
 } from './types'
 
 import { addError } from './errors'
@@ -106,6 +108,26 @@ export const signUp = ({ email, username, password, password2 }) => async dispat
 
         dispatch({
             type: SIGNUP_FAIL,
+        })
+    }
+}
+
+export const updateUserData = data => async (dispatch, getState) => {
+    try {
+        const config = getAccessToken(getState)
+        const body = JSON.stringify(data)
+
+        const res = await axios.patch(`${process.env.REACT_APP_API_URL}/accounts/current/`, body, config)
+
+        dispatch({
+            type: USER_UPDATE,
+            payload: res.data
+        })
+    } catch (err) {
+        if (err.response) dispatch(addError(err.response.data, err.response.status))
+
+        dispatch({
+            type: USER_UPDATE_ERROR,
         })
     }
 }
