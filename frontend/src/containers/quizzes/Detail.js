@@ -20,7 +20,7 @@ export class Detail extends Component {
     async getQuizData() {
         const { author_slug, quiz_slug } = this.props.match.params
         try {
-            const res = await axios.get(`http://192.168.1.31:8000/api/quizzes/${author_slug}/${quiz_slug}/`)
+            const res = await axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
 
             this.setState({
                 loading: false,

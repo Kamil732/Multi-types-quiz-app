@@ -21,7 +21,7 @@ export const refreshToken = () => async (dispatch, getState) => {
         const refresh = getState().auth.refresh
         const body = refresh ? JSON.stringify({ refresh }) : {}
 
-        const res = await axios.post('http://192.168.1.31:8000/api/accounts/login/refresh/', body, config)
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/accounts/login/refresh/`, body, config)
 
         dispatch({
             type: TOKEN_REFRESH,
@@ -41,7 +41,7 @@ export const loadUser = () => async (dispatch, getState) => {
     const config = getAccessToken(getState)
 
     try {
-        const res = await axios.get('http://192.168.1.31:8000/api/accounts/current/', config)
+        const res = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/current/`, config)
 
         dispatch({
             type: USER_LOADED,
@@ -66,7 +66,7 @@ export const login = (email, password) => async dispatch => {
     };
 
     try {
-        const res = await axios.post('http://192.168.1.31:8000/api/accounts/login/', body, config)
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/accounts/login/`, body, config)
 
         dispatch({
             type: LOGIN_SUCCESS,
@@ -94,7 +94,7 @@ export const signUp = ({ email, username, password, password2 }) => async dispat
     };
 
     try {
-        await axios.post('http://192.168.1.31:8000/api/accounts/signup/', body, config)
+        await axios.post(`${process.env.REACT_APP_API_URL}/accounts/signup/`, body, config)
 
         dispatch({
             type: SIGNUP_SUCCESS,

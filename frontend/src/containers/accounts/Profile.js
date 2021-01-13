@@ -41,7 +41,7 @@ class Profile extends Component {
                 })
             else {
                 try {
-                    const profile = await axios.get(`http://192.168.1.31:8000/api/accounts/account/${profile_slug}/`)
+                    const profile = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/account/${profile_slug}/`)
 
                     this.setState({
                         loading: false,

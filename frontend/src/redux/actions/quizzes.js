@@ -18,7 +18,7 @@ export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
     const config = getAccessToken(getState)
 
     try {
-        const URL = url ? url + search : `http://192.168.1.31:8000/api/quizzes/${search}`
+        const URL = url ? url + search : `${process.env.REACT_APP_API_URL}/quizzes/${search}`
         const res = await axios.get(URL, config)
 
         dispatch({
@@ -40,8 +40,8 @@ export const getCategorySection = () => async dispatch => {
     dispatch({ type: CATEGORY_SECTION_LOADING })
 
     try {
-        const categories = await axios.get('http://192.168.1.31:8000/api/categories/')
-        const sections = await axios.get('http://192.168.1.31:8000/api/sections/')
+        const categories = await axios.get(`${process.env.REACT_APP_API_URL}/categories/`)
+        const sections = await axios.get(`${process.env.REACT_APP_API_URL}/sections/`)
 
         const res = await Promise.all([
             sections.data,
@@ -70,7 +70,7 @@ export const createQuiz = ({ title, description, section, category, image_url })
 
         const config = getAccessToken(getState)
 
-        await axios.post('http://192.168.1.31:8000/api/quizzes/', body, config)
+        await axios.post(`${process.env.REACT_APP_API_URL}/quizzes/`, body, config)
     } catch (err) {
         if (err.response) dispatch(addError(err.response.data, err.response.status))
     }

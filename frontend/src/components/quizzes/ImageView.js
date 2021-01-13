@@ -37,7 +37,7 @@ class ImageView extends Component {
         const body = JSON.stringify({ image_url })
 
         try {
-            const res = await axios.post('http://192.168.1.31:8000/api/image-url-validation/', body, config)
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/image-url-validation/`, body, config)
 
             this.setState({
                 loading: false,
