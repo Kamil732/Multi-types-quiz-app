@@ -12,6 +12,9 @@ export const LOGIN_FAIL = 'LOGIN_FAIL'
 
 export const LOGOUT = 'LOGOUT'
 
+export const USER_UPDATE = 'USER_UPDATE'
+export const USER_UPDATE_ERROR = 'USER_UPDATE_ERROR'
+
 // Quizzes
 export const QUIZZES_ERROR = 'QUIZZES_ERROR'
 export const QUIZZES_LOADING = 'QUIZZES_LOADING'
@@ -23,4 +26,5 @@ export const GET_CATEGORY_SECTION = 'GET_CATEGORY_SECTION'
 
 // Errors
 export const ADD_ERROR = 'ADD_ERROR'
+export const REMOVE_ERROR = 'REMOVE_ERROR'
 export const CLEAR_ERRORS = 'CLEAR_ERRORS'
