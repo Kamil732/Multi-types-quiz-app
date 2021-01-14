@@ -12,13 +12,13 @@ import { addError } from './errors'
 import getAccessToken from '../../helpers/getAccessToken'
 import { refreshToken } from './auth'
 
-export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
+export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quizzes/`) => async (dispatch, getState) => {
     dispatch({ type: QUIZZES_LOADING })
 
     const config = getAccessToken(getState)
 
     try {
-        const URL = url ? url + search : `${process.env.REACT_APP_API_URL}/quizzes/${search}`
+        const URL = url + search
         const res = await axios.get(URL, config)
 
         dispatch({
@@ -28,7 +28,7 @@ export const getQuizzes = (search='', url='') => async (dispatch, getState) => {
     } catch (err) {
         await dispatch(refreshToken())
         if (getState().auth.token)
-            await dispatch(getQuizzes())
+            await dispatch(getQuizzes(search, url))
         else
             dispatch({
                 type: QUIZZES_ERROR,
