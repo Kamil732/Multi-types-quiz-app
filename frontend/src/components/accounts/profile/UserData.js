@@ -62,8 +62,15 @@ class UserData extends Component {
                     <div className="card__header">{ isOwner ? 'My Profile' : `${username}'s Profile` }</div>
                     <div className="card__body">
                         <div className="profile">
-                            <div className="profile__img">
-                                <img src={picture_url} alt={username} className="img-rounded" />
+                            <div className={`profile__img ${isOwner ? 'owner' : ''}`}>
+                                <img src={picture_url} alt={username} draggable="false" className="img-rounded" />
+                                {
+                                    isOwner ? (
+                                        <button className="btn__img">
+                                            Upload
+                                        </button>
+                                    ) : null
+                                }
                             </div>
 
                             <div className="profile__content">

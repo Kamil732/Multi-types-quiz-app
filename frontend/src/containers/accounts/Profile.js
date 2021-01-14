@@ -41,7 +41,6 @@ class Profile extends Component {
         const { profile_slug } = this.props.match.params
 
         if (userLoading === false) {
-            console.log(profile_slug === user.slug)
             if (profile_slug === user.slug)
                 this.setState({
                     loading: false,
