@@ -124,11 +124,18 @@ export const updateUserData = data => async (dispatch, getState) => {
             payload: res.data
         })
     } catch (err) {
-        if (err.response) dispatch(addError(err.response.data, err.response.status))
+        if (err.response.status === 401) {
+            await dispatch(refreshToken())
+            if (getState().auth.token)
+                await dispatch(updateUserData(data))
+        } else {
+            if (err.response)
+                dispatch(addError(err.response.data, err.response.status))
 
-        dispatch({
-            type: USER_UPDATE_ERROR,
-        })
+            dispatch({
+                type: USER_UPDATE_ERROR,
+            })
+        }
     }
 }
 

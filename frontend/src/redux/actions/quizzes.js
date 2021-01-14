@@ -26,10 +26,11 @@ export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quiz
             payload: res.data,
         })
     } catch (err) {
-        await dispatch(refreshToken())
-        if (getState().auth.token)
-            await dispatch(getQuizzes(search, url))
-        else
+        if (err.response.status === 401) {
+            await dispatch(refreshToken())
+            if (getState().auth.token)
+                await dispatch(getQuizzes(search, url))
+        } else
             dispatch({
                 type: QUIZZES_ERROR,
             })
@@ -63,8 +64,6 @@ export const getCategorySection = () => async dispatch => {
 }
 
 export const createQuiz = ({ title, description, section, category, image_url }) => async (dispatch, getState) => {
-    // dispatch(clearErrors())
-
     try {
         const body = JSON.stringify({ title, description, section, category, image_url })
 
@@ -72,6 +71,12 @@ export const createQuiz = ({ title, description, section, category, image_url })
 
         await axios.post(`${process.env.REACT_APP_API_URL}/quizzes/`, body, config)
     } catch (err) {
-        if (err.response) dispatch(addError(err.response.data, err.response.status))
+        if (err.response.status === 401) {
+            await dispatch(refreshToken())
+            if (getState().auth.token)
+                await dispatch(createQuiz({ title, description, section, category, image_url }))
+        } else
+            if (err.response)
+                dispatch(addError(err.response.data, err.response.status))
     }
 }
