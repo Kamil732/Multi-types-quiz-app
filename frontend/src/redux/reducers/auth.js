@@ -68,8 +68,6 @@ export default function(state=initialState, action) {
             return {
                 ...state,
                 token: action.payload.access,
-                loading: false,
-                isAuthenticated: true,
             }
         case USER_UPDATE:
             return {

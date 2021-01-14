@@ -35,11 +35,13 @@ class Profile extends Component {
         this.getProfileData = this.getProfileData.bind(this)
     }
 
-    async getProfileData() {
+    getProfileData() {
+        this.setState({ loading: true })
         const { userLoading, user } = this.props
         const { profile_slug } = this.props.match.params
 
         if (userLoading === false) {
+            console.log(profile_slug === user.slug)
             if (profile_slug === user.slug)
                 this.setState({
                     loading: false,
@@ -47,21 +49,21 @@ class Profile extends Component {
                     data: user,
                 })
             else {
-                try {
-                    const profile = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/account/${profile_slug}/`)
-
-                    this.setState({
-                        loading: false,
-                        isOwner: false,
-                        data: profile.data,
-                    })
-                } catch (err) {
-                    this.setState({
-                        loading: false,
-                        isOwner: false,
-                        data: {},
-                    })
-                }
+                axios.get(`${process.env.REACT_APP_API_URL}/accounts/account/${profile_slug}/`)
+                    .then(res =>
+                        this.setState({
+                            loading: false,
+                            isOwner: false,
+                            data: res.data,
+                        })
+                    )
+                    .catch(err =>
+                        this.setState({
+                            loading: false,
+                            isOwner: false,
+                            data: {},
+                        })
+                    )
             }
         }
     }
@@ -82,7 +84,6 @@ class Profile extends Component {
             return <CircleLoader />
         else if (Object.keys(data).length === 0)
             return <NotFound />
-
 
         return (
             <>
