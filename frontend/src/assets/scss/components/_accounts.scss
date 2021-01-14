@@ -16,7 +16,16 @@
     height: 100%;
 
     &__img {
+        position: relative;
         margin-bottom: 20px;
+
+        &.owner:hover .img-rounded {
+            filter: brightness(60%);
+        }
+
+        &.owner:hover .btn__img {
+            display: block;
+        }
     }
 
     &__username {

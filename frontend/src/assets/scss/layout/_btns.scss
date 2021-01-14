@@ -7,8 +7,16 @@
     border-radius: 6px;
     display: block;
     cursor: pointer;
-    transition: all .3s ease-in;
+    transition: transform, box-shadow .3s ease-in;
     @include shadow-sm;
+
+    &__img {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
     &__edit {
         background: $primary-color;
@@ -20,8 +28,6 @@
     &__submit {
         width: 50%;
         margin: 0 auto;
-        // background-color: $secondary-variant-color;
-        // color: set-text-color($secondary-variant-color);
     }
 
     &__contrast {
