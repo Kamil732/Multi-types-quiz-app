@@ -81,3 +81,16 @@ class TestAccounts(TestSetUp):
         }, format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
 
         self.assertEqual(res.status_code, 200)
+
+    def test_patch_account(self):
+        self.client.post(
+            self.register_url, self.register_data, format='json')
+        access_token = self.client.post(
+            self.login_url, self.login_data, format='json').data.get('access')
+
+        res = self.client.patch(self.my_profile_url, self.patch_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data.get('username'), self.patch_data['username'])
+        self.assertEqual(res.data.get('bio'), self.patch_data['bio'])

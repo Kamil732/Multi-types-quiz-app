@@ -31,6 +31,11 @@ class TestSetUp(APITestCase):
             'password': password,
         }
 
+        self.patch_data = {
+            'username': self.fake.email().split('@')[0],
+            'bio': username,
+        }
+
         return super(TestSetUp, self).setUp()
 
     def tearDown(self):
