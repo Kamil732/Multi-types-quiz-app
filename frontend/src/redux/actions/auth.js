@@ -112,10 +112,21 @@ export const signUp = ({ email, username, password, password2 }) => async dispat
     }
 }
 
-export const updateUserData = data => async (dispatch, getState) => {
+export const updateUserData = (data, isJSON=true) => async (dispatch, getState) => {
     try {
         const config = getAccessToken(getState)
-        const body = JSON.stringify(data)
+        let body
+
+        if (isJSON === true)
+            body = JSON.stringify(data)
+        else {
+            config['headers']['Content-Type'] = 'multipart/form-data'
+
+            body = new FormData()
+
+            for (const field in data)
+                body.append(field.toString(), data[field])
+        }
 
         const res = await axios.patch(`${process.env.REACT_APP_API_URL}/accounts/current/`, body, config)
 

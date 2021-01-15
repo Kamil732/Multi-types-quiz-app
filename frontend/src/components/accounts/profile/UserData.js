@@ -20,6 +20,8 @@ class UserData extends Component {
         super(props)
 
         this.state = {
+            picture: null,
+            picturePreview: this.props.picture_url,
             username: this.props.username,
             bio: this.props.bio,
             picture_edit_mode: false,
@@ -33,6 +35,13 @@ class UserData extends Component {
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
 
+    handleImageChange = e => {
+        this.setState({
+            picture: e.target.files[0],
+            picturePreview: URL.createObjectURL(e.target.files[0]),
+        })
+    }
+
     componentDidUpdate(prevProps, _) {
         if (prevProps.username !== this.props.username || prevProps.bio !== this.props.bio)
             this.setState({
@@ -43,18 +52,19 @@ class UserData extends Component {
 
     onSubmit = async (e, field) => {
         e.preventDefault()
-        const { username, bio } = this.state
+
+        console.log(this.state[field])
 
         this.props.removeError(field)
-        await this.props.updateUserData({ username, bio })
+        await this.props.updateUserData({ [field]: this.state[field] }, false)
 
         if (this.props.errors[field] === undefined)
             this.setState({ [`${field}_edit_mode`]: false })
     }
 
     render() {
-        const { isOwner, picture_url, quizzes_count, quizzes_solves, errors } = this.props
-        const { username, bio, username_edit_mode, bio_edit_mode } = this.state
+        const { isOwner, quizzes_count, quizzes_solves, errors } = this.props
+        const { picturePreview, username, bio, username_edit_mode, bio_edit_mode } = this.state
 
         return (
             <>
@@ -63,12 +73,32 @@ class UserData extends Component {
                     <div className="card__body">
                         <div className="profile">
                             <div className={`profile__img ${isOwner ? 'owner' : ''}`}>
-                                <img src={picture_url} alt={username} draggable="false" className="img-rounded" />
+                                <img src={picturePreview} alt={username} draggable="false" className="img-rounded" />
                                 {
                                     isOwner ? (
-                                        <button className="btn__img">
-                                            Upload
-                                        </button>
+                                        <form onSubmit={e => this.onSubmit(e, 'picture')}>
+                                            {
+                                                errors.picture ? (
+                                                    <div className="error-box">
+                                                        {
+                                                            errors.picture.map((error, index) => (
+                                                                <p className="error-text" key={index}>{error}</p>
+                                                            ))
+                                                        }
+                                                    </div>
+                                                ) : null
+                                            }
+
+                                            <input
+                                                type="file"
+                                                accept="image/png, image/jpeg"
+                                                className="btn btn__edit"
+                                                onChange={this.handleImageChange}
+                                            />
+                                            <button className="btn">
+                                                Save
+                                            </button>
+                                        </form>
                                     ) : null
                                 }
                             </div>
@@ -132,7 +162,7 @@ class UserData extends Component {
                                                     ) : null
                                                 }
                                                 <div className="form-control">
-                                                    <Textarea                                                    type="text"
+                                                    <Textarea
                                                         name="bio"
                                                         value={bio}
                                                         onChange={this.onChange}
