@@ -25,4 +25,3 @@
 [0112/180555.863:ERROR:file_io.cc(90)] ReadExactly: expected 36, observed 0
 [0112/223146.669:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)
 [0113/175146.886:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)
-[0114/155040.597:ERROR:directory_reader_win.cc(43)] FindFirstFile: System nie moze odnalezc okreslonej sciezki. (0x3)

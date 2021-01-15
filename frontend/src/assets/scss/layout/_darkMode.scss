@@ -95,6 +95,10 @@ body.dark-mode {
         background: $secondary-variant-color-dark-mode;
         color: set-text-color($secondary-variant-color-dark-mode);
 
+        &__edit {
+            color: $primary-color-dark-mode;
+        }
+
         &__contrast {
             background-color: $secondary-color-dark-mode;
             color: set-text-color($secondary-color-dark-mode);

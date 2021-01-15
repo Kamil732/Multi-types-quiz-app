@@ -25,7 +25,7 @@ class SectionCategorySearch extends Component {
 
     onClick = (key, value) => {
         window.scrollTo({ top: 0, behavior: `smooth` })
-        search(this.props, key, value)
+        setTimeout(search(this.props, key, value), 150)
     }
 
     render() {
