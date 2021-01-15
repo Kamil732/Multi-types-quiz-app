@@ -9,6 +9,8 @@ import {
     USER_LOADED,
     TOKEN_REFRESH,
     AUTH_ERROR,
+    USER_UPDATE,
+    USER_UPDATE_ERROR,
 } from './types'
 
 import { addError } from './errors'
@@ -107,6 +109,44 @@ export const signUp = ({ email, username, password, password2 }) => async dispat
         dispatch({
             type: SIGNUP_FAIL,
         })
+    }
+}
+
+export const updateUserData = (data, isJSON=true) => async (dispatch, getState) => {
+    try {
+        const config = getAccessToken(getState)
+        let body
+
+        if (isJSON === true)
+            body = JSON.stringify(data)
+        else {
+            config['headers']['Content-Type'] = 'multipart/form-data'
+
+            body = new FormData()
+
+            for (const field in data)
+                body.append(field.toString(), data[field])
+        }
+
+        const res = await axios.patch(`${process.env.REACT_APP_API_URL}/accounts/current/`, body, config)
+
+        dispatch({
+            type: USER_UPDATE,
+            payload: res.data
+        })
+    } catch (err) {
+        if (err.response.status === 401) {
+            await dispatch(refreshToken())
+            if (getState().auth.token)
+                await dispatch(updateUserData(data))
+        } else {
+            if (err.response)
+                dispatch(addError(err.response.data, err.response.status))
+
+            dispatch({
+                type: USER_UPDATE_ERROR,
+            })
+        }
     }
 }
 

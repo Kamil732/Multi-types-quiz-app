@@ -1,6 +1,7 @@
 import {
     ADD_ERROR,
-    CLEAR_ERRORS,
+    REMOVE_ERROR,
+    CLEAR_ERRORS
 } from './types'
 
 export const addError = (messages, status) => dispatch => {
@@ -10,6 +11,13 @@ export const addError = (messages, status) => dispatch => {
             messages,
             status,
         }
+    })
+}
+
+export const removeError = name => dispatch => {
+    dispatch({
+        type: REMOVE_ERROR,
+        payload: name,
     })
 }
 

@@ -8,7 +8,7 @@ import { RiImageEditFill } from 'react-icons/ri'
 
 import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
 import { clearErrors } from '../../redux/actions/errors'
-import ImageView from './ImageView'
+import ImageUrlPreview from './ImageUrlPreview'
 import Textarea from '../../common/Textarea'
 
 class CreateForm extends Component {
@@ -211,7 +211,7 @@ class CreateForm extends Component {
                                 />
                             </div>
                         </div>
-                        <ImageView image_url={image_url} />
+                        <ImageUrlPreview image_url={image_url} />
 
                         {
                             this.props.errors.image_url ? (

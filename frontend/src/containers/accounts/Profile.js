@@ -10,10 +10,17 @@ import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import NotFound from '../errors/NotFound'
 
+import { updateUserData } from '../../redux/actions/auth'
+import { removeError, clearErrors } from '../../redux/actions/errors'
+
 class Profile extends Component {
     static propTypes = {
         userLoading: PropTypes.bool,
         user: PropTypes.object,
+        errors: PropTypes.object,
+        removeError: PropTypes.func.isRequired,
+        clearErrors: PropTypes.func.isRequired,
+        updateUserData: PropTypes.func.isRequired,
     }
 
     constructor(props) {
@@ -28,7 +35,8 @@ class Profile extends Component {
         this.getProfileData = this.getProfileData.bind(this)
     }
 
-    async getProfileData() {
+    getProfileData() {
+        this.setState({ loading: true })
         const { userLoading, user } = this.props
         const { profile_slug } = this.props.match.params
 
@@ -40,26 +48,28 @@ class Profile extends Component {
                     data: user,
                 })
             else {
-                try {
-                    const profile = await axios.get(`${process.env.REACT_APP_API_URL}/accounts/account/${profile_slug}/`)
-
-                    this.setState({
-                        loading: false,
-                        isOwner: false,
-                        data: profile.data,
-                    })
-                } catch (err) {
-                    this.setState({
-                        loading: false,
-                        isOwner: false,
-                        data: {},
-                    })
-                }
+                axios.get(`${process.env.REACT_APP_API_URL}/accounts/account/${profile_slug}/`)
+                    .then(res =>
+                        this.setState({
+                            loading: false,
+                            isOwner: false,
+                            data: res.data,
+                        })
+                    )
+                    .catch(err =>
+                        this.setState({
+                            loading: false,
+                            isOwner: false,
+                            data: {},
+                        })
+                    )
             }
         }
     }
 
     componentDidMount = () => this.getProfileData()
+
+    componentWillUnmount = () => this.props.clearErrors()
 
     componentDidUpdate(prevProps, _) {
         if (prevProps.userLoading !== this.props.userLoading || prevProps.match.params.profile_slug !== this.props.match.params.profile_slug)
@@ -74,7 +84,6 @@ class Profile extends Component {
         else if (Object.keys(data).length === 0)
             return <NotFound />
 
-
         return (
             <>
                 <Title title={`${data.username} Profile`} />
@@ -88,6 +97,9 @@ class Profile extends Component {
                             bio={data.bio}
                             quizzes_count={data.quizzes_count}
                             quizzes_solves={data.quizzes_solves}
+                            errors={this.props.errors}
+                            removeError={this.props.removeError}
+                            updateUserData={this.props.updateUserData}
                         />
                     </div>
                     <div className="col col-sm-4">
@@ -102,10 +114,13 @@ class Profile extends Component {
 const mapStateToProps = state => ({
     userLoading: state.auth.loading,
     user: state.auth.user,
+    errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
-
+    updateUserData,
+    removeError,
+    clearErrors,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Profile))

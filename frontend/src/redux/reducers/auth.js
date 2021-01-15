@@ -8,6 +8,8 @@ import {
     USER_LOADING,
     AUTH_ERROR,
     TOKEN_REFRESH,
+    USER_UPDATE,
+    USER_UPDATE_ERROR,
 } from '../actions/types'
 
 const initialState = {
@@ -66,8 +68,14 @@ export default function(state=initialState, action) {
             return {
                 ...state,
                 token: action.payload.access,
-                loading: false,
-                isAuthenticated: true,
+            }
+        case USER_UPDATE:
+            return {
+                ...state,
+                user: {
+                    ...state.user,
+                    ...action.payload,
+                }
             }
         default:
             return state

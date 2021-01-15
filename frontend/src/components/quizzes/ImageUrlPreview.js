@@ -5,7 +5,7 @@ import SpinLoader from '../loaders/SpinLoader'
 
 import { debounce } from 'lodash';
 
-class ImageView extends Component {
+class ImageUrlPreview extends Component {
     static propTypes = {
         image_url: PropTypes.string.isRequired,
     }
@@ -94,4 +94,4 @@ class ImageView extends Component {
 }
 
 
-export default ImageView
+export default ImageUrlPreview
