@@ -5,7 +5,6 @@ const tokenConfig = (getState) => {
     // Headers
     const config = {
         headers: {
-            // 'Accept': 'application/json',
             'Content-Type': 'application/json',
             'Accept-Language': 'pl',
         }
