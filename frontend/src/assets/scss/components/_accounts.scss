@@ -1,10 +1,10 @@
 .img-rounded {
-    border-radius: 35%;
+    border-radius: 100%;
     padding: 0.3rem;
     border: 1px solid grey;
     background-color: $background-color;
-    max-height: 10rem;
-    width: auto;
+    height: 9rem;
+    width: 9rem;
 
     @include shadow-sm;
 }
