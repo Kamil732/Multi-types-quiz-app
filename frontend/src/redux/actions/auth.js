@@ -10,7 +10,7 @@ import {
     TOKEN_REFRESH,
     AUTH_ERROR,
     USER_UPDATE,
-    USER_UPDATE_ERROR,
+
 } from './types'
 
 import { addError } from './errors'
@@ -136,10 +136,6 @@ export const updateUserData = (data) => async (dispatch, getState) => {
         } else {
             if (err.response)
                 dispatch(addError(err.response.data, err.response.status))
-
-            dispatch({
-                type: USER_UPDATE_ERROR,
-            })
         }
     }
 }

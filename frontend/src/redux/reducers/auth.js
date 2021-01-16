@@ -9,7 +9,6 @@ import {
     AUTH_ERROR,
     TOKEN_REFRESH,
     USER_UPDATE,
-    USER_UPDATE_ERROR,
 } from '../actions/types'
 
 const initialState = {
