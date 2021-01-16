@@ -15,6 +15,7 @@ import { removeError, clearErrors } from '../../redux/actions/errors'
 
 class Profile extends Component {
     static propTypes = {
+        isAuthenticated: PropTypes.bool,
         userLoading: PropTypes.bool,
         user: PropTypes.object,
         errors: PropTypes.object,
@@ -37,6 +38,7 @@ class Profile extends Component {
 
     getProfileData() {
         this.setState({ loading: true })
+
         const { userLoading, user } = this.props
         const { profile_slug } = this.props.match.params
 
@@ -72,7 +74,8 @@ class Profile extends Component {
     componentWillUnmount = () => this.props.clearErrors()
 
     componentDidUpdate(prevProps, _) {
-        if (prevProps.userLoading !== this.props.userLoading || prevProps.match.params.profile_slug !== this.props.match.params.profile_slug)
+        if (prevProps.match.params.profile_slug !== this.props.match.params.profile_slug ||
+            prevProps.isAuthenticated !== this.props.isAuthenticated)
             this.getProfileData()
     }
 
@@ -112,6 +115,7 @@ class Profile extends Component {
 }
 
 const mapStateToProps = state => ({
+    isAuthenticated: state.auth.isAuthenticated,
     userLoading: state.auth.loading,
     user: state.auth.user,
     errors: state.errors.messages,

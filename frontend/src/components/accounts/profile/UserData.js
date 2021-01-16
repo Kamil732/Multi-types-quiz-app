@@ -61,7 +61,7 @@ class UserData extends Component {
         e.preventDefault()
 
         this.props.removeError(field)
-        await this.props.updateUserData({ [field]: this.state[field] }, false)
+        await this.props.updateUserData({ [field]: this.state[field] })
 
         if (this.props.errors[field] === undefined)
             this.setState({ [`${field}_edit_mode`]: false })
