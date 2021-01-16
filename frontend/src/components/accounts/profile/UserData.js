@@ -35,25 +35,30 @@ class UserData extends Component {
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
 
-    handleImageChange = e => {
+    handleImageChange = e =>
         this.setState({
             picture: e.target.files[0],
             picturePreview: URL.createObjectURL(e.target.files[0]),
         })
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.username !== this.props.username ||
+            prevProps.bio !== this.props.bio ||
+            prevProps.picture_url !== this.props.picture_url) {
+                this.setState({
+                    username: this.props.username,
+                    bio: this.props.bio,
+                    picturePreview: this.props.picture_url,
+                })
+
+                URL.revokeObjectURL(prevState.picturePreview)
+            }
     }
 
-    componentDidUpdate(prevProps, _) {
-        if (prevProps.username !== this.props.username || prevProps.bio !== this.props.bio)
-            this.setState({
-                username: this.props.username,
-                bio: this.props.bio,
-            })
-    }
+    componentWillUnmount = () => URL.revokeObjectURL(this.state.picturePreview)
 
     onSubmit = async (e, field) => {
         e.preventDefault()
-
-        console.log(this.state[field])
 
         this.props.removeError(field)
         await this.props.updateUserData({ [field]: this.state[field] }, false)
@@ -88,7 +93,6 @@ class UserData extends Component {
                                                     </div>
                                                 ) : null
                                             }
-
                                             <input
                                                 type="file"
                                                 accept="image/png, image/jpeg"
