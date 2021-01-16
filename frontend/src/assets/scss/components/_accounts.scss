@@ -3,8 +3,8 @@
     padding: 0.3rem;
     border: 1px solid grey;
     background-color: $background-color;
-    height: 9rem;
-    width: 9rem;
+    height: 10rem;
+    width: 10rem;
 
     @include shadow-sm;
 }
@@ -16,16 +16,7 @@
     height: 100%;
 
     &__img {
-        position: relative;
         margin-bottom: 20px;
-
-        &.owner:hover .img-rounded {
-            filter: brightness(60%);
-        }
-
-        &.owner:hover .btn__img {
-            display: block;
-        }
     }
 
     &__username {

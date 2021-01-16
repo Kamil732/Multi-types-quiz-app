@@ -19,6 +19,8 @@ class UserData extends Component {
     constructor(props) {
         super(props)
 
+        this.uploadContainer = React.createRef()
+
         this.state = {
             picture: null,
             picturePreview: this.props.picture_url,
@@ -35,24 +37,29 @@ class UserData extends Component {
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
 
-    handleImageChange = e =>
-        this.setState({
-            picture: e.target.files[0],
-            picturePreview: URL.createObjectURL(e.target.files[0]),
-        })
+    handleImageChange = e => {
+        const file = e.target.files[0]
+        const reader = new FileReader()
+
+        if (file && file.type.match('image.*'))
+            reader.readAsDataURL(e.target.files[0])
+
+        reader.onloadend = () =>
+            this.setState({
+                picture: file,
+                picturePreview: reader.result,
+            })
+    }
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.username !== this.props.username ||
             prevProps.bio !== this.props.bio ||
-            prevProps.picture_url !== this.props.picture_url) {
+            prevProps.picture_url !== this.props.picture_url)
                 this.setState({
                     username: this.props.username,
                     bio: this.props.bio,
                     picturePreview: this.props.picture_url,
                 })
-
-                URL.revokeObjectURL(prevState.picturePreview)
-            }
     }
 
     componentWillUnmount = () => URL.revokeObjectURL(this.state.picturePreview)
@@ -93,12 +100,20 @@ class UserData extends Component {
                                                     </div>
                                                 ) : null
                                             }
-                                            <input
-                                                type="file"
-                                                accept="image/png, image/jpeg"
-                                                className="btn btn__edit"
-                                                onChange={this.handleImageChange}
-                                            />
+                                            <label className="btn__upload">
+                                                <div className="btn__upload__container" ref={this.uploadContainer}>
+                                                    Click or drop an image here
+                                                </div>
+
+                                                <input
+                                                    type="file"
+                                                    accept="image/png, image/jpeg"
+                                                    className="btn__upload__field"
+                                                    onChange={this.handleImageChange}
+                                                    onDragOver={() => this.uploadContainer.current.classList.add('dragover')}
+                                                    onDragLeave={() => this.uploadContainer.current.classList.remove('dragover')}
+                                                />
+                                            </label>
                                             <button className="btn">
                                                 Save
                                             </button>
