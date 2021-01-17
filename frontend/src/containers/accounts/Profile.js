@@ -77,6 +77,8 @@ class Profile extends Component {
         if (prevProps.match.params.profile_slug !== this.props.match.params.profile_slug ||
             prevProps.isAuthenticated !== this.props.isAuthenticated)
             this.getProfileData()
+        if (this.state.isOwner === true && prevProps.user !== this.props.user)
+            this.setState({ data: this.props.user })
     }
 
     render() {
@@ -95,7 +97,7 @@ class Profile extends Component {
                     <div className="col col-sm-8">
                         <UserData
                             isOwner={isOwner}
-                            picture_url={data.picture}
+                            picture={data.picture}
                             username={data.username}
                             bio={data.bio}
                             quizzes_count={data.quizzes_count}

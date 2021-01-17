@@ -6,7 +6,7 @@ import Textarea from '../../../common/Textarea'
 class UserData extends Component {
     static propTypes = {
         isOwner: PropTypes.bool,
-        picture_url: PropTypes.string,
+        picture: PropTypes.string,
         username: PropTypes.string.isRequired,
         bio: PropTypes.string.isRequired,
         quizzes_count: PropTypes.number.isRequired,
@@ -23,7 +23,7 @@ class UserData extends Component {
 
         this.state = {
             picture: null,
-            picturePreview: this.props.picture_url,
+            picturePreview: this.props.picture,
             username: this.props.username,
             bio: this.props.bio,
             picture_edit_mode: false,
@@ -34,11 +34,22 @@ class UserData extends Component {
         this.onChange = this.onChange.bind(this)
         this.handleImageChange = this.handleImageChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.deleteImage = this.deleteImage.bind(this)
     }
 
     setEdit = field => {
         this.props.removeError(field)
         this.setState({ [`${field}_edit_mode`]: !this.state[`${field}_edit_mode`] })
+    }
+
+    closeEdit = field => {
+        this.setEdit(field)
+        this.setState({ [field]: this.props[field] })
+    }
+
+    closeEditImage = () => {
+        this.setEdit('picture')
+        this.setState({ picturePreview: this.props.picture })
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -57,6 +68,10 @@ class UserData extends Component {
             })
     }
 
+    deleteImage = e => {
+        this.setEdit('picture')
+    }
+
     onSubmit = async (e, field) => {
         e.preventDefault()
 
@@ -70,11 +85,11 @@ class UserData extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.username !== this.props.username ||
             prevProps.bio !== this.props.bio ||
-            prevProps.picture_url !== this.props.picture_url)
+            prevProps.picture !== this.props.picture)
                 this.setState({
                     username: this.props.username,
                     bio: this.props.bio,
-                    picturePreview: this.props.picture_url,
+                    picturePreview: this.props.picture,
                 })
     }
 
@@ -121,10 +136,10 @@ class UserData extends Component {
                                             <button className="btn btn__contrast">
                                                 Save
                                             </button>
-                                            <button className="btn btn__danger">
-                                                delete
+                                            <button className="btn btn__danger" onClick={e => e.preventDefault()} onDoubleClick={() => this.deleteImage()}>
+                                                delete (dobule click)
                                             </button>
-                                            <button className="btn" onClick={() => this.setEdit('picture')}>
+                                            <button className="btn" onClick={this.closeEditImage}>
                                                 Close
                                             </button>
                                         </form>
@@ -169,6 +184,9 @@ class UserData extends Component {
                                                 </div>
                                                 <button className="btn btn__contrast">
                                                     Save
+                                                </button>
+                                                <button className="btn" onClick={() => this.closeEdit('username')}>
+                                                    Close
                                                 </button>
                                             </form>
                                         ) : (

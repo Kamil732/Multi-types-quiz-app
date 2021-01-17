@@ -99,6 +99,11 @@ body.dark-mode {
             color: $primary-color-dark-mode;
         }
 
+        &__danger {
+            background-color: $error-color-dark-mode;
+            color: set-text-color($error-color-dark-mode);
+        }
+
         &__contrast {
             background-color: $secondary-color-dark-mode;
             color: set-text-color($secondary-color-dark-mode);
