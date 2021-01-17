@@ -41,14 +41,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #ddd;
+            background: #eee;
             border: 3px dotted #bebebe;
             border-radius: 10px;
 
             &.dragover {
-                background: #cccccc;
+                border-color: #555;
             }
         }
+    }
+
+    &__danger {
+        background: $error-color;
+        color: set-text-color($error-color);
     }
 
     &__submit {

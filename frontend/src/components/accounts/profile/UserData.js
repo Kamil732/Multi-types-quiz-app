@@ -32,7 +32,13 @@ class UserData extends Component {
         }
 
         this.onChange = this.onChange.bind(this)
+        this.handleImageChange = this.handleImageChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+    }
+
+    setEdit = field => {
+        this.props.removeError(field)
+        this.setState({ [`${field}_edit_mode`]: !this.state[`${field}_edit_mode`] })
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -51,6 +57,16 @@ class UserData extends Component {
             })
     }
 
+    onSubmit = async (e, field) => {
+        e.preventDefault()
+
+        this.props.removeError(field)
+        await this.props.updateUserData({ [field]: this.state[field] })
+
+        if (this.props.errors[field] === undefined)
+            this.setState({ [`${field}_edit_mode`]: false })
+    }
+
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.username !== this.props.username ||
             prevProps.bio !== this.props.bio ||
@@ -62,19 +78,9 @@ class UserData extends Component {
                 })
     }
 
-    onSubmit = async (e, field) => {
-        e.preventDefault()
-
-        this.props.removeError(field)
-        await this.props.updateUserData({ [field]: this.state[field] })
-
-        if (this.props.errors[field] === undefined)
-            this.setState({ [`${field}_edit_mode`]: false })
-    }
-
     render() {
         const { isOwner, quizzes_count, quizzes_solves, errors } = this.props
-        const { picturePreview, username, bio, username_edit_mode, bio_edit_mode } = this.state
+        const { picturePreview, username, bio, picture_edit_mode, username_edit_mode, bio_edit_mode } = this.state
 
         return (
             <>
@@ -85,7 +91,7 @@ class UserData extends Component {
                             <div className={`profile__img ${isOwner ? 'owner' : ''}`}>
                                 <img src={picturePreview} alt={username} draggable="false" className="img-rounded" />
                                 {
-                                    isOwner ? (
+                                    picture_edit_mode ? (
                                         <form onSubmit={e => this.onSubmit(e, 'picture')}>
                                             {
                                                 errors.picture ? (
@@ -112,11 +118,27 @@ class UserData extends Component {
                                                     onDragLeave={() => this.uploadContainer.current.classList.remove('dragover')}
                                                 />
                                             </label>
-                                            <button className="btn">
+                                            <button className="btn btn__contrast">
                                                 Save
                                             </button>
+                                            <button className="btn btn__danger">
+                                                delete
+                                            </button>
+                                            <button className="btn" onClick={() => this.setEdit('picture')}>
+                                                Close
+                                            </button>
                                         </form>
-                                    ) : null
+                                    ) : (
+                                        <>
+                                            {
+                                                isOwner ? (
+                                                    <button className="btn" onClick={() => this.setEdit('picture')}>
+                                                        Edit <FaEdit />
+                                                    </button>
+                                                ) : null
+                                            }
+                                        </>
+                                    )
                                 }
                             </div>
 
@@ -145,7 +167,7 @@ class UserData extends Component {
                                                         onChange={this.onChange}
                                                     />
                                                 </div>
-                                                <button className="btn">
+                                                <button className="btn btn__contrast">
                                                     Save
                                                 </button>
                                             </form>
@@ -154,7 +176,7 @@ class UserData extends Component {
                                                 {username}
                                                 {
                                                     isOwner ? (
-                                                        <button className="btn__edit" onClick={() => this.setState({ username_edit_mode: true })}>
+                                                        <button className="btn__edit" onClick={() => this.setEdit('username')}>
                                                             Edit <FaEdit />
                                                         </button>
                                                     ) : null
@@ -187,7 +209,7 @@ class UserData extends Component {
                                                         rows="10"
                                                     />
                                                 </div>
-                                                <button className="btn">
+                                                <button className="btn btn__contrast">
                                                     Save
                                                 </button>
                                             </form>
@@ -196,7 +218,7 @@ class UserData extends Component {
                                                 { bio ? bio : 'Welcome to my profile!' }
                                                 {
                                                     isOwner ? (
-                                                        <button className="btn__edit" onClick={() => this.setState({ bio_edit_mode: true })}>
+                                                        <button className="btn__edit" onClick={() => this.setEdit('bio')}>
                                                             Edit <FaEdit />
                                                         </button>
                                                     ) : null
