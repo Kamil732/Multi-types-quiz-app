@@ -41,6 +41,7 @@ export default function(state=initialState, action) {
                 ...state,
                 isAuthenticated: true,
                 loading: false,
+                refresh: action.payload.refresh,
                 token: action.payload.access,
             }
         case SIGNUP_SUCCESS:

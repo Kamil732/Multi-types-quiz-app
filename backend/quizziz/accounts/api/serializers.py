@@ -6,6 +6,8 @@ from quizzes.models import Quiz
 
 
 class AccountSerializer(serializers.ModelSerializer):
+    picture = serializers.ImageField(
+        required=False, allow_null=True, default=Account.DEFAULT_PROFILE_PICTURE)
     quizzes_count = serializers.SerializerMethodField('get_quizzes_count')
     quizzes_solves = serializers.SerializerMethodField('get_quizzes_solves')
 

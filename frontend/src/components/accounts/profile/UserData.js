@@ -49,7 +49,10 @@ class UserData extends Component {
 
     closeEditImage = () => {
         this.setEdit('picture')
-        this.setState({ picturePreview: this.props.picture })
+        this.setState({
+            picture: null,
+            picturePreview: this.props.picture,
+        })
     }
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
@@ -69,6 +72,9 @@ class UserData extends Component {
     }
 
     deleteImage = e => {
+        this.props.updateUserData({ picture: '' })
+
+        this.props.removeError('picture')
         this.setEdit('picture')
     }
 
@@ -103,7 +109,7 @@ class UserData extends Component {
                     <div className="card__header">{ isOwner ? 'My Profile' : `${username}'s Profile` }</div>
                     <div className="card__body">
                         <div className="profile">
-                            <div className={`profile__img ${isOwner ? 'owner' : ''}`}>
+                            <div className="profile__img">
                                 <img src={picturePreview} alt={username} draggable="false" className="img-rounded" />
                                 {
                                     picture_edit_mode ? (
@@ -133,15 +139,17 @@ class UserData extends Component {
                                                     onDragLeave={() => this.uploadContainer.current.classList.remove('dragover')}
                                                 />
                                             </label>
-                                            <button className="btn btn__contrast">
-                                                Save
-                                            </button>
-                                            <button className="btn btn__danger" onClick={e => e.preventDefault()} onDoubleClick={() => this.deleteImage()}>
-                                                delete (dobule click)
-                                            </button>
-                                            <button className="btn" onClick={this.closeEditImage}>
-                                                Close
-                                            </button>
+                                            <div style={{ display: 'inline-flex', gap: '10px', flexWrap: 'wrap', margin: '0 auto' }}>
+                                                <button className="btn btn__contrast">
+                                                    Save
+                                                </button>
+                                                <button className="btn btn__danger" onClick={e => e.preventDefault()} onDoubleClick={() => this.deleteImage()}>
+                                                    delete (dobule click)
+                                                </button>
+                                                <button className="btn" onClick={this.closeEditImage}>
+                                                    Close
+                                                </button>
+                                            </div>
                                         </form>
                                     ) : (
                                         <>
@@ -182,12 +190,14 @@ class UserData extends Component {
                                                         onChange={this.onChange}
                                                     />
                                                 </div>
-                                                <button className="btn btn__contrast">
-                                                    Save
-                                                </button>
-                                                <button className="btn" onClick={() => this.closeEdit('username')}>
-                                                    Close
-                                                </button>
+                                                <div style={{ display: 'inline-flex', gap: '10px' }}>
+                                                    <button className="btn btn__contrast">
+                                                        Save
+                                                    </button>
+                                                    <button className="btn" onClick={() => this.closeEdit('username')}>
+                                                        Close
+                                                    </button>
+                                                </div>
                                             </form>
                                         ) : (
                                             <>
@@ -227,9 +237,14 @@ class UserData extends Component {
                                                         rows="10"
                                                     />
                                                 </div>
-                                                <button className="btn btn__contrast">
-                                                    Save
-                                                </button>
+                                                <div style={{ display: 'inline-flex', gap: '10px' }}>
+                                                    <button className="btn btn__contrast">
+                                                        Save
+                                                    </button>
+                                                    <button className="btn" onClick={() => this.closeEdit('bio')}>
+                                                        Close
+                                                    </button>
+                                                </div>
                                             </form>
                                         ) : (
                                             <>
