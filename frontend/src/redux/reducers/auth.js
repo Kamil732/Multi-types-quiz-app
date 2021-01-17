@@ -57,6 +57,7 @@ export default function(state=initialState, action) {
             localStorage.removeItem('refresh')
             return {
                 ...state,
+                refresh: null,
                 token: null,
                 isAuthenticated: false,
                 loading: false,

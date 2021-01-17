@@ -62,8 +62,6 @@ class UserData extends Component {
                 })
     }
 
-    componentWillUnmount = () => URL.revokeObjectURL(this.state.picturePreview)
-
     onSubmit = async (e, field) => {
         e.preventDefault()
 
