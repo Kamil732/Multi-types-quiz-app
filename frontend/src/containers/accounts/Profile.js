@@ -118,7 +118,7 @@ class Profile extends Component {
                     </div>
                 </div>
                 <Quizzes
-                    title="Most Popular Quizzes"
+                    title="The List of Quizzes"
                     searchUrl={`http://192.168.1.31:8000/api/accounts/account/${data.slug}/quizzes/`}
                     getQuizzes={this.props.getQuizzes}
                     loading={this.props.quizzes.loading}

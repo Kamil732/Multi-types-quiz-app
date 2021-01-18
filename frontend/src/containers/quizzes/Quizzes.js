@@ -28,10 +28,11 @@ class Quizzes extends Component {
 
     componentDidMount = () => this.searchQuiz()
 
-    componentDidUpdate = (prevProps, _) =>
-        prevProps.location !== this.props.location || prevProps.searchUrl !== this.props.searchUrl ?
+    componentDidUpdate = (prevProps, _) => {
+        if (prevProps.searchUrl !== this.props.searchUrl)
             this.searchQuiz()
-        : null
+    }
+
 
     render() {
         const { title, quizzes, loading } = this.props
@@ -41,7 +42,11 @@ class Quizzes extends Component {
                 <div className="row">
                     <div className="col col-md-8">
                         <div className="card">
-                            <header className="card__header">{ title ? title : 'List of Quizzes' }</header>
+                            {
+                                title ? (
+                                    <header className="card__header">{ title }</header>
+                                ) : null
+                            }
                             <section className="card__body">
                                 <QuizList quizzes={quizzes.results} loading={loading} />
                             </section>
