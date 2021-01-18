@@ -9,7 +9,6 @@ import { default as QuizDetail } from '../containers/quizzes/Detail'
 
 import Auth from '../containers/accounts/Auth';
 import Profile from '../containers/accounts/Profile';
-import { default as MyQuizzes } from '../containers/accounts/Quizzes';
 import PrivateRoute from '../common/PrivateRoute'
 
 function Routes() {
@@ -23,7 +22,6 @@ function Routes() {
                 <Route exact path="/login" component={() => <Auth type="login" />} />
                 <Route exact path="/register" component={() => <Auth type="register" />} />
                 <Route exact path="/profile/:profile_slug" component={Profile} />
-                <PrivateRoute exact path="/my-quizzes" component={MyQuizzes} />
 
                 <Route path="*" component={NotFound} />
             </Switch>

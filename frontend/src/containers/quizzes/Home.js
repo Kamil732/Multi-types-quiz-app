@@ -4,14 +4,8 @@ import { connect } from 'react-redux'
 
 import { getQuizzes } from '../../redux/actions/quizzes'
 
-import { default as QuizList } from '../../components/quizzes/List'
-import TitleSearchForm from '../../components/quizzes/search/TitleSearchForm'
-import CategorySearch from '../../components/quizzes/search/CategorySearch'
-import SectionSearch from '../../components/quizzes/search/SectionSearch'
-import Pagination from '../../components/Pagination'
-import Ad from '../../components/Ad'
 import Title from '../../common/Title'
-
+import Quizzes from './Quizzes'
 
 
 class Home extends Component {
@@ -33,27 +27,12 @@ class Home extends Component {
             <>
                 <Title title="Quiz List" />
 
-                <div className="row">
-                    <div className="col col-md-8">
-                        <div className="card">
-                            <header className="card__header">Most Popular Quizzes</header>
-                            <section className="card__body">
-                                <QuizList quizzes={this.props.quizzes.results} loading={this.props.loading} />
-                            </section>
-                            <footer className="card__footer">
-                                <Pagination pageCount={this.props.quizzes.pageCount} />
-                            </footer>
-                        </div>
-                        <Ad />
-                    </div>
-                    <div className="col col-md-4 card-col">
-                        <TitleSearchForm />
-                        <Ad />
-                        <SectionSearch />
-                        <Ad />
-                        <CategorySearch />
-                    </div>
-                </div>
+                <Quizzes
+                    title="Most Popular Quizzes"
+                    getQuizzes={this.props.getQuizzes}
+                    loading={this.props.loading}
+                    quizzes={this.props.quizzes}
+                />
             </>
         )
     }

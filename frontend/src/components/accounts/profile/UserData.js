@@ -112,7 +112,7 @@ class UserData extends Component {
                             <div className="profile__img">
                                 <img src={picturePreview} alt={username} draggable="false" className="img-rounded" />
                                 {
-                                    picture_edit_mode ? (
+                                    isOwner && picture_edit_mode ? (
                                         <form onSubmit={e => this.onSubmit(e, 'picture')}>
                                             {
                                                 errors.picture ? (
@@ -168,7 +168,7 @@ class UserData extends Component {
                             <div className="profile__content">
                                 <div className="profile__username">
                                     {
-                                        username_edit_mode ? (
+                                        isOwner && username_edit_mode ? (
                                             <form onSubmit={e => this.onSubmit(e, 'username')}>
                                                 {
                                                     errors.username ? (
@@ -215,7 +215,7 @@ class UserData extends Component {
                                 </div>
                                 <div className="profile__bio">
                                     {
-                                        bio_edit_mode ? (
+                                        isOwner && bio_edit_mode ? (
                                             <form onSubmit={e => this.onSubmit(e, 'bio')}>
                                                 {
                                                     errors.bio ? (

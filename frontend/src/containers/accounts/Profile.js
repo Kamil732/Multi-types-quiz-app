@@ -12,6 +12,8 @@ import NotFound from '../errors/NotFound'
 
 import { updateUserData } from '../../redux/actions/auth'
 import { removeError, clearErrors } from '../../redux/actions/errors'
+import { getQuizzes } from '../../redux/actions/quizzes'
+import Quizzes from '../quizzes/Quizzes'
 
 class Profile extends Component {
     static propTypes = {
@@ -73,11 +75,15 @@ class Profile extends Component {
 
     componentWillUnmount = () => this.props.clearErrors()
 
-    componentDidUpdate(prevProps, _) {
+    componentDidUpdate(prevProps, prevState) {
         if (prevProps.match.params.profile_slug !== this.props.match.params.profile_slug ||
-            prevProps.isAuthenticated !== this.props.isAuthenticated)
+            prevProps.userLoading !== this.props.userLoading)
             this.getProfileData()
-        if (this.state.isOwner === true && prevProps.user !== this.props.user)
+
+        if (prevProps.isAuthenticated !== this.props.isAuthenticated && this.state.isOwner === true)
+            this.setState({ isOwner: false })
+
+        else if (this.state.isOwner === true && prevProps.user !== this.props.user)
             this.setState({ data: this.props.user })
     }
 
@@ -111,6 +117,13 @@ class Profile extends Component {
                         <Ad />
                     </div>
                 </div>
+                <Quizzes
+                    title="Most Popular Quizzes"
+                    searchUrl="http://192.168.1.31:8000/api/accounts/current/quizzes/"
+                    getQuizzes={this.props.getQuizzes}
+                    loading={this.props.quizzes.loading}
+                    quizzes={this.props.quizzes.data}
+                />
             </>
         )
     }
@@ -120,6 +133,7 @@ const mapStateToProps = state => ({
     isAuthenticated: state.auth.isAuthenticated,
     userLoading: state.auth.loading,
     user: state.auth.user,
+    quizzes: state.quizzes.quizzes,
     errors: state.errors.messages,
 })
 
@@ -127,6 +141,7 @@ const mapDispatchToProps = {
     updateUserData,
     removeError,
     clearErrors,
+    getQuizzes,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Profile))
