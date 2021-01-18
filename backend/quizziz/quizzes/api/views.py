@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
 from quizzes.models import Quiz, Section, Category, KnowledgeAnswer, Question
-from .pagination import QuizListPagination
+
 from . import serializers, permissions, mixins
 
 
@@ -74,29 +74,8 @@ class QuizDetailAPIView(mixins.QuizMixin, generics.RetrieveUpdateDestroyAPIView)
                 _('The quiz you are looking for does not exist'))
 
 
-class QuizListAPIView(mixins.QuizMixin, generics.ListCreateAPIView):
+class QuizListAPIView(mixins.QuizMixin, mixins.QuizListMixin, generics.ListCreateAPIView):
     permission_classes = (permissions.CreateIsAuthenticated,)
-    serializer_class = serializers.QuizListSerializer
-    pagination_class = QuizListPagination
-    filterset_fields = ('title', 'category__name', 'section__name',)
-    filterset_fields = {
-        'title': ['istartswith'],
-        'category__name': ['exact'],
-        'section__name': ['exact'],
-    }
-
-    def list(self, request):
-        qs = self.filter_queryset(
-            self.get_queryset()).filter(is_published=True)
-
-        page = self.paginate_queryset(qs)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(qs, many=True)
-
-        return Response(serializer.data)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

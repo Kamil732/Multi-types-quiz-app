@@ -29,7 +29,9 @@ class Quizzes extends Component {
     componentDidMount = () => this.searchQuiz()
 
     componentDidUpdate = (prevProps, _) =>
-        prevProps.location !== this.props.location ? this.searchQuiz() : null
+        prevProps.location !== this.props.location || prevProps.searchUrl !== this.props.searchUrl ?
+            this.searchQuiz()
+        : null
 
     render() {
         const { title, quizzes, loading } = this.props

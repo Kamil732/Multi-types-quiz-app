@@ -2,7 +2,7 @@ from rest_framework import generics, permissions
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
-from quizzes.api.views import QuizListAPIView
+from quizzes.api.mixins import QuizListMixin
 from accounts.api.serializers import AccountSerializer, RegisterSerializer
 
 from quizzes.models import Quiz
@@ -35,8 +35,9 @@ class CurrentAccountAPI(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user
 
 
-class CurrentAccountQuizzesAPI(QuizListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+class AccountQuizzesAPI(QuizListMixin, generics.ListAPIView):
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'account_slug'
 
     def get_queryset(self, *args, **kwargs):
-        return Quiz.objects.filter(author=self.request.user).order_by('-pub_date')
+        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg)).order_by('-pub_date')

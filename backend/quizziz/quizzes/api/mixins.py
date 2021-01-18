@@ -1,10 +1,35 @@
 from quizzes.models import Quiz, Question
-from quizzes.api.permissions import IsOwner
-from quizzes.api import serializers
+from .permissions import IsOwner
+from .pagination import QuizListPagination
+from . import serializers
 
 
 class QuizMixin(object):
     queryset = Quiz.objects.order_by('-pub_date', '-solved_times')
+
+
+class QuizListMixin(object):
+    serializer_class = serializers.QuizListSerializer
+    pagination_class = QuizListPagination
+    filterset_fields = ('title', 'category__name', 'section__name',)
+    filterset_fields = {
+        'title': ['istartswith'],
+        'category__name': ['exact'],
+        'section__name': ['exact'],
+    }
+
+    def list(self, request, *args, **kwargs):
+        qs = self.filter_queryset(
+            self.get_queryset()).filter(is_published=True)
+
+        page = self.paginate_queryset(qs)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(qs, many=True)
+
+        return Response(serializer.data)
 
 
 class QuestionMixin(object):
