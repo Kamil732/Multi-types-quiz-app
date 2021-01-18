@@ -29,7 +29,8 @@ class Quizzes extends Component {
     componentDidMount = () => this.searchQuiz()
 
     componentDidUpdate = (prevProps, _) => {
-        if (prevProps.searchUrl !== this.props.searchUrl)
+        if (prevProps.location.search !== this.props.location.search ||
+            prevProps.searchUrl !== this.props.searchUrl)
             this.searchQuiz()
     }
 

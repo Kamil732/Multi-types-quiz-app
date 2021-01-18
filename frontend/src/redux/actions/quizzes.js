@@ -15,7 +15,13 @@ import { refreshToken } from './auth'
 export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quizzes/`) => async (dispatch, getState) => {
     dispatch({ type: QUIZZES_LOADING })
 
-    const config = getAccessToken(getState)
+    const config = {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Accept-Language': 'pl',
+        }
+    }
 
     try {
         const URL = url + search
@@ -26,14 +32,9 @@ export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quiz
             payload: res.data,
         })
     } catch (err) {
-        if (err.response.status === 401) {
-            await dispatch(refreshToken())
-            if (getState().auth.token)
-                await dispatch(getQuizzes(search, url))
-        } else
-            dispatch({
-                type: QUIZZES_ERROR,
-            })
+        dispatch({
+            type: QUIZZES_ERROR,
+        })
     }
 }
 
