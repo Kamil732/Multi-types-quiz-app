@@ -26,7 +26,7 @@ class Pagination extends Component {
         const { pageCount } = this.props
 
         const query = queryString.parse(this.props.location.search)
-        const initialPage = query.page - 1 || 0
+        const initialPage = query.page - 1 || undefined
 
         return (
             <ReactPaginate
