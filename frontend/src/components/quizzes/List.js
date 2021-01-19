@@ -17,7 +17,7 @@ class List extends Component {
         } else if (this.props.quizzes.length > 0) {
             return this.props.quizzes.map((quiz, index) => (
                 <article className="card-inline quiz-card" key={index}>
-                    <Link to={`quizzes/${quiz.author_slug}/${quiz.slug}`} className="card-inline__img-link">
+                    <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`} className="card-inline__img-link">
                         <img className="card-inline__img quiz-card__img" src={quiz.image_url} alt={quiz.title} />
                     </Link>
 
