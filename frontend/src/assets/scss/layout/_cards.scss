@@ -15,18 +15,17 @@
     min-width: 100%;
     overflow: hidden;
 
-    &__header {
-        $color: darken($surface-color, 10%);
-        background-color: $color;
-        color: set-text-color($color);
-        height: auto;
-        font-size: 1.6rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-style: italic;
-        font-weight: 700;
-        padding: 0.7rem 1rem;
+    & > &__header {
+        @include card__header;
+    }
+
+    div:not(.card) > &__header {
+        @include card__header;
+        @include shadow-sm;
+
+        border-top: 6px solid $primary-color;
+        border-radius: 1rem;
+        margin-bottom: 1.5rem;
     }
 
     &__body {
@@ -36,12 +35,17 @@
         padding: 1.5rem;
     }
 
-    &__footer {
-        $color: darken($surface-color, 10%);
-        background-color: $color;
-        color: set-text-color($color);
-        height: auto;
-        padding: 0.7rem;
+    & > &__footer {
+        @include card__footer;
+    }
+
+    div:not(.card) > &__footer {
+        @include card__footer;
+        @include shadow-sm;
+
+        border-bottom: 6px solid $primary-color;
+        border-radius: 1rem;
+        margin-top: 1.5rem;
     }
 }
 

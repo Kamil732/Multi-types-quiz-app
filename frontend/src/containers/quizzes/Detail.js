@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import axios from 'axios'
-import { connect } from 'react-redux'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
 import NotFound from '../errors/NotFound'
+
+import FacebookShare from '../../components/social_media/FacebookShare'
 
 export class Detail extends Component {
     constructor(props) {
@@ -19,6 +20,7 @@ export class Detail extends Component {
 
     async getQuizData() {
         const { author_slug, quiz_slug } = this.props.match.params
+
         try {
             const res = await axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
 
@@ -53,20 +55,37 @@ export class Detail extends Component {
         return (
             <>
                 <Title title={`Quiz Detail ${data.title}`} />
-                <div>
-                    {data.title}
+
+                <div className="row">
+                    <div className="col-md-9">
+                        <div className="card__header">
+                            {data.title}
+                        </div>
+                        <div className="card">
+                            <div className="card__body">
+                                <div className="quiz-detail">
+                                    <img className="quiz-detail__img" src={data.image_url} alt={data.title} />
+                                    {data.description}
+                                </div>
+                            </div>
+
+                            <hr />
+
+                        <div className="card__body">
+                            <FacebookShare />
+                        </div>
+                        </div>
+                        <div className="card__footer">
+                            <button className="btn btn__submit btn__contrast">START</button>
+                        </div>
+                    </div>
+                    <div className="col-md-3">
+
+                    </div>
                 </div>
             </>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-
-})
-
-const mapDispatchToProps = {
-
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Detail)
+export default Detail

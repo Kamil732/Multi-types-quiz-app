@@ -15,6 +15,28 @@
     position: relative;
 }
 
+@mixin card__header {
+    $color: darken($surface-color, 10%);
+    background-color: $color;
+    color: set-text-color($color);
+    height: auto;
+    font-size: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-style: italic;
+    font-weight: 700;
+    padding: 0.7rem 1rem;
+}
+
+@mixin card__footer {
+    $color: darken($surface-color, 10%);
+    background-color: $color;
+    color: set-text-color($color);
+    height: auto;
+    padding: 0.7rem;
+}
+
 @mixin shadow-sm {
     box-shadow: 2px 2px 2px grey;
 }
