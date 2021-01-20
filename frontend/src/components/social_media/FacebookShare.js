@@ -23,7 +23,6 @@ class FacebookShare extends Component {
                     url={this.props.url}
                     quote={this.props.quote}
                     hashtag="#quizzer"
-                    className="share-items__item"
                 >
                     <FacebookIcon size={50} />
                 </FacebookShareButton>

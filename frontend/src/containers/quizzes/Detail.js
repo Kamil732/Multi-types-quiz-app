@@ -4,6 +4,7 @@ import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
 import NotFound from '../errors/NotFound'
 
+import AboutUser from '../../components/accounts/profile/AboutUser'
 import FacebookShare from '../../components/social_media/FacebookShare'
 import TwitterShare from '../../components/social_media/TwitterShare'
 
@@ -58,7 +59,7 @@ export class Detail extends Component {
                 <Title title={`Quiz Detail ${data.title}`} />
 
                 <div className="row">
-                    <div className="col-md-9">
+                    <div className="col-sm-9">
                         <div className="card__header">
                             {data.title}
                         </div>
@@ -81,8 +82,10 @@ export class Detail extends Component {
                             <button className="btn btn__submit btn__contrast">START</button>
                         </div>
                     </div>
-                    <div className="col-md-3">
-
+                    <div className="col-sm-3">
+                        <AboutUser
+                            accountUrl={data.author}
+                        />
                     </div>
                 </div>
             </>

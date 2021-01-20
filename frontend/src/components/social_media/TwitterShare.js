@@ -16,9 +16,8 @@ class TwitterShare extends Component {
                     url={this.props.url}
                     title={this.props.title}
                     hashtag="#quizzer"
-                    className="share-items__item"
                 >
-                    <TwitterIcon size={50}   />
+                    <TwitterIcon size={50} />
                 </TwitterShareButton>
             </>
         )
