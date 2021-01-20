@@ -1,11 +1,10 @@
 .img-rounded {
     border-radius: 100%;
     padding: 0.3rem;
-    margin: 0 auto;
     border: 1px solid grey;
     background-color: $background-color;
-    height: 10rem;
-    width: 10rem;
+    height: 8.5rem;
+    width: 8.5rem;
 
     @include shadow-sm;
 }
@@ -29,4 +28,12 @@
         margin: 15px 0;
         font-size: 1rem;
     }
+}
+
+.about-user {
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
 }
