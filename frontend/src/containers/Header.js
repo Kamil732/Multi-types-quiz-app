@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 import logo from '../assets/images/logo.png'
 import { default as NavigationMenu } from '../components/navigation/Menu'
+import DarkModeToggle from '../components/DarkModeToggle'
 
 class Header extends Component {
     constructor(props) {
@@ -28,6 +29,7 @@ class Header extends Component {
                     <Link to="/" className="logo__link">
                         <img src={logo} alt="quizziz" width="150" height="30" className="logo__img"></img>
                     </Link>
+                    <DarkModeToggle />
                     <div className="nav-btn" onClick={this.toggleNavigation}>
                         <span className="nav-btn__burger"></span>
                     </div>

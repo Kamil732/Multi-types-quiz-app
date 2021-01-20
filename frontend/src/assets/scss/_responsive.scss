@@ -178,6 +178,16 @@
         }
     }
 
+    .quiz-detail {
+        float: right;
+
+        &__img {
+            max-width: 50%;
+            box-shadow: 2px 0 3px grey;
+            float: left;
+        }
+    }
+
     .profile {
         flex-direction: row;
 

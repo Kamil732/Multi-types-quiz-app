@@ -10,7 +10,6 @@ import { getCategorySection } from '../redux/actions/quizzes'
 import Header from '../containers/Header'
 import Routes from './Routes'
 import Footer from '../containers/Footer'
-import DarkModeToggle from '../components/DarkModeToggle'
 
 class App extends Component {
 	componentDidMount() {
@@ -24,10 +23,6 @@ class App extends Component {
 			<Provider store={store}>
 				<Router>
 					<Header />
-
-					<aside>
-						<DarkModeToggle />
-					</aside>
 
 					<section className="content-wrap container-mobile">
 						<Routes />

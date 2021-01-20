@@ -12,12 +12,13 @@ class List extends Component {
     }
 
     render() {
-        if (this.props.loading) {
+        if (this.props.loading)
             return <CircleLoader />
-        } else if (this.props.quizzes.length > 0) {
+
+        else if (this.props.quizzes.length > 0)
             return this.props.quizzes.map((quiz, index) => (
                 <article className="card-inline quiz-card" key={index}>
-                    <Link to={`quizzes/${quiz.author_slug}/${quiz.slug}`} className="card-inline__img-link">
+                    <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`} className="card-inline__img-link">
                         <img className="card-inline__img quiz-card__img" src={quiz.image_url} alt={quiz.title} />
                     </Link>
 
@@ -58,7 +59,6 @@ class List extends Component {
                     </section>
                 </article>
             ))
-        }
 
         return (
             <div className="no-quizzes">

@@ -57,26 +57,31 @@ class CreateForm extends Component {
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
 
-    onSubmit = e => {
+    onSubmit = async e => {
         e.preventDefault()
+
 
         const { title, description, section, category, image_url } = this.state
         const quiz = { title, description, section, category, image_url }
 
-        this.props.createQuiz(quiz)
-        this.props.history.push('/')
+        this.props.clearErrors()
+        await this.props.createQuiz(quiz)
+
+        if (Object.keys(this.props.errors).length === 0)
+            this.props.history.push('/')
     }
 
     render() {
+        const { errors, sections, categories } = this.props
         const { title, description, section, category, image_url } = this.state
 
-        const sections = this.props.sections.map((section, index) => (
+        const sectionOptions = sections.map((section, index) => (
             <option value={section.name} key={index}>
                 {section.display_name}
             </option>
         ))
 
-        const categories = this.props.categories.map((category, index) => (
+        const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
                 {category.display_name}
             </option>
@@ -86,19 +91,19 @@ class CreateForm extends Component {
             <form onSubmit={this.onSubmit}>
                 <div className="row">
                     {
-                        this.props.errors.detail ? (
+                        errors.detail ? (
                             <div className="error-box">
-                                <p className="error-text">{this.props.errors.detail}</p>
+                                <p className="error-text">{errors.detail}</p>
                             </div>
                         ) : ''
                     }
 
                     <div className="col col-md-6">
                         {
-                            this.props.errors.title ? (
+                            errors.title ? (
                                 <div className="error-box">
                                     {
-                                        this.props.errors.title.map((error, index) => (
+                                        errors.title.map((error, index) => (
                                             <p className="error-text" key={index}>{error}</p>
                                         ))
                                     }
@@ -124,10 +129,10 @@ class CreateForm extends Component {
                         </div>
 
                         {
-                            this.props.errors.section ? (
+                            errors.section ? (
                                 <div className="error-box">
                                     {
-                                        this.props.errors.section.map((error, index) => (
+                                        errors.section.map((error, index) => (
                                             <p className="error-text" key={index}>{error}</p>
                                         ))
                                     }
@@ -142,15 +147,15 @@ class CreateForm extends Component {
                                 onChange={this.onChange}
                                 value={section}
                             >
-                                {sections}
+                                {sectionOptions}
                             </select>
                         </div>
 
                         {
-                            this.props.errors.category ? (
+                            errors.category ? (
                                 <div className="error-box">
                                     {
-                                        this.props.errors.category.map((error, index) => (
+                                        errors.category.map((error, index) => (
                                             <p className="error-text" key={index}>{error}</p>
                                         ))
                                     }
@@ -165,15 +170,15 @@ class CreateForm extends Component {
                                 onChange={this.onChange}
                                 value={category}
                             >
-                                {categories}
+                                {categoryOptions}
                             </select>
                         </div>
 
                         {
-                            this.props.errors.description ? (
+                            errors.description ? (
                                 <div className="error-box">
                                     {
-                                        this.props.errors.description.map((error, index) => (
+                                        errors.description.map((error, index) => (
                                             <p className="error-text" key={index}>{error}</p>
                                         ))
                                     }
@@ -214,10 +219,10 @@ class CreateForm extends Component {
                         <ImageUrlPreview image_url={image_url} />
 
                         {
-                            this.props.errors.image_url ? (
+                            errors.image_url ? (
                                 <div className="error-box">
                                     {
-                                        this.props.errors.image_url.map((error, index) => (
+                                        errors.image_url.map((error, index) => (
                                             <p className="error-text" key={index}>{error}</p>
                                         ))
                                     }

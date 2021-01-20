@@ -91,6 +91,11 @@ body.dark-mode {
         border: 1px solid #808080;
     }
 
+    .quiz-detail {
+        background-color: darken($surface-color-dark-mode, 2%);
+        color: set-text-color($surface-color-dark-mode);
+    }
+
     .btn {
         background: $secondary-variant-color-dark-mode;
         color: set-text-color($secondary-variant-color-dark-mode);
@@ -142,6 +147,7 @@ body.dark-mode {
 }
 
 .dark-mode-toggle {
+    margin: 0 1.25rem;
     position: relative;
     display: inline-block;
     width: 60px;
