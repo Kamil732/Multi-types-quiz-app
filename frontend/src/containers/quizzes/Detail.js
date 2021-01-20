@@ -5,6 +5,7 @@ import Title from '../../common/Title'
 import NotFound from '../errors/NotFound'
 
 import FacebookShare from '../../components/social_media/FacebookShare'
+import TwitterShare from '../../components/social_media/TwitterShare'
 
 export class Detail extends Component {
     constructor(props) {
@@ -71,8 +72,9 @@ export class Detail extends Component {
 
                             <hr />
 
-                        <div className="card__body">
-                            <FacebookShare url={window.location.href} quote={data.title} />
+                        <div className="card__body share-items">
+                            <FacebookShare url={window.location.href} quote={data.title} image_url={data.image_url} />
+                            <TwitterShare url={window.location.href} title={data.title} />
                         </div>
                         </div>
                         <div className="card__footer">
