@@ -72,7 +72,7 @@ export class Detail extends Component {
                             <hr />
 
                         <div className="card__body">
-                            <FacebookShare />
+                            <FacebookShare url={window.location.href} quote={data.title} />
                         </div>
                         </div>
                         <div className="card__footer">
