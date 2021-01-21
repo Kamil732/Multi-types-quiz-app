@@ -10,6 +10,7 @@ import { default as QuizDetail } from '../containers/quizzes/Detail'
 import Auth from '../containers/accounts/Auth';
 import Profile from '../containers/accounts/Profile';
 import PrivateRoute from '../common/PrivateRoute'
+import Dashboard from '../containers/quizzes/panel/Dashboard'
 
 function Routes() {
     return (
@@ -22,6 +23,8 @@ function Routes() {
                 <Route exact path="/login" component={() => <Auth type="login" />} />
                 <Route exact path="/register" component={() => <Auth type="register" />} />
                 <Route exact path="/profile/:profile_slug" component={Profile} />
+
+                <PrivateRoute exact path="/panel/dashboard" component={Dashboard} />
 
                 <Route path="*" component={NotFound} />
             </Switch>

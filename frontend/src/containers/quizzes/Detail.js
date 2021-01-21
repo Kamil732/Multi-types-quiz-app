@@ -59,7 +59,7 @@ export class Detail extends Component {
                 <Title title={`Quiz Detail ${data.title}`} />
 
                 <div className="row">
-                    <div className="col-sm-9">
+                    <div className="col col-sm-9">
                         <div className="card__header">
                             {data.title}
                         </div>
@@ -82,7 +82,7 @@ export class Detail extends Component {
                             <button className="btn btn__submit btn__contrast">START</button>
                         </div>
                     </div>
-                    <div className="col-sm-3">
+                    <div className="col col-sm-3">
                         <AboutUser
                             accountUrl={data.author}
                         />
