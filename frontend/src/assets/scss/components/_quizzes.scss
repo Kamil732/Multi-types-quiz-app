@@ -14,6 +14,20 @@
     }
 }
 
+.quiz-detail {
+    background-color: darken($surface-color, 4%);
+    color: set-text-color($surface-color);
+    min-height: 100%;
+
+    &__img {
+        max-width: 100%;
+        height: auto;
+        margin-right: 10px;
+        border: 1px solid grey;
+        box-shadow: 0 2px 3px grey;
+    }
+}
+
 .quiz-card {
     &__body {
         display: flex;

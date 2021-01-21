@@ -38,7 +38,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
     DEFAULT_PROFILE_PICTURE = 'images/DEFAULT_PROFILE_PICTURE.png'
 
     email = models.EmailField(max_length=80, unique=True)
-    username = models.CharField(max_length=20, unique=True)
+    username = models.CharField(max_length=12, unique=True)
     picture = models.ImageField(
         upload_to='images/%Y/%m/%d', default=DEFAULT_PROFILE_PICTURE, blank=True)
     bio = models.TextField(max_length=500, blank=True)
