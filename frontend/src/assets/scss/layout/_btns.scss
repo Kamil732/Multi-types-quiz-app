@@ -7,7 +7,7 @@
     border-radius: 6px;
     display: block;
     cursor: pointer;
-    transition: transform .3s ease-in;
+    transition: transform .2s ease-in;
     @include shadow-sm;
 
     &__edit {
@@ -72,8 +72,8 @@
     }
 
     &:hover {
-        transform: scale(1.05);
-        @include shadow-md;
+        transform: translateY(-2.5px);
+        // @include shadow-md;
     }
 }
 

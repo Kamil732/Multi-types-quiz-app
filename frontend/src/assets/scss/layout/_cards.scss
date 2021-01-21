@@ -43,7 +43,7 @@
         @include card__footer;
         @include shadow-sm;
 
-        border-bottom: 6px solid $primary-color;
+        border-bottom: 6px solid $primary-variant-color;
         border-radius: 1rem;
         margin: 1.5rem 0;
     }
