@@ -1,5 +1,5 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import NotFound from '../containers/errors/NotFound'
 
@@ -24,7 +24,8 @@ function Routes() {
 
                 <PrivateRoute path="/panel/" component={Navigation} />
 
-                <Route path="*" component={NotFound} />
+                <Route path="/not-found" component={NotFound} />
+                <Redirect to="/not-found" />
             </Switch>
 		</section>
     )

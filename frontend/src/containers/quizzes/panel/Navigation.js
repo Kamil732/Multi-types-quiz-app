@@ -5,8 +5,7 @@ import Ad from '../../../components/Ad'
 import PrivateRoute from '../../../common/PrivateRoute'
 import Create from '../Create'
 import Dashboard from './Dashboard'
-import { Route, Switch } from 'react-router-dom'
-import NotFound from '../../errors/NotFound'
+import { Redirect, Switch } from 'react-router-dom'
 
 function Navigation() {
     return (
@@ -24,7 +23,7 @@ function Navigation() {
                     <PrivateRoute exact path="/panel/create-quiz" component={Create} />
                     <PrivateRoute exact path="/panel/dashboard" component={Dashboard} />
 
-                    <Route path="*" component={NotFound} />
+                    <Redirect to="/not-found" />
                 </Switch>
             </div>
         </div>
