@@ -44,29 +44,20 @@ class TestAuthentication(TestSetUp):
 
 
 class TestAccounts(TestSetUp):
-    def test_get_account_info(self):
+    def test_get_current_account(self):
         self.client.post(
             self.register_url, self.register_data, format='json')
         res = self.client.get(self.account_url)
 
         self.assertEqual(res.status_code, 200)
 
-    def test_get_my_profile_with_no_authorization(self):
-        self.client.post(
-            self.register_url, self.register_data, format='json')
-        self.client.post(self.login_url, self.login_data, format='json')
-
-        res = self.client.get(self.my_profile_url)
-
-        self.assertEqual(res.status_code, 401)
-
-    def test_get_my_profile(self):
+    def test_get_account(self):
         self.client.post(
             self.register_url, self.register_data, format='json')
         access_token = self.client.post(
             self.login_url, self.login_data, format='json').data.get('access')
 
-        res = self.client.get(self.my_profile_url, data={
+        res = self.client.get(self.account_url, data={
         }, format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
 
         self.assertEqual(res.status_code, 200)
@@ -82,13 +73,34 @@ class TestAccounts(TestSetUp):
 
         self.assertEqual(res.status_code, 200)
 
+    def test_get_current_account_quizzes_no_authorization(self):
+        self.client.post(
+            self.register_url, self.register_data, format='json')
+        access_token = self.client.post(
+            self.login_url, self.login_data, format='json').data.get('access')
+
+        res = self.client.get(self.current_account_quizzes_url)
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_get_current_account_quizzes(self):
+        self.client.post(
+            self.register_url, self.register_data, format='json')
+        access_token = self.client.post(
+            self.login_url, self.login_data, format='json').data.get('access')
+
+        res = self.client.get(self.current_account_quizzes_url, data={
+        }, format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
+
+        self.assertEqual(res.status_code, 200)
+
     def test_patch_account(self):
         self.client.post(
             self.register_url, self.register_data, format='json')
         access_token = self.client.post(
             self.login_url, self.login_data, format='json').data.get('access')
 
-        res = self.client.patch(self.my_profile_url, self.patch_data,
+        res = self.client.patch(self.current_account_url, self.patch_data,
                                 format='json', HTTP_AUTHORIZATION=f'Bearer {access_token}')
 
         self.assertEqual(res.status_code, 200)

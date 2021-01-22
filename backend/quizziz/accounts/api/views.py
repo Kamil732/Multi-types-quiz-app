@@ -9,7 +9,7 @@ from quizzes.models import Quiz
 from accounts.models import Account
 
 
-class SignupView(generics.CreateAPIView):
+class SignupAPIView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
@@ -20,14 +20,22 @@ class SignupView(generics.CreateAPIView):
         return Response(AccountSerializer(user, context=self.get_serializer_context()).data, status=HTTP_201_CREATED)
 
 
-class AccountAPI(generics.RetrieveAPIView):
+class AccountAPIView(generics.RetrieveAPIView):
     serializer_class = AccountSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'account_slug'
     queryset = Account.objects.all()
 
 
-class CurrentAccountAPI(generics.RetrieveUpdateDestroyAPIView):
+class AccountQuizzesAPIView(QuizListMixin, generics.ListAPIView):
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'account_slug'
+
+    def get_queryset(self, *args, **kwargs):
+        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg)).order_by('-pub_date')
+
+
+class CurrentAccountAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AccountSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -35,9 +43,8 @@ class CurrentAccountAPI(generics.RetrieveUpdateDestroyAPIView):
         return self.request.user
 
 
-class AccountQuizzesAPI(QuizListMixin, generics.ListAPIView):
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'account_slug'
+class CurrentAccountQuizzesAPIView(QuizListMixin, generics.ListAPIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self, *args, **kwargs):
-        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg)).order_by('-pub_date')
+        return Quiz.objects.filter(author=self.request.user).order_by('-pub_date')

@@ -12,11 +12,11 @@ class TestSetUp(APITestCase):
         self.fake = Faker()
 
         email = self.fake.email()
-        username = self.fake.email().split('@')[0]
+        username = self.fake.email().split('@')[0][:12]
         password = self.fake.email()
 
         email_other = self.fake.email()
-        username_other = self.fake.email().split('@')[0]
+        username_other = self.fake.email().split('@')[0][:12]
 
         register_url = reverse('signup')
         login_url = reverse('token_obtain_pair')
