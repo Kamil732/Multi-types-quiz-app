@@ -6,6 +6,8 @@ import { getQuizzes } from '../../../redux/actions/quizzes'
 
 import Title from '../../../common/Title'
 import CircleLoader from '../../../components/loaders/CircleLoader'
+import Pagination from '../../../components/Pagination'
+import { withRouter } from 'react-router-dom'
 
 class Dashboard extends Component {
     static propTypes = {
@@ -14,28 +16,78 @@ class Dashboard extends Component {
         quizzes: PropTypes.object.isRequired,
     }
 
-    componentDidMount = () => this.props.getQuizzes('', `${process.env.REACT_APP_API_URL}/accounts/current/quizzes/`, true)
+    constructor(props) {
+        super(props)
+
+        this.searchQuiz = this.searchQuiz.bind(this)
+    }
+
+    searchQuiz = () => this.props.getQuizzes(this.props.location.search, `${process.env.REACT_APP_API_URL}/accounts/current/quizzes/`, true)
+
+    componentDidMount = () => this.searchQuiz()
+
+    componentDidUpdate = (prevProps, _) => {
+        if (prevProps.location.search !== this.props.location.search)
+            this.searchQuiz()
+    }
 
     render() {
         const { loading, quizzes } = this.props
 
-        if (loading)
-            return <CircleLoader />
-
-        const quizList = quizzes.results.map(quiz => (
-            <h1>{quiz.title}</h1>
+        const quizList = quizzes.results.map((quiz, index) => (
+            <tr key={index}>
+                <td>
+                    <img className="quiz-card__img" src={quiz.image_url} alt="" />
+                </td>
+                <td>
+                    {quiz.title}
+                    created {quiz.pub_date}
+                </td>
+                <td>
+                    {quiz.question_amount}
+                </td>
+                <td>
+                    {quiz.solved_times}
+                </td>
+                <td>
+                    <button className="btn btn__danger">Delete</button>
+                </td>
+            </tr>
         ))
 
         return (
             <>
                 <Title title="Dashboard" />
 
+                <div className="card__footer">
+                    <Pagination pageCount={quizzes.pageCount} />
+                </div>
+
                 <div className="card">
                     <div className="card__header">
                         My Quizzes
                     </div>
                     <div className="card__body">
-                        {quizList}
+                        {
+                            loading ? <CircleLoader /> : (
+                                <div style={{ overflowX: 'auto', border: '1px solid grey' }}>
+                                    <table className="table">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Image</th>
+                                                <th scope="col">Title</th>
+                                                <th scope="col">Questions</th>
+                                                <th scope="col">Solves</th>
+                                                <th scope="col">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {quizList}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )
+                        }
                     </div>
                 </div>
             </>
@@ -52,4 +104,4 @@ const mapDispatchToProps = {
     getQuizzes,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Dashboard))

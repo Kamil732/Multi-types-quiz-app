@@ -83,9 +83,13 @@ class QuizSerializer(serializers.Serializer):
     image_url = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
+    question_amount = serializers.SerializerMethodField('get_question_amount')
 
     def get_pub_date(self, obj):
         return f'{obj.pub_date.day}-{obj.pub_date.month}-{obj.pub_date.year}'
+
+    def get_question_amount(self, obj):
+        return Question.objects.filter(quiz_id=obj.id).count()
 
     def validate_section(self, value):
         return Section.objects.get(
@@ -112,15 +116,6 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
     author = serializers.ReadOnlyField(source='author.username')
     author_slug = serializers.ReadOnlyField(source='author.slug')
 
-    # def create(self, validated_data):
-    #     validated_data['section'] = Section.objects.get(
-    #         name=validated_data['section'])
-
-    #     validated_data['category'] = Category.objects.get(
-    #         name=validated_data['category'])
-
-    #     return super(self.__class__, self).create(validated_data)
-
     class Meta:
         model = Quiz
         fields = (
@@ -136,6 +131,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'author_slug',
             'section',
             'category',
+            'question_amount',
         )
         read_only_fields = ('slug', 'solved_times',)
 
