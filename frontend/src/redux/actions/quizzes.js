@@ -37,7 +37,7 @@ export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quiz
             if (err.response.status === 401) {
                 await dispatch(refreshToken())
 
-                if (getState().auth.isAuthenticated)
+                if (getState().auth.token)
                     await dispatch(getQuizzes(search, url, authoriaztion))
             } else
                 dispatch({
@@ -83,7 +83,7 @@ export const createQuiz = ({ title, description, section, category, image_url })
     } catch (err) {
         if (err.response.status === 401) {
             await dispatch(refreshToken())
-            if (getState().auth.isAuthenticated)
+            if (getState().auth.token)
                 await dispatch(createQuiz({ title, description, section, category, image_url }))
         } else
             if (err.response)

@@ -17,7 +17,7 @@ class Menu extends Component {
     }
 
     render() {
-        if (this.props.loading !== false)
+        if (this.props.loading === true)
             return <></>
 
         const auth_links = this.props.username ? (
