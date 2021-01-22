@@ -22,10 +22,10 @@ class Menu extends Component {
 
         const auth_links = this.props.username ? (
             <>
-                <ActiveTag to={['/quizzes/create']} tag="li" className="menu-nav__item">
-                    <Link to="/quizzes/create" className="menu-nav__link" onClick={this.props.closeNavigation}>Create Quiz</Link>
+                <ActiveTag to={['/panel/create-quiz']} tag="li" className="menu-nav__item">
+                    <Link to="/panel/create-quiz" className="menu-nav__link" onClick={this.props.closeNavigation}>Create Quiz</Link>
                 </ActiveTag>
-                <ActiveTag to={[`/profile/${this.props.slug}`, '/panel/']} tag="li" className="menu-nav__item dropdown">
+                <ActiveTag to={[`/profile/${this.props.slug}`, '/panel/dashboard']} tag="li" className="menu-nav__item dropdown">
                     <button className="menu-nav__link dropdown__btn">
                         <span className="dropdown__btn__icon">
                             <FaUserAlt />
@@ -35,7 +35,7 @@ class Menu extends Component {
 
                     <div className="dropdown__menu">
                         <ActiveTag to={[`/profile/${this.props.slug}`]} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>My Profile</ActiveTag>
-                        <ActiveTag to={['/panel/dashboard', '/panel/']} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>Panel</ActiveTag>
+                        <ActiveTag to={['/panel/dashboard']} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>Panel</ActiveTag>
                         <hr style={{ marginTop: '10px' }} />
                         <button className="dropdown__menu__link btn btn__contrast" onClick={() => { this.props.logout(); this.props.closeNavigation() } }>Logout</button>
                     </div>
