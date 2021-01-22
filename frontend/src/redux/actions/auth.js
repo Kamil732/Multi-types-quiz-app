@@ -51,7 +51,7 @@ export const loadUser = () => async (dispatch, getState) => {
         })
     } catch (err) {
         await dispatch(refreshToken())
-        if (getState().auth.token)
+        if (getState().auth.isAuthenticated)
             await dispatch(loadUser())
     }
 }
@@ -131,7 +131,7 @@ export const updateUserData = (data) => async (dispatch, getState) => {
     } catch (err) {
         if (err.response.status === 401) {
             await dispatch(refreshToken())
-            if (getState().auth.token)
+            if (getState().auth.isAuthenticated)
                 await dispatch(updateUserData(data))
         } else {
             if (err.response)
