@@ -19,7 +19,7 @@ export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quiz
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Accept-Language': 'pl',
+            'Accept-Language': 'en',
         }
     }
 

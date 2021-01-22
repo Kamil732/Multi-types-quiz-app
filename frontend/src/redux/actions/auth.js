@@ -63,7 +63,7 @@ export const login = (email, password) => async dispatch => {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Accept-Language': 'pl',
+            'Accept-Language': 'en',
         }
     };
 
@@ -91,7 +91,7 @@ export const signUp = ({ email, username, password, password2 }) => async dispat
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Accept-Language': 'pl',
+            'Accept-Language': 'en',
         }
     };
 

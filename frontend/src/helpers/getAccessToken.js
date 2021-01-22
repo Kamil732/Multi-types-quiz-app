@@ -6,7 +6,7 @@ const tokenConfig = (getState) => {
     const config = {
         headers: {
             'Content-Type': 'application/json',
-            'Accept-Language': 'pl',
+            'Accept-Language': 'en',
         }
     }
 
