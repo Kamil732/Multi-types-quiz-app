@@ -7,7 +7,11 @@ import { getQuizzes } from '../../../redux/actions/quizzes'
 import Title from '../../../common/Title'
 import CircleLoader from '../../../components/loaders/CircleLoader'
 import Pagination from '../../../components/Pagination'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
+import FacebookShare from '../../../components/social_media/FacebookShare'
+import TwitterShare from '../../../components/social_media/TwitterShare'
+
+import TextTruncate from 'react-text-truncate'
 
 class Dashboard extends Component {
     static propTypes = {
@@ -36,20 +40,55 @@ class Dashboard extends Component {
 
         const quizList = quizzes.results.map((quiz, index) => (
             <tr key={index}>
-                <td>
-                    <img className="quiz-card__img" src={quiz.image_url} alt="" />
+                <td className="quiz-display">
+                    <Link to={`/panel/dashboard/${quiz.slug}`}>
+                        <img className="quiz-display__img" src={quiz.image_url} alt="" />
+                    </Link>
+
+                    <div className="share-items">
+                        <FacebookShare url={window.location.href} quote={quiz.title} image_url={quiz.image_url} />
+                        <TwitterShare url={window.location.href} title={quiz.title} />
+                    </div>
                 </td>
-                <td>
-                    {quiz.title}
-                    created {quiz.pub_date}
+                <td className="title">
+                    <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}`}>
+                        <TextTruncate
+                            text={quiz.title}
+                            line={3}
+                            truncateText="..."
+                        />
+                    </Link>
+                    <TextTruncate
+                        text={quiz.description}
+                        line={1}
+                        truncateText="..."
+                    />
+                    <span>
+                        Type: {quiz.section.display_name}
+                    </span>
+                    <span>
+                        {quiz.pub_date} &bull;
+                        <Link to={`/?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link> &bull;
+                        <Link to={`/profile/${quiz.author_slug}`}>{quiz.author}</Link>
+                    </span>
                 </td>
-                <td>
+                <td className="numbers">
                     {quiz.question_amount}
                 </td>
-                <td>
+                <td className="numbers">
                     {quiz.solved_times}
                 </td>
-                <td>
+                <td className="actions">
+                    <Link to={`/panel/dashboard/${quiz.slug}/edit`}>
+                        <button className="btn">Edit</button>
+                    </Link>
+                    <br />
+
+                    <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`}>
+                        <button className="btn btn__contrast">Start Quiz</button>
+                    </Link>
+                    <br /> <br /> <br />
+
                     <button className="btn btn__danger">Delete</button>
                 </td>
             </tr>
@@ -70,7 +109,7 @@ class Dashboard extends Component {
                     <div className="card__body">
                         {
                             loading ? <CircleLoader /> : (
-                                <div style={{ overflowX: 'auto', border: '1px solid grey' }}>
+                                <div style={{ overflowX: 'auto' }}>
                                     <table className="table">
                                         <thead>
                                             <tr>

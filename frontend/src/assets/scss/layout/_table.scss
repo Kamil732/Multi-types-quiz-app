@@ -3,18 +3,32 @@
     border-collapse: collapse;
 
     & tr:nth-of-type(odd) {
-        background: #eee;
+        background-color: #eee;
     }
 
     & th {
-        background: #333;
-        color: white;
+        background-color: #ccc;
+        color: set-text-color(#ccc);
         font-weight: bold;
     }
 
     & td, & th {
         padding: 6px;
-        border: 1px solid #ccc;
-        text-align: left;
+        border: 1px solid #bbb;
+    }
+
+    & td {
+        &.actions, &.numbers, &.quiz-display {
+            text-align: center;
+        }
+
+        &.quiz-display .quiz-display__img {
+            width: 165px;
+            border: 1px solid #bbb;
+        }
+
+        &.title {
+            word-wrap: break-word;
+        }
     }
 }

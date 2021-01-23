@@ -81,7 +81,8 @@
         &.active {
             cursor: default;
             background-color: $secondary-variant-color;
-            color: set-text-color($secondary-variant-color)
+            color: set-text-color($secondary-variant-color);
+            pointer-events: none;
         }
 
         cursor: pointer;
