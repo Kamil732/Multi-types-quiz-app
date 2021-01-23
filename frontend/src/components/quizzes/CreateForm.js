@@ -9,7 +9,7 @@ import { RiImageEditFill } from 'react-icons/ri'
 import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
 import { clearErrors } from '../../redux/actions/errors'
 import ImageUrlPreview from './ImageUrlPreview'
-import Textarea from '../../common/Textarea'
+import Textarea from '../Textarea'
 
 class CreateForm extends Component {
     static propTypes = {

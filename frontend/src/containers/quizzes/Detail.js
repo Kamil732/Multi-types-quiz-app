@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
-import NotFound from '../errors/NotFound'
 
 import AboutUser from '../../components/accounts/profile/AboutUser'
 import FacebookShare from '../../components/social_media/FacebookShare'
 import TwitterShare from '../../components/social_media/TwitterShare'
+import { Redirect } from 'react-router-dom'
 
 export class Detail extends Component {
     constructor(props) {
@@ -52,7 +52,7 @@ export class Detail extends Component {
         if (loading)
             return <CircleLoader />
         else if (Object.keys(data).length === 0)
-            return <NotFound />
+            return <Redirect to="/not-found" />
 
         return (
             <>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { FaEdit } from 'react-icons/fa'
-import Textarea from '../../../common/Textarea'
+import Textarea from '../../Textarea'
 
 class UserData extends Component {
     static propTypes = {
