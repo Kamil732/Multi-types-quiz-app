@@ -200,7 +200,7 @@
 
 @include media-laptop {
     .container-mobile, .container-tablet {
-        max-width: 950px;
+        max-width: 1000px;
     }
 
     .card-inline {
@@ -214,10 +214,14 @@
     .container-mobile, .container-tablet, .container-laptop {
         max-width: 1340px;
     }
+
+    .table td.quiz-display .quiz-display__img {
+        width: 275px;
+    }
 }
 
-// @include media-laptop-lg-extra {
-//     .container-mobile, .container-tablet, .container-laptop, .container-laptop-lg {
-//         max-width: 1700px;
-//     }
-// }
+@include media-laptop-lg-extra {
+    .container-mobile, .container-tablet, .container-laptop, .container-laptop-lg {
+        max-width: 1500px;
+    }
+}

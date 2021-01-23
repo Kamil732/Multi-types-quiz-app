@@ -13,11 +13,13 @@
     }
 
     & td, & th {
-        padding: 6px;
+        padding: 10px;
         border: 1px solid #bbb;
     }
 
     & td {
+        vertical-align: top;
+
         &.actions, &.numbers, &.quiz-display {
             text-align: center;
         }

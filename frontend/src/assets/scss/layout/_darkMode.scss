@@ -131,14 +131,12 @@ body.dark-mode {
         }
 
         & td, & th {
-            padding: 6px;
             border-color: #999;
         }
 
         & th {
             background-color: #888;
             color: set-text-color(#888);
-            font-weight: bold;
         }
     }
 

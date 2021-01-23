@@ -51,26 +51,33 @@ class Dashboard extends Component {
                     </div>
                 </td>
                 <td className="title">
-                    <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}`}>
-                        <TextTruncate
-                            text={quiz.title}
-                            line={3}
-                            truncateText="..."
-                        />
-                    </Link>
-                    <TextTruncate
-                        text={quiz.description}
-                        line={1}
-                        truncateText="..."
-                    />
-                    <span>
-                        Type: {quiz.section.display_name}
-                    </span>
-                    <span>
-                        {quiz.pub_date} &bull;
-                        <Link to={`/?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link> &bull;
-                        <Link to={`/profile/${quiz.author_slug}`}>{quiz.author}</Link>
-                    </span>
+                    <div className="row">
+                       <div className="col-md-12">
+                            <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}`}>
+                                <TextTruncate
+                                    text={quiz.title}
+                                    line={3}
+                                    truncateText="..."
+                                />
+                            </Link>
+                            <span style={{ fontSize: '11px' }}>
+                                {quiz.pub_date}
+                                &ensp; &bull; &ensp;
+                                <Link to={`/?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link>
+                                &ensp; &bull; &ensp;
+                                <Link to={`/profile/${quiz.author_slug}`}>{quiz.author}</Link>
+                            </span> <br /> <br />
+                            <TextTruncate
+                                text={quiz.description}
+                                line={1}
+                                truncateText="..."
+                                style={{ fontSize: '12px' }}
+                            />  <br /> <br />
+                            <span style={{ fontSize: '11px', fontWeight: 'bold' }}>
+                                Type: {quiz.section.display_name}
+                            </span>
+                       </div>
+                    </div>
                 </td>
                 <td className="numbers">
                     {quiz.question_amount}
@@ -127,6 +134,9 @@ class Dashboard extends Component {
                                 </div>
                             )
                         }
+                    </div>
+                    <div className="card__footer">
+                        <Pagination pageCount={quizzes.pageCount} />
                     </div>
                 </div>
             </>
