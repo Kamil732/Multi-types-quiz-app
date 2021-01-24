@@ -1,32 +1,31 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 
 import NotFound from '../containers/errors/NotFound'
 
 import Home from '../containers/quizzes/Home'
-import { default as CreateQuiz } from '../containers/quizzes/Create'
 import { default as QuizDetail } from '../containers/quizzes/Detail'
 
 import Auth from '../containers/accounts/Auth';
 import Profile from '../containers/accounts/Profile';
 import PrivateRoute from '../common/PrivateRoute'
-import Dashboard from '../containers/quizzes/panel/Dashboard'
+import PageNavigation from '../components/quizzes/panel/PageNavigation'
 
 function Routes() {
     return (
         <section>
 			<Switch>
                 <Route exact path="/" component={Home} />
-                <PrivateRoute exact path="/quizzes/create" component={CreateQuiz} />
                 <Route exact path="/quizzes/:author_slug/:quiz_slug" component={QuizDetail} />
 
                 <Route exact path="/login" component={() => <Auth type="login" />} />
                 <Route exact path="/register" component={() => <Auth type="register" />} />
                 <Route exact path="/profile/:profile_slug" component={Profile} />
 
-                <PrivateRoute exact path="/panel/dashboard" component={Dashboard} />
+                <PrivateRoute path="/panel/" component={PageNavigation} />
 
-                <Route path="*" component={NotFound} />
+                <Route path="/not-found" component={NotFound} />
+                <Redirect to="/not-found" />
             </Switch>
 		</section>
     )

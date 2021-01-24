@@ -12,19 +12,20 @@ import { addError } from './errors'
 import getAccessToken from '../../helpers/getAccessToken'
 import { refreshToken } from './auth'
 
-export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quizzes/`) => async (dispatch, getState) => {
+export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quizzes/`, authoriaztion=false) => async (dispatch, getState) => {
     dispatch({ type: QUIZZES_LOADING })
 
-    const config = {
+    const URL = url + search
+
+    const config = authoriaztion === false ? {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Accept-Language': 'pl',
+            'Accept-Language': 'en',
         }
-    }
+    } : getAccessToken(getState)
 
     try {
-        const URL = url + search
         const res = await axios.get(URL, config)
 
         dispatch({
@@ -32,9 +33,17 @@ export const getQuizzes = (search='', url=`${process.env.REACT_APP_API_URL}/quiz
             payload: res.data,
         })
     } catch (err) {
-        dispatch({
-            type: QUIZZES_ERROR,
-        })
+        if (err.response) {
+            if (err.response.status === 401) {
+                await dispatch(refreshToken())
+
+                if (getState().auth.token)
+                    await dispatch(getQuizzes(search, url, authoriaztion))
+            } else
+                dispatch({
+                    type: QUIZZES_ERROR,
+                })
+        }
     }
 }
 

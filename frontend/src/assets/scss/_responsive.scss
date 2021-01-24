@@ -106,6 +106,14 @@
                 }
             }
 
+            & .icon-text {
+                display: flex;
+
+                &__icon {
+                    display: block;
+                }
+            }
+
             &__link {
                 color: set-text-color(set-text-color($primary-color));
                 font-size: 1.5rem;
@@ -200,7 +208,7 @@
 
 @include media-laptop {
     .container-mobile, .container-tablet {
-        max-width: 950px;
+        max-width: 1000px;
     }
 
     .card-inline {
@@ -214,10 +222,18 @@
     .container-mobile, .container-tablet, .container-laptop {
         max-width: 1340px;
     }
+
+    .btn {
+        padding: 0.5rem 2.5rem;
+    }
+
+    .table td.quiz-display .quiz-display__img {
+        width: 275px;
+    }
 }
 
-// @include media-laptop-lg-extra {
-//     .container-mobile, .container-tablet, .container-laptop, .container-laptop-lg {
-//         max-width: 1700px;
-//     }
-// }
+@include media-laptop-lg-extra {
+    .container-mobile, .container-tablet, .container-laptop, .container-laptop-lg {
+        max-width: 1500px;
+    }
+}

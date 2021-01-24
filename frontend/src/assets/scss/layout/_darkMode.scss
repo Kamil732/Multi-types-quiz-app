@@ -66,7 +66,7 @@ body.dark-mode {
         color: set-text-color($background-color-dark-mode);
 
         &:not(.active):hover {
-            background-color: rgba($secondary-variant-color-dark-mode, 0.4);
+            background-color: rgba($secondary-variant-color-dark-mode, 0.6);
             color: set-text-color($secondary-variant-color-dark-mode);
         }
 
@@ -74,6 +74,16 @@ body.dark-mode {
             background-color: $secondary-variant-color-dark-mode;
             color: set-text-color($secondary-variant-color-dark-mode);
         }
+    }
+
+    div:not(.card) > .card__header {
+        border-color: $primary-color-dark-mode;
+        box-shadow: none;
+    }
+
+    div:not(.card) > .card__footer {
+        border-color: $primary-variant-color-dark-mode;
+        box-shadow: none;
     }
 
     .card__body, .card-inline {
@@ -111,6 +121,33 @@ body.dark-mode {
 
         &__contrast {
             background-color: $secondary-color-dark-mode;
+            color: set-text-color($secondary-color-dark-mode);
+        }
+    }
+
+    .table {
+        & tr:nth-of-type(odd) {
+            background-color: #aaa;
+        }
+
+        & td, & th {
+            border-color: #999;
+        }
+
+        & th {
+            background-color: #888;
+            color: set-text-color(#888);
+        }
+    }
+
+    .pagination__item {
+        &:hover {
+            background: rgba($secondary-color-dark-mode, 0.6);
+            color: set-text-color(rgba($secondary-color-dark-mode, 0.6));
+        }
+
+        &.active {
+            background: $secondary-color-dark-mode;
             color: set-text-color($secondary-color-dark-mode);
         }
     }

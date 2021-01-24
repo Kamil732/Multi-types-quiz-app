@@ -1,58 +1,72 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import PropTypes, { bool } from 'prop-types'
 import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
-import NotFound from '../errors/NotFound'
+
+import { FaEdit } from 'react-icons/fa'
 
 import AboutUser from '../../components/accounts/profile/AboutUser'
 import FacebookShare from '../../components/social_media/FacebookShare'
 import TwitterShare from '../../components/social_media/TwitterShare'
+import { Link, Redirect } from 'react-router-dom'
 
-export class Detail extends Component {
+class Detail extends Component {
+    static propTypes = {
+        user_loading: PropTypes.bool,
+        user_slug_slug: PropTypes.string,
+    }
+
     constructor(props) {
         super(props)
 
         this.state = {
             loading: true,
+            isOwner: false,
             data: {},
         }
 
         this.getQuizData = this.getQuizData.bind(this)
     }
 
-    async getQuizData() {
+    getQuizData() {
         const { author_slug, quiz_slug } = this.props.match.params
 
-        try {
-            const res = await axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
-
-            this.setState({
-                loading: false,
-                data: res.data,
-            })
-        } catch (err) {
-            this.setState({
-                loading: false,
-                data: [],
-            })
-        }
+        if (this.props.user_loading === false)
+            axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
+                .then(res =>
+                    this.setState({
+                        loading: false,
+                        isOwner: author_slug === this.props.user_slug,
+                        data: res.data,
+                    })
+                )
+                .catch(err =>
+                    this.setState({
+                        loading: false,
+                        isOwner: false,
+                        data: [],
+                    })
+                )
     }
 
     componentDidMount = () => this.getQuizData()
 
     componentDidUpdate(prevProps, _) {
         if (prevProps.match.params.author_slug !== this.props.match.params.author_slug ||
-            prevProps.match.params.quiz_slug !== this.props.match.params.quiz_slug)
+            prevProps.match.params.quiz_slug !== this.props.match.params.quiz_slug ||
+            prevProps.user_loading !== this.props.user_loading)
             this.getQuizData()
     }
 
     render() {
-        const { loading, data } = this.state
+        const { loading, isOwner, data } = this.state
 
         if (loading)
             return <CircleLoader />
         else if (Object.keys(data).length === 0)
-            return <NotFound />
+            return <Redirect to="/not-found" />
 
         return (
             <>
@@ -73,10 +87,20 @@ export class Detail extends Component {
 
                             <hr />
 
-                        <div className="card__body share-items">
-                            <FacebookShare url={window.location.href} quote={data.title} image_url={data.image_url} />
-                            <TwitterShare url={window.location.href} title={data.title} />
-                        </div>
+                            <div className="card__body share-items">
+                                <FacebookShare url={window.location.href} quote={data.title} image_url={data.image_url} />
+                                <TwitterShare url={window.location.href} title={data.title} />
+                            </div>
+                            {
+                                isOwner ? (
+                                    <div className="card__footer">
+                                        <Link to={`/panel/dashboard/${data.slug}`} className="btn icon-text" style={{ width: 'fit-content' }}>
+                                            <FaEdit className="icon-text__icon" />
+                                            Edit as an admin
+                                        </Link>
+                                    </div>
+                                ) : null
+                            }
                         </div>
                         <div className="card__footer">
                             <button className="btn btn__submit btn__contrast">START</button>
@@ -93,4 +117,9 @@ export class Detail extends Component {
     }
 }
 
-export default Detail
+const mapStateTopProps = state => ({
+    user_loading: state.auth.loading,
+    user_slug: state.auth.user.slug,
+})
+
+export default connect(mapStateTopProps, null)(Detail)

@@ -50,6 +50,14 @@
             }
         }
 
+        & .icon-text {
+            display: initial;
+
+            &__icon {
+                display: none;
+            }
+        }
+
         &__link {
             font-weight: 550;
             text-transform: uppercase;
@@ -74,10 +82,6 @@
         border: none;
         outline: none;
         text-transform: none !important;
-
-        &__icon {
-            margin-right: 8px;
-        }
     }
 
     &__menu {
@@ -104,6 +108,52 @@
                 color: set-text-color($secondary-color);
                 background-color: $secondary-color;
             }
+        }
+    }
+}
+
+.horizontal-menu {
+    display: inline-flex;
+    flex-direction: row;
+    overflow-x: auto;
+    width: min-content;
+}
+
+.vertical-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal-menu__item, .vertical-menu__item {
+    list-style: none;
+    padding: 10px;
+    text-align: center;
+    letter-spacing: 2px;
+    background-color: $background-color;
+    color: set-text-color($background-color);
+    cursor: pointer;
+
+    &:not(.active):hover {
+        background-color: rgba($secondary-variant-color, 0.4);
+        color: set-text-color($secondary-variant-color)
+    }
+
+    &.active {
+        cursor: default;
+        background-color: $secondary-variant-color;
+        color: set-text-color($secondary-variant-color);
+        pointer-events: none;
+    }
+
+    &.contrast {
+        &:not(.active):hover {
+            background-color: rgba($secondary-color, 0.4);
+            color: set-text-color($secondary-color)
+        }
+
+        &.active {
+            background-color: $secondary-color;
+            color: set-text-color($secondary-color);
         }
     }
 }

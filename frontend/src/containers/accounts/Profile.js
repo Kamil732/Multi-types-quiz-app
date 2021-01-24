@@ -5,10 +5,9 @@ import PropTypes from 'prop-types'
 import UserData from '../../components/accounts/profile/UserData'
 import Title from '../../common/Title'
 import Ad from '../../components/Ad'
-import { withRouter } from 'react-router-dom'
+import { Redirect, withRouter } from 'react-router-dom'
 import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
-import NotFound from '../errors/NotFound'
 
 import { updateUserData } from '../../redux/actions/auth'
 import { removeError, clearErrors } from '../../redux/actions/errors'
@@ -93,7 +92,7 @@ class Profile extends Component {
         if (loading === true)
             return <CircleLoader />
         else if (Object.keys(data).length === 0)
-            return <NotFound />
+            return <Redirect to="/not-found" />
 
         return (
             <>
