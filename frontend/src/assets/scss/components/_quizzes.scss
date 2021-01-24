@@ -60,36 +60,3 @@
         margin-bottom: 15px;
     }
 }
-
-.horizontal-menu {
-    display: flex;
-    flex-direction: row;
-}
-
-.vertical-menu {
-    display: flex;
-    flex-direction: column;
-}
-
-.horizontal-menu__item, .vertical-menu__item {
-    list-style: none;
-    padding: 10px;
-    text-align: center;
-    letter-spacing: 2px;
-    background-color: $background-color;
-    color: set-text-color($background-color);
-
-    &:not(.active):hover {
-        background-color: rgba($secondary-variant-color, 0.4);
-        color: set-text-color($secondary-variant-color)
-    }
-
-    &.active {
-        cursor: default;
-        background-color: $secondary-variant-color;
-        color: set-text-color($secondary-variant-color);
-        pointer-events: none;
-    }
-
-    cursor: pointer;
-}

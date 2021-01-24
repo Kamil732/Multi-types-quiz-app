@@ -12,7 +12,7 @@ import Dashboard from '../../../containers/quizzes/panel/Dashboard'
 
 function DashboardNavigation(props) {
     return (
-        <nav className="card horizontal-menu">
+        <nav className="card horizontal-menu contrast">
             <Link to="/panel/dashboard" className="horizontal-menu__item">
                 <span className="icon-text">
                     <ImHome className="icon-text__icon" />
@@ -46,7 +46,7 @@ function DashboardNavigation(props) {
             <Link to={`/panel/dashboard/${props.quiz_slug}/edit`} className="horizontal-menu__item">
                 <span className="icon-text">
                     <FaEdit className="icon-text__icon" />
-                    Edit Quiz
+                    Edit
                 </span>
             </Link>
         </nav>

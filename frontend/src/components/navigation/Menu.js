@@ -6,8 +6,7 @@ import { connect } from 'react-redux'
 import { logout } from '../../redux/actions/auth'
 import ActiveTag from './ActiveTag'
 
-import { FaUserAlt } from 'react-icons/fa'
-import { FaPlusCircle } from 'react-icons/fa'
+import { FaUserAlt, FaPlusCircle } from 'react-icons/fa'
 
 class Menu extends Component {
     static propTypes = {
@@ -25,26 +24,22 @@ class Menu extends Component {
         const auth_links = this.props.username ? (
             <>
                 <ActiveTag to={['/panel/create-quiz']} tag="li" className="menu-nav__item">
-                    <Link to="/panel/create-quiz" className="menu-nav__link" onClick={this.props.closeNavigation}>
-                        <span className="icon-text">
-                            <FaPlusCircle className="icon-text__icon" />
-                            Create Quiz
-                        </span>
+                    <Link to="/panel/create-quiz" className="menu-nav__link icon-text" onClick={this.props.closeNavigation}>
+                        <FaPlusCircle className="icon-text__icon" />
+                        Create Quiz
                     </Link>
                 </ActiveTag>
                 <ActiveTag to={[`/profile/${this.props.slug}`, '/panel/dashboard']} tag="li" className="menu-nav__item dropdown">
-                    <button className="menu-nav__link dropdown__btn">
-                        <span className="icon-text">
-                            <FaUserAlt className="icon-text__icon" />
-                            {this.props.username}
-                        </span>
+                    <button className="menu-nav__link dropdown__btn icon-text">
+                        <FaUserAlt className="icon-text__icon" />
+                        {this.props.username}
                     </button>
 
                     <div className="dropdown__menu">
                         <ActiveTag to={[`/profile/${this.props.slug}`]} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>My Profile</ActiveTag>
                         <ActiveTag to={['/panel/dashboard']} className="dropdown__menu__link" jsx={{ onClick: this.props.closeNavigation }}>Panel</ActiveTag>
-                        <hr style={{ marginTop: '10px' }} />
-                        <button className="dropdown__menu__link btn btn__contrast" onClick={() => { this.props.logout(); this.props.closeNavigation() } }>Logout</button>
+                        <hr style={{ margin: '20px 0' }} />
+                        <button className="dropdown__menu__link btn" onClick={() => { this.props.logout(); this.props.closeNavigation() } }>Logout</button>
                     </div>
                 </ActiveTag>
             </>

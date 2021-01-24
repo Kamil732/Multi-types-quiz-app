@@ -106,6 +106,14 @@
                 }
             }
 
+            & .icon-text {
+                display: flex;
+
+                &__icon {
+                    display: block;
+                }
+            }
+
             &__link {
                 color: set-text-color(set-text-color($primary-color));
                 font-size: 1.5rem;
