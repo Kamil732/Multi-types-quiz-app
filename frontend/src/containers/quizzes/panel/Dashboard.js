@@ -50,7 +50,7 @@ class Dashboard extends Component {
                         <TwitterShare url={window.location.href} title={quiz.title} />
                     </div>
                 </td>
-                <td className="title">
+                <td className="info">
                     <div className="row">
                        <div className="col-md-12">
                             <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}`}>
@@ -76,6 +76,20 @@ class Dashboard extends Component {
                             <span style={{ fontSize: '11px', fontWeight: 'bold' }}>
                                 Type: {quiz.section.display_name}
                             </span>
+
+                            <div className="actions">
+                                <Link to={`/panel/dashboard/${quiz.slug}/edit`}>
+                                    <button className="btn">Edit</button>
+                                </Link>
+                                <br />
+
+                                <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`}>
+                                    <button className="btn btn__contrast">Start Quiz</button>
+                                </Link>
+                                <br /> <br /> <br />
+
+                                <button className="btn btn__danger">Delete</button>
+                            </div>
                        </div>
                     </div>
                 </td>
@@ -85,29 +99,12 @@ class Dashboard extends Component {
                 <td className="numbers">
                     {quiz.solved_times}
                 </td>
-                <td className="actions">
-                    <Link to={`/panel/dashboard/${quiz.slug}/edit`}>
-                        <button className="btn">Edit</button>
-                    </Link>
-                    <br />
-
-                    <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`}>
-                        <button className="btn btn__contrast">Start Quiz</button>
-                    </Link>
-                    <br /> <br /> <br />
-
-                    <button className="btn btn__danger">Delete</button>
-                </td>
             </tr>
         ))
 
         return (
             <>
                 <Title title="Dashboard" />
-
-                <div className="card__footer">
-                    <Pagination pageCount={quizzes.pageCount} />
-                </div>
 
                 <div className="card">
                     <div className="card__header">
@@ -121,10 +118,10 @@ class Dashboard extends Component {
                                         <thead>
                                             <tr>
                                                 <th scope="col">Image</th>
-                                                <th scope="col">Title</th>
+                                                <th scope="col" style={{ padding: '0 150px' }}>Info</th>
                                                 <th scope="col">Questions</th>
                                                 <th scope="col">Solves</th>
-                                                <th scope="col">Actions</th>
+                                                {/* <th scope="col">Actions</th> */}
                                             </tr>
                                         </thead>
                                         <tbody>

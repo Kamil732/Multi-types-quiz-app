@@ -1,7 +1,7 @@
 import React from 'react'
-import Title from '../../common/Title'
+import Title from '../../../common/Title'
 
-import CreateForm from '../../components/quizzes/CreateForm'
+import CreateForm from '../../../components/quizzes/CreateForm'
 
 function Create() {
     return (

@@ -20,7 +20,7 @@
     & td {
         vertical-align: top;
 
-        &.actions, &.numbers, &.quiz-display {
+        &.numbers, &.quiz-display {
             text-align: center;
         }
 
@@ -29,8 +29,16 @@
             border: 1px solid #bbb;
         }
 
-        &.title {
+        &.info {
             word-wrap: break-word;
+        }
+
+        & .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 12px;
+            justify-content: space-evenly;
+            align-items: center;
         }
     }
 }

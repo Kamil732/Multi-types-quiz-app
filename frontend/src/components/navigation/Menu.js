@@ -4,8 +4,10 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { logout } from '../../redux/actions/auth'
-import { FaUserAlt } from 'react-icons/fa'
 import ActiveTag from './ActiveTag'
+
+import { FaUserAlt } from 'react-icons/fa'
+import { FaPlusCircle } from 'react-icons/fa'
 
 class Menu extends Component {
     static propTypes = {
@@ -23,14 +25,19 @@ class Menu extends Component {
         const auth_links = this.props.username ? (
             <>
                 <ActiveTag to={['/panel/create-quiz']} tag="li" className="menu-nav__item">
-                    <Link to="/panel/create-quiz" className="menu-nav__link" onClick={this.props.closeNavigation}>Create Quiz</Link>
+                    <Link to="/panel/create-quiz" className="menu-nav__link" onClick={this.props.closeNavigation}>
+                        <span className="icon-text">
+                            <FaPlusCircle className="icon-text__icon" />
+                            Create Quiz
+                        </span>
+                    </Link>
                 </ActiveTag>
                 <ActiveTag to={[`/profile/${this.props.slug}`, '/panel/dashboard']} tag="li" className="menu-nav__item dropdown">
                     <button className="menu-nav__link dropdown__btn">
-                        <span className="dropdown__btn__icon">
-                            <FaUserAlt />
+                        <span className="icon-text">
+                            <FaUserAlt className="icon-text__icon" />
+                            {this.props.username}
                         </span>
-                        {this.props.username}
                     </button>
 
                     <div className="dropdown__menu">
