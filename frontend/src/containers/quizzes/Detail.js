@@ -81,7 +81,9 @@ class Detail extends Component {
                             <div className="card__body">
                                 <div className="quiz-detail">
                                     <img className="quiz-detail__img" src={data.image_url} alt={data.title} />
-                                    {data.description}
+                                    <span style={{ wordWrap: 'break-word' }}>
+                                        {data.description}
+                                    </span>
                                 </div>
                             </div>
 
@@ -103,7 +105,7 @@ class Detail extends Component {
                             }
                         </div>
                         <div className="card__footer">
-                            <button className="btn btn__submit btn__contrast">START</button>
+                            <button className="btn btn__submit btn__contrast" style={{ display: 'block', margin: '0 auto' }}>START</button>
                         </div>
                     </div>
                     <div className="col col-sm-3">
