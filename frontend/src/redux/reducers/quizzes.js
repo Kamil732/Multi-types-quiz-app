@@ -4,12 +4,15 @@ import {
     QUIZZES_LOADING,
     CATEGORY_SECTION_LOADING,
     QUIZZES_ERROR,
-    CATEGORY_SECTION_ERROR
+    CATEGORY_SECTION_ERROR,
+    CREATE_QUIZ,
+    CREATE_QUIZ_FAIL
 } from '../actions/types'
 
 const initialState = {
     quizzes: {
         loading: false,
+        new: {},
         data: {
             pageCount: 0,
             results: [],
@@ -52,6 +55,7 @@ export default function (state=initialState, action) {
             return {
                 ...state,
                 quizzes: {
+                    ...state.quizzes,
                     loading: false,
                     data: action.payload,
                 },
@@ -79,6 +83,22 @@ export default function (state=initialState, action) {
                     categories: initialState.categories,
                     sections: initialState.sections,
                 }
+        case CREATE_QUIZ:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    new: action.payload,
+                }
+            }
+        case CREATE_QUIZ_FAIL:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    new: {},
+                }
+            }
         default:
             return state;
     };

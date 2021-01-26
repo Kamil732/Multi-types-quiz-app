@@ -2,6 +2,8 @@ import axios from 'axios'
 import {
     CATEGORY_SECTION_ERROR,
     CATEGORY_SECTION_LOADING,
+    CREATE_QUIZ,
+    CREATE_QUIZ_FAIL,
     GET_CATEGORY_SECTION,
     GET_QUIZZES,
     QUIZZES_ERROR,
@@ -79,14 +81,22 @@ export const createQuiz = ({ title, description, section, category, image_url })
 
         const config = getAccessToken(getState)
 
-        await axios.post(`${process.env.REACT_APP_API_URL}/quizzes/`, body, config)
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/quizzes/`, body, config)
+
+        dispatch({
+            type: CREATE_QUIZ,
+            payload: res.data
+        })
     } catch (err) {
         if (err.response.status === 401) {
             await dispatch(refreshToken())
             if (getState().auth.token)
                 await dispatch(createQuiz({ title, description, section, category, image_url }))
-        } else
+        } else {
             if (err.response)
                 dispatch(addError(err.response.data, err.response.status))
+
+            dispatch({ type: CREATE_QUIZ_FAIL })
+        }
     }
 }
