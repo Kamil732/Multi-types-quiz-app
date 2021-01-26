@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Redirect, withRouter } from 'react-router-dom'
+import { Link, Redirect, withRouter } from 'react-router-dom'
 import axios from 'axios'
-import CircleLoader from '../../../components/loaders/CircleLoader'
+import CircleLoader from '../../../../components/loaders/CircleLoader'
 import { connect } from 'react-redux'
-import Title from '../../../common/Title'
-import QuizNavigation from '../../../components/quizzes/panel/QuizNavigation'
+import Title from '../../../../common/Title'
+import QuizNavigation from '../../../../components/quizzes/panel/QuizNavigation'
 
 class QuizDetail extends Component {
     static propTypes = {
@@ -58,13 +58,37 @@ class QuizDetail extends Component {
         else if (Object.keys(data).length === 0)
             return <Redirect to="/not-found" />
 
-
         return (
             <>
                 <Title title={`Dashboard ${data.title}`} />
+
+                <p className="quiz-detail__title">
+                    {data.title}
+                    <br />
+                    <span className="text-darken">created {data.pub_date}</span>
+                </p>
                 <QuizNavigation quiz_slug={data.slug} />
 
-                {data.title}
+                <div className="card">
+                    <div className="card__body">
+                        <div className="card-inline">
+                            <img src={data.image_url} className="card-inline__img" alt={data.title} />
+
+                            <div className="card-inline__body">
+                                {data.title}
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+
+                    <div className="card__body">
+                        URL address to your quiz:
+                        <br />
+                        <Link to={`/quizzes/${this.props.author_slug}/${data.slug}`}>
+                            {`${window.location.origin}/quizzes/${this.props.author_slug}/${data.slug}`}
+                        </Link>
+                    </div>
+                </div>
             </>
         )
     }
