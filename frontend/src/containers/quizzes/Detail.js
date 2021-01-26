@@ -94,7 +94,7 @@ class Detail extends Component {
                             {
                                 isOwner ? (
                                     <div className="card__footer">
-                                        <Link to={`/panel/dashboard/${data.slug}`}>
+                                        <Link to={`/panel/dashboard/${data.slug}/summery`}>
                                             <button className="btn btn__submit">
                                                 Edit as an admin
                                             </button>

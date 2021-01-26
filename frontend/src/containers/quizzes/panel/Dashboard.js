@@ -8,7 +8,7 @@ import Title from '../../../common/Title'
 import Pagination from '../../../components/Pagination'
 import { withRouter } from 'react-router-dom'
 
-import { default as QuizList } from './List'
+import { default as QuizList } from '../../../components/quizzes/panel/List'
 
 class Dashboard extends Component {
     static propTypes = {

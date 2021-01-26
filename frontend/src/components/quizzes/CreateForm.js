@@ -69,7 +69,7 @@ class CreateForm extends Component {
         await this.props.createQuiz(quiz)
 
         if (this.props.newQuiz.slug)
-            this.props.history.push(`/panel/dashboard/${this.props.newQuiz.slug}`)
+            this.props.history.push(`/panel/dashboard/${this.props.newQuiz.slug}/summery`)
     }
 
     render() {

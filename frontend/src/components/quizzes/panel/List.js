@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link, withRouter } from 'react-router-dom'
 
-import FacebookShare from '../../../components/social_media/FacebookShare'
-import TwitterShare from '../../../components/social_media/TwitterShare'
+import FacebookShare from '../../social_media/FacebookShare'
+import TwitterShare from '../../social_media/TwitterShare'
 
 import TextTruncate from 'react-text-truncate'
-import CircleLoader from '../../../components/loaders/CircleLoader'
+import CircleLoader from '../../loaders/CircleLoader'
 
 class List extends Component {
     static propTypes = {
@@ -23,7 +23,7 @@ class List extends Component {
         const quizList = quizzes.map((quiz, index) => (
             <tr key={index}>
                 <td className="quiz-display">
-                    <Link to={`/panel/dashboard/${quiz.slug}`}>
+                    <Link to={`/panel/dashboard/${quiz.slug}/summery`}>
                         <img className="quiz-display__img" src={quiz.image_url} alt="" />
                     </Link>
 
@@ -35,7 +35,7 @@ class List extends Component {
                 <td className="info">
                     <div className="row">
                        <div className="col-md-12">
-                            <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}`}>
+                            <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}/summery`}>
                                 <TextTruncate
                                     text={quiz.title}
                                     line={3}
@@ -58,7 +58,7 @@ class List extends Component {
                             </span>
 
                             <div className="actions">
-                                <Link to={`/panel/dashboard/${quiz.slug}/edit`}>
+                                <Link to={`/panel/dashboard/${quiz.slug}/settings`}>
                                     <button className="btn">Edit</button>
                                 </Link>
                                 <br />
