@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Link, Redirect, withRouter } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import axios from 'axios'
 import CircleLoader from '../../../../components/loaders/CircleLoader'
 import { connect } from 'react-redux'
 import Title from '../../../../common/Title'
 import QuizNavigation from '../../../../components/quizzes/panel/QuizNavigation'
+
+import { default as QuizList } from '../List'
 
 class QuizDetail extends Component {
     static propTypes = {
@@ -71,13 +73,17 @@ class QuizDetail extends Component {
 
                 <div className="card">
                     <div className="card__body">
-                        <div className="card-inline">
+                        {/* <div className="card-inline">
                             <img src={data.image_url} className="card-inline__img" alt={data.title} />
 
                             <div className="card-inline__body">
-                                {data.title}
+                                {data.description}
                             </div>
-                        </div>
+                        </div> */}
+                        <QuizList
+                            loading={loading}
+                            quizzes={[data]}
+                        />
                     </div>
                     <hr />
 
@@ -98,4 +104,4 @@ const mapStateToProps = state => ({
     author_slug: state.auth.user.slug
 })
 
-export default connect(mapStateToProps, null)(withRouter(QuizDetail))
+export default connect(mapStateToProps, null)(QuizDetail)
