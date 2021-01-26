@@ -126,7 +126,7 @@ body.dark-mode {
     }
 
     .table {
-        & tr:nth-of-type(odd) {
+        & tr:nth-of-type(even) {
             background-color: #aaa;
         }
 
