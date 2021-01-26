@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PropTypes, { bool } from 'prop-types'
+import PropTypes from 'prop-types'
 import axios from 'axios'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
-
-import { FaEdit } from 'react-icons/fa'
 
 import AboutUser from '../../components/accounts/profile/AboutUser'
 import FacebookShare from '../../components/social_media/FacebookShare'
@@ -96,16 +94,17 @@ class Detail extends Component {
                             {
                                 isOwner ? (
                                     <div className="card__footer">
-                                        <Link to={`/panel/dashboard/${data.slug}`} className="btn icon-text" style={{ width: 'fit-content' }}>
-                                            <FaEdit className="icon-text__icon" />
-                                            Edit as an admin
+                                        <Link to={`/panel/dashboard/${data.slug}`}>
+                                            <button className="btn btn__submit">
+                                                Edit as an admin
+                                            </button>
                                         </Link>
                                     </div>
                                 ) : null
                             }
                         </div>
                         <div className="card__footer">
-                            <button className="btn btn__submit btn__contrast" style={{ display: 'block', margin: '0 auto' }}>START</button>
+                            <button className="btn btn__submit btn__contrast">START</button>
                         </div>
                     </div>
                     <div className="col col-sm-3">

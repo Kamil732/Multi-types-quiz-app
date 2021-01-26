@@ -81,10 +81,10 @@ class QuizDetail extends Component {
                     </div>
                     <hr />
 
-                    <div className="card__body">
-                        URL address to your quiz:
+                    <div className="card__body" style={{ textAlign: 'center' }}>
+                        <h4>URL address to your quiz:</h4>
                         <br />
-                        <Link to={`/quizzes/${this.props.author_slug}/${data.slug}`}>
+                        <Link to={`/quizzes/${this.props.author_slug}/${data.slug}`} style={{ fontSize: '1.1rem' }}>
                             {`${window.location.origin}/quizzes/${this.props.author_slug}/${data.slug}`}
                         </Link>
                     </div>
