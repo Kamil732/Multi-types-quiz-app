@@ -1,6 +1,7 @@
 from django.utils.translation import gettext as _
 from django.db import models
 from django.template.defaultfilters import slugify
+from autoslug import AutoSlugField
 from django.core.exceptions import ValidationError
 
 
@@ -83,31 +84,11 @@ class Quiz(models.Model):
     image_url = models.URLField(default=DEFAULT_IMAGE)
     solved_times = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
-    slug = models.SlugField(blank=True, max_length=120)
+    slug = AutoSlugField(populate_from='title',
+                         unique_with=['author'], max_length=120)
 
     def __str__(self):
         return self.title
-
-    def save(self, *args, **kwargs):
-        if not(self.slug):
-            # Get all 'id' fields from all the quizzes with the same title and author
-            # same_title_quizzes = Quiz.objects.filter(title=self.title, author=self.author).order_by(
-            #     'pub_date').values_list('id', flat=True)
-            # ordered_quizzes = [quiz_id for quiz_id in same_title_quizzes]
-
-            # quiz_count = ordered_quizzes.index(self.id)
-            # quiz_count = quiz_count + 1 if quiz_count > 0 else ''
-
-            # slug = f'{self.title} {quiz_count}'
-            # self.slug = slugify(slug)
-
-            quizzes = Quiz.objects.filter(
-                title=self.title, author=self.author).count()
-
-            self.slug = slugify(
-                f'{self.title} {quizzes if quizzes > 0 else ""}')
-
-        return super(self.__class__, self).save(*args, **kwargs)
 
 
 class Question(models.Model):
@@ -116,13 +97,8 @@ class Question(models.Model):
     question = models.CharField(max_length=100)
     image_url = models.URLField(blank=True)
     summery = models.TextField(blank=True)
-    slug = models.SlugField(max_length=120, blank=True)
-
-    def save(self, *args, **kwargs):
-        if not(self.slug):
-            self.slug = slugify(self.question)
-
-        return super(self.__class__, self).save(*args, **kwargs)
+    slug = AutoSlugField(populate_from='question',
+                         unique_with=['quiz'], max_length=120)
 
     def __str__(self):
         return self.question
