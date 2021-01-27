@@ -1,27 +1,21 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
+import SettingsForm from '../../../../components/quizzes/panel/detail/SettingsForm'
 
 class Settings extends Component {
     static propTypes = {
-        prop: PropTypes
+        data: PropTypes.object.isRequired,
     }
 
     render() {
         return (
-            <div>
-
+            <div className="card">
+                <div className="card__body">
+                    <SettingsForm data={this.props.data} />
+                </div>
             </div>
         )
     }
 }
 
-const mapStateToProps = (state) => ({
-
-})
-
-const mapDispatchToProps = {
-
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Settings)
+export default Settings

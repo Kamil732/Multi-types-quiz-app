@@ -6,13 +6,17 @@ import {
     QUIZZES_ERROR,
     CATEGORY_SECTION_ERROR,
     CREATE_QUIZ,
-    CREATE_QUIZ_FAIL
+    CREATE_QUIZ_FAIL,
+    UPDATE_QUIZ_SUCCESS,
+    UPDATE_QUIZ_FAIL,
+    GET_QUIZ_SUCCESS,
+    GET_QUIZ_FAIL
 } from '../actions/types'
 
 const initialState = {
     quizzes: {
         loading: false,
-        new: {},
+        item: {},
         data: {
             pageCount: 0,
             results: [],
@@ -83,20 +87,24 @@ export default function (state=initialState, action) {
                     categories: initialState.categories,
                     sections: initialState.sections,
                 }
+        case UPDATE_QUIZ_SUCCESS:
         case CREATE_QUIZ:
+        case GET_QUIZ_SUCCESS:
             return {
                 ...state,
                 quizzes: {
                     ...state.quizzes,
-                    new: action.payload,
+                    item: action.payload,
                 }
             }
+        case UPDATE_QUIZ_FAIL:
         case CREATE_QUIZ_FAIL:
+        case GET_QUIZ_FAIL:
             return {
                 ...state,
                 quizzes: {
                     ...state.quizzes,
-                    new: {},
+                    item: {},
                 }
             }
         default:

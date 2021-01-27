@@ -3,13 +3,17 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Navigation from './Navigation'
 import Routes from './Routes'
-import axios from 'axios'
 import CircleLoader from '../../../loaders/CircleLoader'
 import { Redirect, withRouter } from 'react-router-dom'
+
+import { getQuiz } from '../../../../redux/actions/quizzes'
 
 class Detail extends Component {
     static propTypes = {
         author_slug: PropTypes.string.isRequired,
+        data_loading: PropTypes.bool,
+        data: PropTypes.object,
+        getQuiz: PropTypes.func.isRequired,
     }
 
     constructor(props) {
@@ -17,30 +21,17 @@ class Detail extends Component {
 
         this.state = {
             loading: true,
-            data: {},
         }
 
         this.getQuiz = this.getQuiz.bind(this)
     }
 
-    getQuiz = () => {
+    getQuiz = async () => {
         this.setState({ loading: true })
-        const { author_slug } = this.props
         const { quiz_slug } = this.props.match.params
 
-        axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
-            .then(res =>
-                this.setState({
-                    loading: false,
-                    data: res.data,
-                })
-            )
-            .catch(err =>
-                this.setState({
-                    loading: false,
-                    data: [],
-                })
-            )
+        await this.props.getQuiz(this.props.author_slug, quiz_slug)
+        this.setState({ loading: false })
     }
 
     componentDidMount = () => this.getQuiz()
@@ -51,10 +42,10 @@ class Detail extends Component {
     }
 
     render() {
-        const { loading, data } = this.state
+        const { data } = this.props
         const { quiz_slug } = this.props.match.params
 
-        if (loading === true)
+        if (this.state.loading)
             return <CircleLoader />
         else if (Object.keys(data).length === 0)
             return <Redirect to="/not-found" />
@@ -76,10 +67,12 @@ class Detail extends Component {
 
 const mapStateToProps = state => ({
     author_slug: state.auth.user.slug,
+    data_loading: state.quizzes.quizzes.loading,
+    data: state.quizzes.quizzes.item,
 })
 
 const mapDispatchToProps = {
-
+    getQuiz,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Detail))
