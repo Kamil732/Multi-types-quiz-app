@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import axios from 'axios'
 
 import TextTruncate from 'react-text-truncate'
-import CircleLoader from '../../loaders/CircleLoader'
 import { Link } from 'react-router-dom'
+import SpinLoader from '../../loaders/SpinLoader'
 
 class AboutUser extends Component {
     static propTypes = {
@@ -59,7 +59,7 @@ class AboutUser extends Component {
         const { loading, data } = this.state
 
         if (loading === true)
-            return <CircleLoader />
+            return <SpinLoader />
 
         return (
             <div className="card">
