@@ -13,7 +13,7 @@ import Textarea from '../Textarea'
 
 class CreateForm extends Component {
     static propTypes = {
-        newQuiz: PropTypes.object,
+        quiz: PropTypes.object,
         sections: PropTypes.array.isRequired,
         categories: PropTypes.array.isRequired,
         errors: PropTypes.object,
@@ -68,8 +68,8 @@ class CreateForm extends Component {
         this.props.clearErrors()
         await this.props.createQuiz(quiz)
 
-        if (this.props.newQuiz.slug)
-            this.props.history.push(`/panel/dashboard/${this.props.newQuiz.slug}/summery`)
+        if (this.props.quiz.slug)
+            this.props.history.push(`/panel/dashboard/${this.props.quiz.slug}/summery`)
     }
 
     render() {
@@ -240,7 +240,7 @@ class CreateForm extends Component {
 }
 
 const mapStateToProps = state => ({
-    newQuiz: state.quizzes.quizzes.new,
+    quiz: state.quizzes.quizzes.item,
     sections: state.quizzes.sections.data,
     categories: state.quizzes.categories.data,
     errors: state.errors.messages,

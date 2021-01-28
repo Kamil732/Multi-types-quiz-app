@@ -16,7 +16,7 @@ class SettingsForm extends Component {
         data: PropTypes.object.isRequired,
         author_slug: PropTypes.string.isRequired,
         categories: PropTypes.array,
-        errors: PropTypes.array,
+        errors: PropTypes.object,
         updateQuizData: PropTypes.func.isRequired,
         getCategorySection: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired,
@@ -31,26 +31,31 @@ class SettingsForm extends Component {
             category: data.category.name,
             description: data.description,
             image_url: data.image_url,
+            is_published: data.is_published,
         }
 
         this.state = this.initialState
 
         this.onChange = this.onChange.bind(this)
+        this.onChangeRadio = this.onChangeRadio.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.cancel = this.cancel.bind(this)
     }
 
     componentWillUnmount = () => this.props.clearErrors()
 
     onChange = e => this.setState({ [e.target.name]: e.target.value })
 
-    onSubmit = e => {
+    onChangeRadio = e => this.setState({ [e.target.name]: e.target.value === 'true' ? true : false })
+
+    onSubmit = async e => {
         e.preventDefault()
 
-        const { title, category, description, image_url } = this.state
-        const quiz = { title, description, category, image_url }
+        const { title, category, description, image_url, is_published } = this.state
+        const quiz = { title, description, category, image_url, is_published }
 
         this.props.clearErrors()
-        this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
+        await this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
     }
 
     cancel = e => {
@@ -60,7 +65,7 @@ class SettingsForm extends Component {
 
     render() {
         const { errors, categories } = this.props
-        const { title, category, description, image_url } = this.state
+        const { title, category, description, image_url, is_published } = this.state
 
         const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
@@ -155,6 +160,41 @@ class SettingsForm extends Component {
                                 rows="10"
                                 required
                             />
+                        </div>
+                        {
+                            errors.is_published ? (
+                                <div className="error-box">
+                                    {
+                                        errors.is_published.map((error, index) => (
+                                            <p className="error-text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-control">
+                            <label className="form-control__label">Quiz availbility:</label>
+                            <div className="switch-btn">
+                                <input
+                                    type="radio"
+                                    id="is_published__true"
+                                    name="is_published"
+                                    value="true"
+                                    onChange={this.onChangeRadio}
+                                    checked={is_published === true}
+                                />
+                                <label htmlFor="is_published__true">Publish</label>
+
+                                <input
+                                    type="radio"
+                                    id="is_published__false"
+                                    name="is_published"
+                                    value="false"
+                                    onChange={this.onChangeRadio}
+                                    checked={is_published === false}
+                                />
+                                <label htmlFor="is_published__false">Private</label>
+                            </div>
                         </div>
                     </div>
                     <div className="col col-md-6">

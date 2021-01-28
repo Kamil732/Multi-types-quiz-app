@@ -11,7 +11,7 @@ import CircleLoader from '../../loaders/CircleLoader'
 class List extends Component {
     static propTypes = {
         loading: PropTypes.bool,
-        quizzes: PropTypes.object.isRequired,
+        quizzes: PropTypes.array.isRequired,
     }
 
     render() {

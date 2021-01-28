@@ -10,8 +10,7 @@ import {
     GET_QUIZ_SUCCESS,
     QUIZZES_ERROR,
     QUIZZES_LOADING,
-    UPDATE_QUIZ_FAIL,
-    UPDATE_QUIZ_SUCCESS
+    UPDATE_QUIZ,
 } from './types'
 
 import { addError } from './errors'
@@ -133,7 +132,7 @@ export const updateQuizData = (author_slug, quiz_slug, data) => async (dispatch,
         const res = await axios.patch(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`, body, config)
 
         dispatch({
-            type: UPDATE_QUIZ_SUCCESS,
+            type: UPDATE_QUIZ,
             payload: res.data
         })
     } catch (err) {
@@ -141,11 +140,8 @@ export const updateQuizData = (author_slug, quiz_slug, data) => async (dispatch,
             await dispatch(refreshToken())
             if (getState().auth.token)
                 await dispatch(updateQuizData(author_slug, quiz_slug, data))
-        } else {
+        } else
             if (err.response)
                 dispatch(addError(err.response.data, err.response.status))
-
-            dispatch({ type: UPDATE_QUIZ_FAIL })
-        }
     }
 }

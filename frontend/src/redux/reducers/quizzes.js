@@ -7,8 +7,7 @@ import {
     CATEGORY_SECTION_ERROR,
     CREATE_QUIZ,
     CREATE_QUIZ_FAIL,
-    UPDATE_QUIZ_SUCCESS,
-    UPDATE_QUIZ_FAIL,
+    UPDATE_QUIZ,
     GET_QUIZ_SUCCESS,
     GET_QUIZ_FAIL
 } from '../actions/types'
@@ -87,7 +86,7 @@ export default function (state=initialState, action) {
                     categories: initialState.categories,
                     sections: initialState.sections,
                 }
-        case UPDATE_QUIZ_SUCCESS:
+        case UPDATE_QUIZ:
         case CREATE_QUIZ:
         case GET_QUIZ_SUCCESS:
             return {
@@ -97,7 +96,6 @@ export default function (state=initialState, action) {
                     item: action.payload,
                 }
             }
-        case UPDATE_QUIZ_FAIL:
         case CREATE_QUIZ_FAIL:
         case GET_QUIZ_FAIL:
             return {
