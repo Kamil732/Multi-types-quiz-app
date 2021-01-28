@@ -120,6 +120,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
         model = Quiz
         fields = (
             'pub_date',
+            'is_published',
             'image_url',
             'section',
             'category',
@@ -152,6 +153,5 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
         model = Quiz
         exclude = (
             'id',
-            'is_published',
         )
         read_only_fields = ('questions', 'author',)

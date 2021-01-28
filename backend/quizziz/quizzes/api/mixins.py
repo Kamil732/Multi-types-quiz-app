@@ -4,10 +4,6 @@ from .pagination import QuizListPagination
 from . import serializers
 
 
-class QuizMixin(object):
-    queryset = Quiz.objects.order_by('-pub_date', '-solved_times')
-
-
 class QuizListMixin(object):
     serializer_class = serializers.QuizListSerializer
     pagination_class = QuizListPagination
@@ -20,7 +16,7 @@ class QuizListMixin(object):
 
     def list(self, request, *args, **kwargs):
         qs = self.filter_queryset(
-            self.get_queryset()).filter(is_published=True)
+            self.get_queryset())
 
         page = self.paginate_queryset(qs)
         if page is not None:

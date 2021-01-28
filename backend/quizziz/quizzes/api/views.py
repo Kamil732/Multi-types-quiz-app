@@ -59,7 +59,9 @@ class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroy
     lookup_url_kwarg = 'question_slug'
 
 
-class QuizDetailAPIView(mixins.QuizMixin, generics.RetrieveUpdateDestroyAPIView):
+class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Quiz.objects.order_by(
+        '-pub_date', '-solved_times').filter(is_published=True)
     permission_classes = (permissions.IsOwner,)
     serializer_class = serializers.QuizDetailSerializer
 
@@ -74,7 +76,9 @@ class QuizDetailAPIView(mixins.QuizMixin, generics.RetrieveUpdateDestroyAPIView)
                 _('The quiz you are looking for does not exist'))
 
 
-class QuizListAPIView(mixins.QuizMixin, mixins.QuizListMixin, generics.ListCreateAPIView):
+class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
+    queryset = Quiz.objects.order_by(
+        '-pub_date', '-solved_times').filter(is_published=True)
     permission_classes = (permissions.CreateIsAuthenticated,)
 
     def perform_create(self, serializer):
