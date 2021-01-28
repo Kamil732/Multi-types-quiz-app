@@ -77,6 +77,22 @@
     }
 }
 
+.inline-btns {
+    display: inline-flex;
+    gap: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    margin: 0 auto;
+
+    &.f-w {
+        flex-wrap: nowrap;
+
+        & > button {
+            width: 100%;
+        }
+    }
+}
+
 .icon-text {
     display: flex;
     align-items: center;

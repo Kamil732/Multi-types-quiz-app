@@ -26,12 +26,14 @@ class SettingsForm extends Component {
         super(props)
         const { data } = this.props
 
-        this.state = {
+        this.initialState = {
             title: data.title,
             category: data.category.name,
             description: data.description,
             image_url: data.image_url,
         }
+
+        this.state = this.initialState
 
         this.onChange = this.onChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
@@ -49,6 +51,11 @@ class SettingsForm extends Component {
 
         this.props.clearErrors()
         this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
+    }
+
+    cancel = e => {
+        e.preventDefault()
+        this.setState(this.initialState)
     }
 
     render() {
@@ -183,7 +190,10 @@ class SettingsForm extends Component {
                     </div>
                 </div>
 
-                <button className="btn btn__submit btn__contrast">Save</button>
+                <div className="inline-btns f-w">
+                    <button className="btn" onClick={this.cancel}>Cancel</button>
+                    <button className="btn btn__contrast">Save</button>
+                </div>
             </form>
         )
     }
