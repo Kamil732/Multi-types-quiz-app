@@ -259,7 +259,7 @@ class SettingsForm extends Component {
                             <button className="btn" onClick={this.cancel}>Cancel</button>
                         ) : null
                     }
-                    <button className="btn btn__contrast">Save</button>
+                    <button className={`btn btn__contrast ${!this.state.hasChanged ? 'btn__disabled' : ''}`}>Save</button>
                 </div>
             </form>
         )
