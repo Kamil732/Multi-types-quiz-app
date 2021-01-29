@@ -84,6 +84,7 @@ class Quiz(models.Model):
     image_url = models.URLField(default=DEFAULT_IMAGE)
     solved_times = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
+    random_question_order = models.BooleanField(default=True)
     slug = AutoSlugField(populate_from='title',
                          unique_with=['author'], max_length=120)
 

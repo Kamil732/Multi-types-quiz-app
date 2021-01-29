@@ -32,6 +32,7 @@ class SettingsForm extends Component {
             description: data.description,
             image_url: data.image_url,
             is_published: data.is_published,
+            random_question_order: data.random_question_order,
         }
 
         this.state = {
@@ -71,8 +72,8 @@ class SettingsForm extends Component {
     onSubmit = async e => {
         e.preventDefault()
 
-        const { title, category, description, image_url, is_published } = this.state.data
-        const quiz = { title, description, category, image_url, is_published }
+        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
+        const quiz = { title, description, category, image_url, is_published, random_question_order }
 
         this.props.clearErrors()
         await this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
@@ -88,7 +89,7 @@ class SettingsForm extends Component {
 
     render() {
         const { errors, categories } = this.props
-        const { title, category, description, image_url, is_published } = this.state.data
+        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
 
         const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
@@ -184,6 +185,7 @@ class SettingsForm extends Component {
                                 required
                             />
                         </div>
+
                         {
                             errors.is_published ? (
                                 <div className="error-box">
@@ -195,9 +197,9 @@ class SettingsForm extends Component {
                                 </div>
                             ) : ''
                         }
-                        <div className="form-control">
-                            <label className="form-control__label">Quiz availbility:</label>
-                            <div className="switch-btn">
+                        <div className="form-inline">
+                            <label className="form-inline__label" htmlFor="is_published">Quiz availbility:</label>
+                            <div className="switch-btn" id="is_published">
                                 <input
                                     type="radio"
                                     id="is_published__true"
@@ -217,6 +219,42 @@ class SettingsForm extends Component {
                                     checked={is_published === false}
                                 />
                                 <label htmlFor="is_published__false">Private</label>
+                            </div>
+                        </div>
+
+                        {
+                            errors.random_question_order ? (
+                                <div className="error-box">
+                                    {
+                                        errors.random_question_order.map((error, index) => (
+                                            <p className="error-text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-inline">
+                            <label className="form-inline__label" htmlFor="random_question_order">Radom question order:</label>
+                            <div className="switch-btn" id="random_question_order">
+                                <input
+                                    type="radio"
+                                    id="random_question_order__true"
+                                    name="random_question_order"
+                                    value="true"
+                                    onChange={this.onChangeRadio}
+                                    checked={random_question_order === true}
+                                />
+                                <label htmlFor="random_question_order__true">Yes</label>
+
+                                <input
+                                    type="radio"
+                                    id="random_question_order__false"
+                                    name="random_question_order"
+                                    value="false"
+                                    onChange={this.onChangeRadio}
+                                    checked={random_question_order === false}
+                                />
+                                <label htmlFor="random_question_order__false">No</label>
                             </div>
                         </div>
                     </div>

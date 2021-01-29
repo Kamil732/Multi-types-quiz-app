@@ -68,6 +68,18 @@
     }
 }
 
+.form-inline {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+
+    & > &__label {
+        font-size: 1.15rem;
+        margin: 5px 10px 5px 0;
+    }
+}
+
 .auth-form {
     display: flex;
     flex-direction: column;

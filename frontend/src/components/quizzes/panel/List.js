@@ -33,45 +33,51 @@ class List extends Component {
                     </div>
                 </td>
                 <td className="info">
-                    <div className="row">
-                       <div className="col-md-12">
-                            <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}/summery`}>
-                                <TextTruncate
-                                    text={quiz.title}
-                                    line={3}
-                                    truncateText="..."
-                                />
-                            </Link>
-                            <span style={{ fontSize: '11px' }}>
-                                {quiz.pub_date}
-                                &ensp; &bull; &ensp;
-                                <Link to={`/?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link>
-                            </span> <br /> <br />
-                            <TextTruncate
-                                text={quiz.description}
-                                line={1}
-                                truncateText="..."
-                                style={{ fontSize: '12px' }}
-                            />  <br /> <br />
-                            <span style={{ fontSize: '11px', fontWeight: 'bold' }}>
-                                Type: {quiz.section.display_name}
-                            </span>
+                    <Link className="quiz-card__link" to={`/panel/dashboard/${quiz.slug}/summery`}>
+                        <TextTruncate
+                            text={quiz.title}
+                            line={3}
+                            truncateText="..."
+                        />
+                    </Link>
+                    <span style={{ fontSize: '11px' }}>
+                        {quiz.pub_date}
+                        &ensp; &bull; &ensp;
+                        <Link to={`/?category__name=${quiz.category.name}`}>{quiz.category.display_name}</Link>
+                    </span> <br /> <br />
+                    <TextTruncate
+                        text={quiz.description}
+                        line={1}
+                        truncateText="..."
+                        style={{ fontSize: '12px' }}
+                    />  <br /> <br />
+                    <span style={{ fontSize: '11px', fontWeight: 'bold' }}>
+                        Type: {quiz.section.display_name}
+                    </span>
 
-                            <div className="actions">
-                                <Link to={`/panel/dashboard/${quiz.slug}/settings`}>
-                                    <button className="btn">Edit</button>
-                                </Link>
-                                <br />
+                    <div className="actions">
+                        <Link to={`/panel/dashboard/${quiz.slug}/settings`}>
+                            <button className="btn">Edit</button>
+                        </Link>
+                        <br />
 
-                                <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`}>
-                                    <button className="btn btn__contrast">Start Quiz</button>
-                                </Link>
-                                <br /> <br /> <br />
+                        <Link to={`/quizzes/${quiz.author_slug}/${quiz.slug}`}>
+                            <button className="btn btn__contrast">Start Quiz</button>
+                        </Link>
+                        <br /> <br /> <br />
 
-                                <button className="btn btn__danger">Delete</button>
-                            </div>
-                       </div>
+                        <button className="btn btn__danger">Delete</button>
                     </div>
+
+                    {
+                        quiz.is_published === false ? (
+                            <div className="error-box">
+                                <span className="error-text">
+                                    This quiz is private
+                                </span>
+                            </div>
+                        ) : null
+                    }
                 </td>
                 <td className="numbers">
                     {quiz.question_amount}
