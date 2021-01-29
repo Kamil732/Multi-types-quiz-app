@@ -119,10 +119,10 @@ class UserData extends Component {
                                         <form onSubmit={e => this.onSubmit(e, 'picture')}>
                                             {
                                                 errors.picture ? (
-                                                    <div className="error-box">
+                                                    <div className="message-box error">
                                                         {
                                                             errors.picture.map((error, index) => (
-                                                                <p className="error-text" key={index}>{error}</p>
+                                                                <p className="message-box__text" key={index}>{error}</p>
                                                             ))
                                                         }
                                                     </div>
@@ -175,10 +175,10 @@ class UserData extends Component {
                                             <form onSubmit={e => this.onSubmit(e, 'username')}>
                                                 {
                                                     errors.username ? (
-                                                        <div className="error-box">
+                                                        <div className="message-box error">
                                                             {
                                                                 errors.username.map((error, index) => (
-                                                                    <p className="error-text" key={index}>{error}</p>
+                                                                    <p className="message-box__text" key={index}>{error}</p>
                                                                 ))
                                                             }
                                                         </div>
@@ -222,10 +222,10 @@ class UserData extends Component {
                                             <form onSubmit={e => this.onSubmit(e, 'bio')}>
                                                 {
                                                     errors.bio ? (
-                                                        <div className="error-box">
+                                                        <div className="message-box error">
                                                             {
                                                                 errors.bio.map((error, index) => (
-                                                                    <p className="error-text" key={index}>{error}</p>
+                                                                    <p className="message-box__text" key={index}>{error}</p>
                                                                 ))
                                                             }
                                                         </div>

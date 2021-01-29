@@ -102,8 +102,8 @@ class SettingsForm extends Component {
                 <div className="row">
                     {
                         errors.detail ? (
-                            <div className="error-box">
-                                <p className="error-text">{errors.detail}</p>
+                            <div className="message-box error">
+                                <p className="message-box__text">{errors.detail}</p>
                             </div>
                         ) : ''
                     }
@@ -111,10 +111,10 @@ class SettingsForm extends Component {
                     <div className="col col-md-6">
                         {
                             errors.title ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.title.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -140,10 +140,10 @@ class SettingsForm extends Component {
 
                         {
                             errors.category ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.category.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -163,10 +163,10 @@ class SettingsForm extends Component {
 
                         {
                             errors.description ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.description.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -188,10 +188,10 @@ class SettingsForm extends Component {
 
                         {
                             errors.is_published ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.is_published.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -224,10 +224,10 @@ class SettingsForm extends Component {
 
                         {
                             errors.random_question_order ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.random_question_order.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -279,10 +279,10 @@ class SettingsForm extends Component {
 
                         {
                             errors.image_url ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         errors.image_url.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>

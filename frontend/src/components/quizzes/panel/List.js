@@ -71,9 +71,9 @@ class List extends Component {
 
                     {
                         quiz.is_published === false ? (
-                            <div className="error-box">
-                                <span className="error-text">
-                                    This quiz is private
+                            <div className="message-box info">
+                                <span className="message-box__text">
+                                    This quiz is private. To change that click <Link to={`/panel/dashboard/${quiz.slug}/settings`}>Here</Link>
                                 </span>
                             </div>
                         ) : null
