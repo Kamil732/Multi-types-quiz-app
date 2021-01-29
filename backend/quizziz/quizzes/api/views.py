@@ -61,7 +61,7 @@ class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroy
 
 class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.order_by(
-        '-pub_date', '-solved_times').filter(is_published=True)
+        '-pub_date', '-solved_times')
     permission_classes = (permissions.IsOwner,)
     serializer_class = serializers.QuizDetailSerializer
 

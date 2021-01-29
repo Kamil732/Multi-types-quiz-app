@@ -26,7 +26,7 @@ class SettingsForm extends Component {
         super(props)
         const { data } = this.props
 
-        this.initialState = {
+        this.initialData = {
             title: data.title,
             category: data.category.name,
             description: data.description,
@@ -34,7 +34,10 @@ class SettingsForm extends Component {
             is_published: data.is_published,
         }
 
-        this.state = this.initialState
+        this.state = {
+            hasChanged: false,
+            data: this.initialData,
+        }
 
         this.onChange = this.onChange.bind(this)
         this.onChangeRadio = this.onChangeRadio.bind(this)
@@ -44,14 +47,31 @@ class SettingsForm extends Component {
 
     componentWillUnmount = () => this.props.clearErrors()
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value })
+    onChange = e => this.setState(prevState => ({
+        ...prevState,
+        data: {
+            ...prevState.data,
+            [e.target.name]: e.target.value,
+        }
+    }))
 
-    onChangeRadio = e => this.setState({ [e.target.name]: e.target.value === 'true' ? true : false })
+    onChangeRadio = e => this.setState(prevState => ({
+        ...prevState,
+        data: {
+            ...prevState.data,
+            [e.target.name]: e.target.value === 'true' ? true : false
+        }
+    }))
+
+    componentDidUpdate(_, prevState) {
+        if (prevState.data !== this.state.data)
+            this.setState({ hasChanged: JSON.stringify(this.initialData) !== JSON.stringify(this.state.data) })
+    }
 
     onSubmit = async e => {
         e.preventDefault()
 
-        const { title, category, description, image_url, is_published } = this.state
+        const { title, category, description, image_url, is_published } = this.state.data
         const quiz = { title, description, category, image_url, is_published }
 
         this.props.clearErrors()
@@ -60,12 +80,15 @@ class SettingsForm extends Component {
 
     cancel = e => {
         e.preventDefault()
-        this.setState(this.initialState)
+        this.setState({
+            hasChanged: false,
+            data: this.initialData,
+        })
     }
 
     render() {
         const { errors, categories } = this.props
-        const { title, category, description, image_url, is_published } = this.state
+        const { title, category, description, image_url, is_published } = this.state.data
 
         const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
@@ -231,7 +254,11 @@ class SettingsForm extends Component {
                 </div>
 
                 <div className="inline-btns f-w">
-                    <button className="btn" onClick={this.cancel}>Cancel</button>
+                    {
+                        this.state.hasChanged ? (
+                            <button className="btn" onClick={this.cancel}>Cancel</button>
+                        ) : null
+                    }
                     <button className="btn btn__contrast">Save</button>
                 </div>
             </form>
