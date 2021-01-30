@@ -85,11 +85,32 @@ class Quiz(models.Model):
     solved_times = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
     random_question_order = models.BooleanField(default=True)
+    password = models.CharField(max_length=20, blank=True)
+    ask_name = models.BooleanField(default=True)
+    ask_email = models.BooleanField(default=False)
+    ask_gender = models.BooleanField(default=False)
+    ask_opinion = models.BooleanField(default=True)
     slug = AutoSlugField(populate_from='title',
                          unique_with=['author'], max_length=120)
 
     def __str__(self):
         return self.title
+
+
+class QuizReview(models.Model):
+    GENDER = (
+        ('man', 'Man'),
+        ('woman', 'Woman'),
+    )
+
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    name = models.CharField(max_length=25, blank=True)
+    email = models.EmailField(max_length=80, blank=True)
+    gender = models.CharField(max_length=5, choices=GENDER, blank=True)
+    opinion = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Question(models.Model):
