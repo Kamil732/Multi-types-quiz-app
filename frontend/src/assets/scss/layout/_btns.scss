@@ -67,14 +67,22 @@
     }
 
     &__disabled {
-        pointer-events: none;
-        cursor: not-allowed;
+        position: relative;
         opacity: 0.7;
+
+        cursor: not-allowed;
+
+        &:hover {
+            transform: none !important;
+        }
+
+        &:active {
+            pointer-events: none;
+        }
     }
 
     &:hover {
         transform: translateY(-2.5px);
-        // @include shadow-md;
     }
 }
 

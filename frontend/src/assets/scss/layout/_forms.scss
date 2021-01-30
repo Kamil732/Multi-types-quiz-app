@@ -95,6 +95,18 @@
     }
 }
 
+.help-text {
+    font-size: 0.8rem;
+    opacity: 0.8;
+
+    &__optional {
+        background-color: $primary-variant-color;
+        color: set-text-color($primary-variant-color);
+        padding: 2px;
+        margin-right: 5px;
+    }
+}
+
 .auth-form {
     display: flex;
     flex-direction: column;
