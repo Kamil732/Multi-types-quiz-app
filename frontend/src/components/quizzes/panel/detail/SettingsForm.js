@@ -181,7 +181,7 @@ class SettingsForm extends Component {
                                 onChange={this.onChange}
                                 className="form-control__input form-control__textarea"
                                 placeholder="Pass the description..."
-                                rows="10"
+                                rows="7"
                                 required
                             />
                         </div>
@@ -292,11 +292,7 @@ class SettingsForm extends Component {
                 </div>
 
                 <div className="inline-btns f-w">
-                    {
-                        this.state.hasChanged ? (
-                            <button className="btn" onClick={this.cancel}>Cancel</button>
-                        ) : null
-                    }
+                    <button className={`btn ${!this.state.hasChanged ? 'btn__disabled' : ''}`} onClick={this.cancel}>Cancel</button>
                     <button className={`btn btn__contrast ${!this.state.hasChanged ? 'btn__disabled' : ''}`}>Save</button>
                 </div>
             </form>

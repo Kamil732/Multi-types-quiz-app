@@ -195,7 +195,7 @@ class CreateForm extends Component {
                                 onChange={this.onChange}
                                 className="form-control__input form-control__textarea"
                                 placeholder="Pass the description..."
-                                rows="10"
+                                rows="7"
                                 required
                             />
                         </div>
