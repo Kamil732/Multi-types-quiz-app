@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { clearErrors } from '../../../../redux/actions/errors'
-import { getCategorySection, updateQuizData } from '../../../../redux/actions/quizzes'
+import { updateQuizData } from '../../../../redux/actions/quizzes'
 
 import { RiImageEditFill } from 'react-icons/ri'
 
@@ -18,7 +18,6 @@ class SettingsForm extends Component {
         categories: PropTypes.array,
         errors: PropTypes.object,
         updateQuizData: PropTypes.func.isRequired,
-        getCategorySection: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired,
     }
 
@@ -79,13 +78,11 @@ class SettingsForm extends Component {
         await this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
     }
 
-    cancel = e => {
-        e.preventDefault()
+    cancel = () =>
         this.setState({
             hasChanged: false,
             data: this.initialData,
         })
-    }
 
     render() {
         const { errors, categories } = this.props
@@ -292,8 +289,8 @@ class SettingsForm extends Component {
                 </div>
 
                 <div className="inline-btns f-w">
-                    <button className={`btn ${!this.state.hasChanged ? 'btn__disabled' : ''}`} onClick={this.cancel}>Cancel</button>
-                    <button className={`btn btn__contrast ${!this.state.hasChanged ? 'btn__disabled' : ''}`}>Save</button>
+                    <button type="reset" className={`btn ${!this.state.hasChanged ? 'btn__disabled' : ''}`} onClick={this.cancel}>Cancel</button>
+                    <button type="submit" className={`btn btn__contrast ${!this.state.hasChanged ? 'btn__disabled' : ''}`}>Save</button>
                 </div>
             </form>
         )
@@ -307,7 +304,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = {
-    getCategorySection,
     updateQuizData,
     clearErrors,
 }
