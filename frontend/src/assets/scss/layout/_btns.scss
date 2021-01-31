@@ -66,11 +66,10 @@
         color: set-text-color($secondary-color);
     }
 
-    &__disabled {
+    &__disabled, &__disabled * {
         position: relative;
         opacity: 0.7;
-
-        cursor: not-allowed;
+        cursor: not-allowed !important;
 
         &:hover {
             transform: none !important;

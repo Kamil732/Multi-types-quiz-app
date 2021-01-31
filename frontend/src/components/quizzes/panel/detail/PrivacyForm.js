@@ -80,6 +80,7 @@ class PrivacyForm extends Component {
 
     render() {
         const { errors } = this.props
+        const { is_published } = this.props.data
         const { ask_name, ask_email, ask_gender, ask_opinion, password } = this.state.data
 
         return (
@@ -106,7 +107,7 @@ class PrivacyForm extends Component {
                 }
                 <div className="form-inline">
                     <label className="form-inline__label" htmlFor="ask_name">Ask about name:</label>
-                    <div className="switch-btn" id="ask_name">
+                    <div className={`switch-btn ${!is_published ? 'btn__disabled' : ''}`} id="ask_name">
                         <input
                             type="radio"
                             id="ask_name__true"
@@ -142,7 +143,7 @@ class PrivacyForm extends Component {
                 }
                 <div className="form-inline">
                     <label className="form-inline__label" htmlFor="ask_email">Ask about email:</label>
-                    <div className="switch-btn" id="ask_email">
+                    <div className={`switch-btn ${!is_published ? 'btn__disabled' : ''}`} id="ask_email">
                         <input
                             type="radio"
                             id="ask_email__true"
@@ -178,7 +179,7 @@ class PrivacyForm extends Component {
                 }
                 <div className="form-inline">
                     <label className="form-inline__label" htmlFor="ask_gender">Ask about gender:</label>
-                    <div className="switch-btn" id="ask_gender">
+                    <div className={`switch-btn ${!is_published ? 'btn__disabled' : ''}`} id="ask_gender">
                         <input
                             type="radio"
                             id="ask_gender__true"
@@ -214,7 +215,7 @@ class PrivacyForm extends Component {
                 }
                 <div className="form-inline">
                     <label className="form-inline__label" htmlFor="ask_opinion">Ask about opinion:</label>
-                    <div className="switch-btn" id="ask_opinion">
+                    <div className={`switch-btn ${!is_published ? 'btn__disabled' : ''}`} id="ask_opinion">
                         <input
                             type="radio"
                             id="ask_opinion__true"
@@ -256,7 +257,8 @@ class PrivacyForm extends Component {
                         name="password"
                         value={password}
                         onChange={this.onChange}
-                        className="form-inline__input"
+                        className={`form-inline__input ${!is_published ? 'btn__disabled' : ''}`}
+                        readOnly={!is_published}
                     />
                     <small className="help-text">
                         <span className="help-text__optional">OPTIONAL</span>
