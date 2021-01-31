@@ -8,7 +8,7 @@
     &__input {
         font-size: 1.05rem;
         width: 100%;
-        padding: 10px;
+        padding: 8px;
         height: 100%;
         outline: none;
         border: none;
@@ -74,9 +74,36 @@
     flex-flow: row wrap;
     align-items: center;
 
-    & > &__label {
+    &__label {
         font-size: 1.15rem;
         margin: 5px 10px 5px 0;
+    }
+
+    &__input {
+        font-size: 1.05rem;
+        padding: 8px;
+        height: 100%;
+        outline: none;
+        border: none;
+        background-color: lighten($primary-variant-color, 15%);
+        border: 1px solid #aaa;
+
+        &:focus {
+            z-index: 1;
+            box-shadow: 0 0 7px $input-focus-color;
+        }
+    }
+}
+
+.help-text {
+    font-size: 0.8rem;
+    opacity: 0.8;
+
+    &__optional {
+        background-color: $primary-variant-color;
+        color: set-text-color($primary-variant-color);
+        padding: 2px;
+        margin-right: 5px;
     }
 }
 

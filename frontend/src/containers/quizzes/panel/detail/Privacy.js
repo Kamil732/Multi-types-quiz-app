@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import SettingsForm from '../../../../components/quizzes/panel/detail/SettingsForm'
 import Title from '../../../../common/Title'
+import PrivacyForm from '../../../../components/quizzes/panel/detail/PrivacyForm'
 
-class Settings extends Component {
+class Privacy extends Component {
     static propTypes = {
         data: PropTypes.object.isRequired,
     }
@@ -11,11 +11,11 @@ class Settings extends Component {
     render() {
         return (
             <>
-                <Title title={`${this.props.data.title} - Quiz Settings`} />
+                <Title title={`${this.props.data.title} - Quiz Privacy`} />
 
                 <div className="card">
                     <div className="card__body">
-                        <SettingsForm data={this.props.data} />
+                        <PrivacyForm data={this.props.data} />
                     </div>
                 </div>
             </>
@@ -23,4 +23,4 @@ class Settings extends Component {
     }
 }
 
-export default Settings
+export default Privacy

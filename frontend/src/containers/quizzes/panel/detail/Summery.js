@@ -16,7 +16,7 @@ class QuizDetail extends Component {
 
         return (
             <>
-                <Title title={`Dashboard ${data.title}`} />
+                <Title title={`${data.title} - Quiz Summery`} />
 
                 <div className="card">
                     <div className="card__body">
