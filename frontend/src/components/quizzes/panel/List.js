@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 import FacebookShare from '../../social_media/FacebookShare'
 import TwitterShare from '../../social_media/TwitterShare'
@@ -8,10 +10,40 @@ import TwitterShare from '../../social_media/TwitterShare'
 import TextTruncate from 'react-text-truncate'
 import CircleLoader from '../../loaders/CircleLoader'
 
+import { deleteQuiz } from '../../../redux/actions/quizzes'
+
 class List extends Component {
     static propTypes = {
         loading: PropTypes.bool,
         quizzes: PropTypes.array.isRequired,
+    }
+
+    constructor(props) {
+        super(props)
+
+        this.deleteQuiz = this.deleteQuiz.bind(this)
+    }
+
+    deleteQuiz = (author_slug, quiz_slug) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then(res => {
+            if (res.isConfirmed) {
+                this.props.deleteQuiz(author_slug, quiz_slug)
+
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                ).then(res => this.props.history.push(`/panel/dashboard/`))
+            }
+        })
     }
 
     render() {
@@ -66,7 +98,7 @@ class List extends Component {
                         </Link>
                         <br /> <br /> <br />
 
-                        <button className="btn btn__danger">Delete</button>
+                        <button className="btn btn__danger" onClick={() => this.deleteQuiz(quiz.author_slug, quiz.slug)}>Delete</button>
                     </div>
 
                     {
@@ -108,4 +140,8 @@ class List extends Component {
     }
 }
 
-export default withRouter(List)
+const mapDispatchToProps = {
+    deleteQuiz,
+}
+
+export default connect(null, mapDispatchToProps)(withRouter(List))

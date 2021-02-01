@@ -11,6 +11,7 @@ import {
     QUIZZES_ERROR,
     QUIZZES_LOADING,
     UPDATE_QUIZ,
+    DELETE_QUIZ,
 } from './types'
 
 import { addError } from './errors'
@@ -143,5 +144,23 @@ export const updateQuizData = (author_slug, quiz_slug, data) => async (dispatch,
         } else
             if (err.response)
                 dispatch(addError(err.response.data, err.response.status))
+    }
+}
+
+export const deleteQuiz = (author_slug, quiz_slug) => async (dispatch, getState) => {
+    try {
+        const config = getAccessToken(getState)
+
+        axios.delete(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`, config)
+        dispatch({
+            type: DELETE_QUIZ,
+            payload: quiz_slug,
+        })
+    } catch (err) {
+        if (err.response.status === 401) {
+            await dispatch(refreshToken())
+            if (getState().auth.token)
+                await dispatch(deleteQuiz(author_slug, quiz_slug))
+        }
     }
 }
