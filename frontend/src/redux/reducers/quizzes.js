@@ -9,7 +9,8 @@ import {
     CREATE_QUIZ_FAIL,
     UPDATE_QUIZ,
     GET_QUIZ_SUCCESS,
-    GET_QUIZ_FAIL
+    GET_QUIZ_FAIL,
+    DELETE_QUIZ,
 } from '../actions/types'
 
 const initialState = {
@@ -103,6 +104,18 @@ export default function (state=initialState, action) {
                 quizzes: {
                     ...state.quizzes,
                     item: {},
+                }
+            }
+        case DELETE_QUIZ:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    item: {},
+                    data: {
+                        ...state.quizzes.data,
+                        results: state.quizzes.data.results.filter(quiz => quiz.slug !== action.payload)
+                    }
                 }
             }
         default:
