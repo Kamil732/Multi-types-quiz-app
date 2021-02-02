@@ -45,7 +45,7 @@ class List extends Component {
                     'Your quiz has been deleted',
                     'success'
                 ).then(res => {
-                    this.props.history.push('/');
+                    this.props.history.push('/refresh');
                     this.props.history.replace('/panel/dashboard');
                 })
             }
