@@ -30,18 +30,24 @@ class List extends Component {
             text: "Are you sure you want to delete this quiz?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'delete'
+            customClass: {
+                confirmButton: 'btn btn__danger',
+                cancelButton: 'btn'
+            },
+            buttonsStyling: false,
+            confirmButtonText: 'delete',
         }).then(res => {
             if (res.isConfirmed) {
                 this.props.deleteQuiz(author_slug, quiz_slug)
 
                 Swal.fire(
                     'Deleted!',
-                    'Your file has been deleted.',
+                    'Your quiz has been deleted',
                     'success'
-                ).then(res => this.props.history.push(`/panel/dashboard/`))
+                ).then(res => {
+                    this.props.history.push('/');
+                    this.props.history.replace('/panel/dashboard');
+                })
             }
         })
     }
@@ -119,6 +125,13 @@ class List extends Component {
                 </td>
             </tr>
         ))
+
+        if (quizList.length === 0)
+            return (
+                <div className="card__header">
+                    There are not quizzes to display
+                </div>
+            )
 
         return (
             <div style={{ overflowX: 'auto' }}>
