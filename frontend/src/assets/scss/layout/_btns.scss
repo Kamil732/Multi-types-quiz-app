@@ -66,14 +66,38 @@
         color: set-text-color($secondary-color);
     }
 
-    &__disabled {
-        pointer-events: none;
-        cursor: not-allowed;
+    &__disabled, &__disabled * {
+        position: relative;
+        opacity: 0.7;
+        cursor: not-allowed !important;
+
+        &:hover {
+            transform: none !important;
+        }
+
+        &:active {
+            pointer-events: none;
+        }
     }
 
     &:hover {
         transform: translateY(-2.5px);
-        // @include shadow-md;
+    }
+}
+
+.inline-btns {
+    display: inline-flex;
+    gap: 10px;
+    width: 100%;
+    flex-wrap: wrap;
+    margin: 0 auto;
+
+    &.f-w {
+        flex-wrap: nowrap;
+
+        & > button {
+            width: 100%;
+        }
     }
 }
 
@@ -141,5 +165,49 @@ select.select-btn {
 
     option {
         font-size: 1.05rem;
+    }
+}
+
+.switch-btn {
+	display: flex;
+    overflow: hidden;
+
+    & > input {
+        position: absolute !important;
+        clip: rect(0, 0, 0, 0);
+        height: 1px;
+        width: 1px;
+        border: 0;
+        overflow: hidden;
+    }
+
+    & > label {
+        background-color: $background-color;
+        color: rgba(set-text-color($background-color), 0.6);
+        font-size: 14px;
+        line-height: 1;
+        text-align: center;
+        padding: 8px 16px;
+        margin-right: -1px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:first-of-type {
+            border-radius: 4px 0 0 4px;
+        }
+
+        &:last-of-type {
+            border-radius: 0 4px 4px 0;
+        }
+    }
+
+    & > input:checked + label {
+        background-color: $primary-color;
+        color: set-text-color($primary-color);
+        box-shadow: none;
     }
 }

@@ -3,15 +3,11 @@
     text-align: center;
 }
 
-.img-preview {
-    padding: 0 2rem;
-
-    &__img {
-        max-width: 100%;
-        height: auto;
-        border: 1px solid grey;
-        vertical-align: middle;
-    }
+.img-preview__img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid grey;
+    vertical-align: middle;
 }
 
 .quiz-detail {
@@ -25,6 +21,11 @@
         margin-right: 10px;
         border: 1px solid grey;
         box-shadow: 0 2px 3px grey;
+    }
+
+    &__title {
+        margin-bottom: 5px;
+        font-size: 1.4rem;
     }
 }
 

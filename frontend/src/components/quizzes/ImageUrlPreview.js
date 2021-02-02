@@ -80,8 +80,8 @@ class ImageUrlPreview extends Component {
 
                             {
                                 success === false ? (
-                                    <div className="error-box">
-                                        <p className="error-text">The URL you entered either doesn't exist or is invalid</p>
+                                    <div className="message-box error">
+                                        <p className="message-box__text">The URL you entered either doesn't exist or is invalid</p>
                                     </div>
                                 ) : ''
                             }

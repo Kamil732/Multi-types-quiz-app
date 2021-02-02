@@ -34,6 +34,9 @@ class UserData extends Component {
         this.onChange = this.onChange.bind(this)
         this.handleImageChange = this.handleImageChange.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
+        this.setEdit = this.setEdit.bind(this)
+        this.cancelEdit = this.cancelEdit.bind(this)
+        this.cancelEditImage = this.cancelEditImage.bind(this)
         this.deleteImage = this.deleteImage.bind(this)
     }
 
@@ -42,12 +45,12 @@ class UserData extends Component {
         this.setState({ [`${field}_edit_mode`]: !this.state[`${field}_edit_mode`] })
     }
 
-    closeEdit = field => {
+    cancelEdit = field => {
         this.setEdit(field)
         this.setState({ [field]: this.props[field] })
     }
 
-    closeEditImage = () => {
+    cancelEditImage = () => {
         this.setEdit('picture')
         this.setState({
             picture: null,
@@ -116,10 +119,10 @@ class UserData extends Component {
                                         <form onSubmit={e => this.onSubmit(e, 'picture')}>
                                             {
                                                 errors.picture ? (
-                                                    <div className="error-box">
+                                                    <div className="message-box error">
                                                         {
                                                             errors.picture.map((error, index) => (
-                                                                <p className="error-text" key={index}>{error}</p>
+                                                                <p className="message-box__text" key={index}>{error}</p>
                                                             ))
                                                         }
                                                     </div>
@@ -139,15 +142,15 @@ class UserData extends Component {
                                                     onDragLeave={() => this.uploadContainer.current.classList.remove('dragover')}
                                                 />
                                             </label>
-                                            <div style={{ display: 'inline-flex', gap: '10px', flexWrap: 'wrap', margin: '0 auto' }}>
-                                                <button className="btn btn__contrast">
-                                                    Save
+                                            <div className="inline-btns">
+                                            <button className="btn" onClick={this.cancelEditImage}>
+                                                    Cancel
                                                 </button>
                                                 <button className="btn btn__danger" onClick={e => e.preventDefault()} onDoubleClick={() => this.deleteImage()}>
                                                     delete (dobule click)
                                                 </button>
-                                                <button className="btn" onClick={this.closeEditImage}>
-                                                    Close
+                                                <button className="btn btn__contrast">
+                                                    Save
                                                 </button>
                                             </div>
                                         </form>
@@ -172,10 +175,10 @@ class UserData extends Component {
                                             <form onSubmit={e => this.onSubmit(e, 'username')}>
                                                 {
                                                     errors.username ? (
-                                                        <div className="error-box">
+                                                        <div className="message-box error">
                                                             {
                                                                 errors.username.map((error, index) => (
-                                                                    <p className="error-text" key={index}>{error}</p>
+                                                                    <p className="message-box__text" key={index}>{error}</p>
                                                                 ))
                                                             }
                                                         </div>
@@ -190,12 +193,12 @@ class UserData extends Component {
                                                         onChange={this.onChange}
                                                     />
                                                 </div>
-                                                <div style={{ display: 'inline-flex', gap: '10px' }}>
+                                                <div className="inline-btns">
+                                                    <button className="btn" onClick={() => this.cancelEdit('username')}>
+                                                        Cancel
+                                                    </button>
                                                     <button className="btn btn__contrast">
                                                         Save
-                                                    </button>
-                                                    <button className="btn" onClick={() => this.closeEdit('username')}>
-                                                        Close
                                                     </button>
                                                 </div>
                                             </form>
@@ -219,10 +222,10 @@ class UserData extends Component {
                                             <form onSubmit={e => this.onSubmit(e, 'bio')}>
                                                 {
                                                     errors.bio ? (
-                                                        <div className="error-box">
+                                                        <div className="message-box error">
                                                             {
                                                                 errors.bio.map((error, index) => (
-                                                                    <p className="error-text" key={index}>{error}</p>
+                                                                    <p className="message-box__text" key={index}>{error}</p>
                                                                 ))
                                                             }
                                                         </div>
@@ -237,12 +240,12 @@ class UserData extends Component {
                                                         rows="10"
                                                     />
                                                 </div>
-                                                <div style={{ display: 'inline-flex', gap: '10px' }}>
+                                                <div className="inline-btns">
+                                                    <button className="btn" onClick={() => this.cancelEdit('bio')}>
+                                                        Cancel
+                                                    </button>
                                                     <button className="btn btn__contrast">
                                                         Save
-                                                    </button>
-                                                    <button className="btn" onClick={() => this.closeEdit('bio')}>
-                                                        Close
                                                     </button>
                                                 </div>
                                             </form>

@@ -1,86 +1,92 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { clearErrors } from '../../../../redux/actions/errors'
+import { updateQuizData } from '../../../../redux/actions/quizzes'
 
-import { AiFillEdit } from 'react-icons/ai'
 import { RiImageEditFill } from 'react-icons/ri'
 
-import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
-import { clearErrors } from '../../redux/actions/errors'
-import ImageUrlPreview from './ImageUrlPreview'
-import Textarea from '../Textarea'
+import ImageUrlPreview from '../../ImageUrlPreview'
+import { AiFillEdit } from 'react-icons/ai'
+import Textarea from '../../../Textarea'
+import { withRouter } from 'react-router-dom'
 
-class CreateForm extends Component {
+class SettingsForm extends Component {
     static propTypes = {
-        quiz: PropTypes.object,
-        sections: PropTypes.array.isRequired,
-        categories: PropTypes.array.isRequired,
+        data: PropTypes.object.isRequired,
+        author_slug: PropTypes.string.isRequired,
+        categories: PropTypes.array,
         errors: PropTypes.object,
-        getCategorySection: PropTypes.func.isRequired,
+        updateQuizData: PropTypes.func.isRequired,
         clearErrors: PropTypes.func.isRequired,
-        createQuiz: PropTypes.func.isRequired,
     }
 
     constructor(props) {
         super(props)
+        const { data } = this.props
+
+        this.initialData = {
+            title: data.title,
+            category: data.category.name,
+            description: data.description,
+            image_url: data.image_url,
+            is_published: data.is_published,
+            random_question_order: data.random_question_order,
+        }
 
         this.state = {
-            title: '',
-            description: 'Welcome to my quiz!',
-            section: '',
-            category: '',
-            image_url: '',
+            hasChanged: false,
+            data: this.initialData,
         }
 
         this.onChange = this.onChange.bind(this)
+        this.onChangeRadio = this.onChangeRadio.bind(this)
         this.onSubmit = this.onSubmit.bind(this)
-    }
-
-    componentDidMount = () => {
-        if (this.props.sections.length > 0 && this.props.categories.length > 0) {
-            this.setState({
-                section: this.props.sections[0].name,
-                category: this.props.categories[0].name,
-            })
-        }
-    }
-
-    componentDidUpdate(prevProps, _) {
-        if(prevProps.categories !== this.props.categories && prevProps.sections !== this.props.sections)
-            this.setState({
-                section: this.props.sections[0].name,
-                category: this.props.categories[0].name,
-            })
+        this.cancel = this.cancel.bind(this)
     }
 
     componentWillUnmount = () => this.props.clearErrors()
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value })
+    onChange = e => this.setState(prevState => ({
+        ...prevState,
+        data: {
+            ...prevState.data,
+            [e.target.name]: e.target.value,
+        }
+    }))
+
+    onChangeRadio = e => this.setState(prevState => ({
+        ...prevState,
+        data: {
+            ...prevState.data,
+            [e.target.name]: e.target.value === 'true' ? true : false
+        }
+    }))
+
+    componentDidUpdate(_, prevState) {
+        if (prevState.data !== this.state.data)
+            this.setState({ hasChanged: JSON.stringify(this.initialData) !== JSON.stringify(this.state.data) })
+    }
 
     onSubmit = async e => {
         e.preventDefault()
 
-
-        const { title, description, section, category, image_url } = this.state
-        const quiz = { title, description, section, category, image_url }
+        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
+        const quiz = { title, description, category, image_url, is_published, random_question_order }
 
         this.props.clearErrors()
-        await this.props.createQuiz(quiz)
-
-        if (this.props.quiz.slug)
-            this.props.history.push(`/panel/dashboard/${this.props.quiz.slug}/summery`)
+        await this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
     }
 
-    render() {
-        const { errors, sections, categories } = this.props
-        const { title, description, section, category, image_url } = this.state
+    cancel = () =>
+        this.setState({
+            hasChanged: false,
+            data: this.initialData,
+        })
 
-        const sectionOptions = sections.map((section, index) => (
-            <option value={section.name} key={index}>
-                {section.display_name}
-            </option>
-        ))
+    render() {
+        const { errors, categories } = this.props
+        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
 
         const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
@@ -130,29 +136,6 @@ class CreateForm extends Component {
                         </div>
 
                         {
-                            errors.section ? (
-                                <div className="message-box error">
-                                    {
-                                        errors.section.map((error, index) => (
-                                            <p className="message-box__text" key={index}>{error}</p>
-                                        ))
-                                    }
-                                </div>
-                            ) : ''
-                        }
-                        <div className="form-control">
-                            <label className="form-control__label">Section:</label>
-                            <select
-                                className="select-btn form-control__input"
-                                name="section"
-                                onChange={this.onChange}
-                                value={section}
-                            >
-                                {sectionOptions}
-                            </select>
-                        </div>
-
-                        {
                             errors.category ? (
                                 <div className="message-box error">
                                     {
@@ -199,6 +182,78 @@ class CreateForm extends Component {
                                 required
                             />
                         </div>
+
+                        {
+                            errors.is_published ? (
+                                <div className="message-box error">
+                                    {
+                                        errors.is_published.map((error, index) => (
+                                            <p className="message-box__text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-inline">
+                            <label className="form-inline__label" htmlFor="is_published">Quiz availbility:</label>
+                            <div className="switch-btn" id="is_published">
+                                <input
+                                    type="radio"
+                                    id="is_published__true"
+                                    name="is_published"
+                                    value="true"
+                                    onChange={this.onChangeRadio}
+                                    checked={is_published === true}
+                                />
+                                <label htmlFor="is_published__true">Publish</label>
+
+                                <input
+                                    type="radio"
+                                    id="is_published__false"
+                                    name="is_published"
+                                    value="false"
+                                    onChange={this.onChangeRadio}
+                                    checked={is_published === false}
+                                />
+                                <label htmlFor="is_published__false">Private</label>
+                            </div>
+                        </div>
+
+                        {
+                            errors.random_question_order ? (
+                                <div className="message-box error">
+                                    {
+                                        errors.random_question_order.map((error, index) => (
+                                            <p className="message-box__text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-inline">
+                            <label className="form-inline__label" htmlFor="random_question_order">Radom question order:</label>
+                            <div className="switch-btn" id="random_question_order">
+                                <input
+                                    type="radio"
+                                    id="random_question_order__true"
+                                    name="random_question_order"
+                                    value="true"
+                                    onChange={this.onChangeRadio}
+                                    checked={random_question_order === true}
+                                />
+                                <label htmlFor="random_question_order__true">Yes</label>
+
+                                <input
+                                    type="radio"
+                                    id="random_question_order__false"
+                                    name="random_question_order"
+                                    value="false"
+                                    onChange={this.onChangeRadio}
+                                    checked={random_question_order === false}
+                                />
+                                <label htmlFor="random_question_order__false">No</label>
+                            </div>
+                        </div>
                     </div>
                     <div className="col col-md-6">
                         <div className="form-control">
@@ -233,23 +288,24 @@ class CreateForm extends Component {
                     </div>
                 </div>
 
-                <button className="btn btn__submit btn__contrast">Create a Quiz</button>
+                <div className="inline-btns f-w">
+                    <button type="reset" className={`btn ${!this.state.hasChanged ? 'btn__disabled' : ''}`} onClick={this.cancel}>Cancel</button>
+                    <button type="submit" className={`btn btn__contrast ${!this.state.hasChanged ? 'btn__disabled' : ''}`}>Save</button>
+                </div>
             </form>
         )
     }
 }
 
 const mapStateToProps = state => ({
-    quiz: state.quizzes.quizzes.item,
-    sections: state.quizzes.sections.data,
+    author_slug: state.auth.user.slug,
     categories: state.quizzes.categories.data,
     errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
-    getCategorySection,
+    updateQuizData,
     clearErrors,
-    createQuiz,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CreateForm))
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SettingsForm))

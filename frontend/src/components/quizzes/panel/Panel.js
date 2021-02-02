@@ -8,7 +8,7 @@ import { RiDashboardFill } from 'react-icons/ri'
 import { GrUserSettings } from 'react-icons/gr'
 import { FaPlusCircle } from 'react-icons/fa'
 
-function PageNavigation() {
+function Panel() {
     return (
         <div className="row">
             <div className="col col-sm-3">
@@ -19,7 +19,7 @@ function PageNavigation() {
                             Dashboard
                         </span>
                     </ActiveTag>
-                    <ActiveTag to={['/panel/settings']} className="vertical-menu__item">
+                    <ActiveTag to={['/panel/account-settings']} className="vertical-menu__item">
                         <span className="icon-text">
                             <GrUserSettings className="icon-text__icon" />
                             Account Settings
@@ -41,4 +41,4 @@ function PageNavigation() {
     )
 }
 
-export default PageNavigation
+export default Panel

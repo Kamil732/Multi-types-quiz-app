@@ -48,18 +48,18 @@ class RegisterForm extends Component {
                     <form onSubmit={this.onSubmit}>
                         {
                             this.props.errors.detail ? (
-                                <div className="error-box">
-                                    <p className="error-text">{this.props.errors.detail}</p>
+                                <div className="message-box error">
+                                    <p className="message-box__text">{this.props.errors.detail}</p>
                                 </div>
                             ) : ''
                         }
 
                         {
                             this.props.errors.email ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         this.props.errors.email.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -85,10 +85,10 @@ class RegisterForm extends Component {
 
                         {
                             this.props.errors.username ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         this.props.errors.username.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -114,10 +114,10 @@ class RegisterForm extends Component {
 
                         {
                             this.props.errors.password ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         this.props.errors.password.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>
@@ -125,10 +125,10 @@ class RegisterForm extends Component {
                         }
                         {
                             this.props.errors.password2 ? (
-                                <div className="error-box">
+                                <div className="message-box error">
                                     {
                                         this.props.errors.password2.map((error, index) => (
-                                            <p className="error-text" key={index}>{error}</p>
+                                            <p className="message-box__text" key={index}>{error}</p>
                                         ))
                                     }
                                 </div>

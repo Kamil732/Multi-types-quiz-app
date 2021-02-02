@@ -35,10 +35,8 @@
         }
     }
 
-    .text-darken {
+    .display-sm {
         display: block;
-        font-size: 0.9rem;
-        opacity: 0.8;
     }
 
     .container-mobile {
@@ -209,6 +207,10 @@
 @include media-laptop {
     .container-mobile, .container-tablet {
         max-width: 1000px;
+    }
+
+    .card {
+        overflow: hidden;
     }
 
     .card-inline {

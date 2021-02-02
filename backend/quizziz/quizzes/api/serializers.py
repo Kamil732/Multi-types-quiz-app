@@ -79,6 +79,8 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class QuizSerializer(serializers.Serializer):
+    is_published = serializers.BooleanField(default=True)
+    author_slug = serializers.ReadOnlyField(source='author.slug')
     pub_date = serializers.SerializerMethodField('get_pub_date')
     image_url = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
@@ -113,13 +115,16 @@ class QuizSerializer(serializers.Serializer):
 
 
 class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
+    random_question_order = serializers.BooleanField(
+        default=True, read_only=True)
     author = serializers.ReadOnlyField(source='author.username')
-    author_slug = serializers.ReadOnlyField(source='author.slug')
 
     class Meta:
         model = Quiz
         fields = (
             'pub_date',
+            'is_published',
+            'random_question_order',
             'image_url',
             'section',
             'category',
@@ -137,6 +142,8 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
 
 
 class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
+    random_question_order = serializers.BooleanField(
+        default=True)
     questions = serializers.SerializerMethodField('get_questions')
     author = serializers.SerializerMethodField('get_author')
 
@@ -152,7 +159,5 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
         model = Quiz
         exclude = (
             'id',
-            'is_published',
-            'solved_times',
         )
         read_only_fields = ('questions', 'author',)

@@ -23,7 +23,7 @@ class List extends Component {
                     </Link>
 
                     <section className="card-inline__body quiz-card__body">
-                        <header className="quiz-card__header text-darken">
+                        <header className="quiz-card__header text-darken display-sm">
                             <span>
                                 Section:&ensp;
                                 <Link to={`?section__name=${quiz.section.name}`}>{quiz.section.display_name}</Link>
@@ -51,7 +51,7 @@ class List extends Component {
                             />
                         </aside>
                         <footer>
-                            <p className="text-darken">
+                            <p className="text-darken display-sm">
                                 <Link to={`/profile/${quiz.author_slug}`}>{quiz.author}</Link>&ensp;&bull;&ensp;
                                 <span>Solved {quiz.solved_times} time{quiz.solved_times !== 1 ? 's' : ''}</span>
                             </p>

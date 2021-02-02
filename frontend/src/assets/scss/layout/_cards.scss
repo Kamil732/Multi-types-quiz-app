@@ -12,7 +12,7 @@
 
 .card {
     @include card;
-    overflow: hidden;
+    max-width: 100%;
     margin-bottom: 1.5rem;
 
     & > &__header {

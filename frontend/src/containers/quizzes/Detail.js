@@ -1,21 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PropTypes, { bool } from 'prop-types'
-import axios from 'axios'
+import PropTypes from 'prop-types'
 import CircleLoader from '../../components/loaders/CircleLoader'
 import Title from '../../common/Title'
-
-import { FaEdit } from 'react-icons/fa'
 
 import AboutUser from '../../components/accounts/profile/AboutUser'
 import FacebookShare from '../../components/social_media/FacebookShare'
 import TwitterShare from '../../components/social_media/TwitterShare'
 import { Link, Redirect } from 'react-router-dom'
 
+import { getQuiz } from '../../redux/actions/quizzes'
+
 class Detail extends Component {
     static propTypes = {
         user_loading: PropTypes.bool,
-        user_slug_slug: PropTypes.string,
+        user_slug: PropTypes.string,
     }
 
     constructor(props) {
@@ -24,44 +23,35 @@ class Detail extends Component {
         this.state = {
             loading: true,
             isOwner: false,
-            data: {},
         }
 
-        this.getQuizData = this.getQuizData.bind(this)
+        this.getQuiz = this.getQuiz.bind(this)
     }
 
-    getQuizData() {
+    getQuiz = async () => {
+        this.setState({ loading: true })
         const { author_slug, quiz_slug } = this.props.match.params
 
-        if (this.props.user_loading === false)
-            axios.get(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`)
-                .then(res =>
-                    this.setState({
-                        loading: false,
-                        isOwner: author_slug === this.props.user_slug,
-                        data: res.data,
-                    })
-                )
-                .catch(err =>
-                    this.setState({
-                        loading: false,
-                        isOwner: false,
-                        data: [],
-                    })
-                )
+        await this.props.getQuiz(author_slug, quiz_slug)
+        this.setState({
+            loading: false,
+            isOwner: author_slug === this.props.user_slug
+        })
     }
 
-    componentDidMount = () => this.getQuizData()
+    componentDidMount = () => this.getQuiz()
 
     componentDidUpdate(prevProps, _) {
         if (prevProps.match.params.author_slug !== this.props.match.params.author_slug ||
-            prevProps.match.params.quiz_slug !== this.props.match.params.quiz_slug ||
-            prevProps.user_loading !== this.props.user_loading)
-            this.getQuizData()
+            prevProps.match.params.quiz_slug !== this.props.match.params.quiz_slug)
+            this.getQuiz()
+        if (prevProps.user_loading !== this.props.user_loading)
+            this.setState({ isOwner: this.props.match.params.author_slug === this.props.user_slug })
     }
 
     render() {
-        const { loading, isOwner, data } = this.state
+        const { loading, isOwner } = this.state
+        const { data } = this.props
 
         if (loading)
             return <CircleLoader />
@@ -81,7 +71,9 @@ class Detail extends Component {
                             <div className="card__body">
                                 <div className="quiz-detail">
                                     <img className="quiz-detail__img" src={data.image_url} alt={data.title} />
-                                    {data.description}
+                                    <span style={{ wordWrap: 'break-word' }}>
+                                        {data.description}
+                                    </span>
                                 </div>
                             </div>
 
@@ -94,9 +86,10 @@ class Detail extends Component {
                             {
                                 isOwner ? (
                                     <div className="card__footer">
-                                        <Link to={`/panel/dashboard/${data.slug}`} className="btn icon-text" style={{ width: 'fit-content' }}>
-                                            <FaEdit className="icon-text__icon" />
-                                            Edit as an admin
+                                        <Link to={`/panel/dashboard/${data.slug}/summery`}>
+                                            <button className="btn btn__submit">
+                                                Edit as an admin
+                                            </button>
                                         </Link>
                                     </div>
                                 ) : null
@@ -120,6 +113,11 @@ class Detail extends Component {
 const mapStateTopProps = state => ({
     user_loading: state.auth.loading,
     user_slug: state.auth.user.slug,
+    data: state.quizzes.quizzes.item
 })
 
-export default connect(mapStateTopProps, null)(Detail)
+const mapDispatchToProps = {
+    getQuiz,
+}
+
+export default connect(mapStateTopProps, mapDispatchToProps)(Detail)

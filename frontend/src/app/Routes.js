@@ -9,7 +9,7 @@ import { default as QuizDetail } from '../containers/quizzes/Detail'
 import Auth from '../containers/accounts/Auth';
 import Profile from '../containers/accounts/Profile';
 import PrivateRoute from '../common/PrivateRoute'
-import PageNavigation from '../components/quizzes/panel/PageNavigation'
+import Panel from '../components/quizzes/panel/Panel'
 
 function Routes() {
     return (
@@ -22,7 +22,7 @@ function Routes() {
                 <Route exact path="/register" component={() => <Auth type="register" />} />
                 <Route exact path="/profile/:profile_slug" component={Profile} />
 
-                <PrivateRoute path="/panel/" component={PageNavigation} />
+                <PrivateRoute path="/panel/" component={Panel} />
 
                 <Route path="/not-found" component={NotFound} />
                 <Redirect to="/not-found" />

@@ -4,12 +4,19 @@ import {
     QUIZZES_LOADING,
     CATEGORY_SECTION_LOADING,
     QUIZZES_ERROR,
-    CATEGORY_SECTION_ERROR
+    CATEGORY_SECTION_ERROR,
+    CREATE_QUIZ,
+    CREATE_QUIZ_FAIL,
+    UPDATE_QUIZ,
+    GET_QUIZ_SUCCESS,
+    GET_QUIZ_FAIL,
+    DELETE_QUIZ,
 } from '../actions/types'
 
 const initialState = {
     quizzes: {
         loading: false,
+        item: {},
         data: {
             pageCount: 0,
             results: [],
@@ -52,6 +59,7 @@ export default function (state=initialState, action) {
             return {
                 ...state,
                 quizzes: {
+                    ...state.quizzes,
                     loading: false,
                     data: action.payload,
                 },
@@ -79,6 +87,37 @@ export default function (state=initialState, action) {
                     categories: initialState.categories,
                     sections: initialState.sections,
                 }
+        case UPDATE_QUIZ:
+        case CREATE_QUIZ:
+        case GET_QUIZ_SUCCESS:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    item: action.payload,
+                }
+            }
+        case CREATE_QUIZ_FAIL:
+        case GET_QUIZ_FAIL:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    item: {},
+                }
+            }
+        case DELETE_QUIZ:
+            return {
+                ...state,
+                quizzes: {
+                    ...state.quizzes,
+                    item: {},
+                    data: {
+                        ...state.quizzes.data,
+                        results: state.quizzes.data.results.filter(quiz => quiz.slug !== action.payload)
+                    }
+                }
+            }
         default:
             return state;
     };

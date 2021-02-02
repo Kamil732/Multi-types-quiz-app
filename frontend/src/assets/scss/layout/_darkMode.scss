@@ -61,7 +61,7 @@ body.dark-mode {
         }
     }
 
-    .vertical-menu__item {
+    .vertical-menu__item, .horizontal-menu__item {
         background: lighten($background-color-dark-mode, 10%);
         color: set-text-color($background-color-dark-mode);
 
@@ -126,7 +126,7 @@ body.dark-mode {
     }
 
     .table {
-        & tr:nth-of-type(odd) {
+        & tr:nth-of-type(even) {
             background-color: #aaa;
         }
 
