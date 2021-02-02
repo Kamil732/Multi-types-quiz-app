@@ -151,7 +151,7 @@ export const deleteQuiz = (author_slug, quiz_slug) => async (dispatch, getState)
     try {
         const config = getAccessToken(getState)
 
-        axios.delete(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`, config)
+        await axios.delete(`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/`, config)
         dispatch({
             type: DELETE_QUIZ,
             payload: quiz_slug,

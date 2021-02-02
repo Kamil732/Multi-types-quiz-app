@@ -27,12 +27,12 @@ class List extends Component {
     deleteQuiz = (author_slug, quiz_slug) => {
         Swal.fire({
             title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            text: "Are you sure you want to delete this quiz?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'delete'
         }).then(res => {
             if (res.isConfirmed) {
                 this.props.deleteQuiz(author_slug, quiz_slug)
