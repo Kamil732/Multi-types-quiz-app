@@ -18,17 +18,6 @@ class ImageValidatorAPIView(generics.GenericAPIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # image_url = serializer.data.get('image_url')
-        # data = {}
-
-        # try:
-        #     image_request = requests.head(image_url)
-        #     data['success'] = image_request.status_code == requests.codes.ok
-        # except:
-        #     data['success'] = False
-
-        # data['image_url'] = image_url if data['success'] else Quiz.DEFAULT_IMAGE
-
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
