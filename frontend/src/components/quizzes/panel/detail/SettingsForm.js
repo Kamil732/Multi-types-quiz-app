@@ -32,6 +32,7 @@ class SettingsForm extends Component {
             image_url: data.image_url,
             is_published: data.is_published,
             random_question_order: data.random_question_order,
+            one_page_questions: data.one_page_questions,
         }
 
         this.state = {
@@ -71,8 +72,8 @@ class SettingsForm extends Component {
     onSubmit = async e => {
         e.preventDefault()
 
-        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
-        const quiz = { title, description, category, image_url, is_published, random_question_order }
+        const { title, category, description, image_url, is_published, random_question_order, one_page_questions } = this.state.data
+        const quiz = { title, description, category, image_url, is_published, random_question_order, one_page_questions }
 
         this.props.clearErrors()
         await this.props.updateQuizData(this.props.author_slug, this.props.match.params.quiz_slug, quiz)
@@ -86,7 +87,7 @@ class SettingsForm extends Component {
 
     render() {
         const { errors, categories } = this.props
-        const { title, category, description, image_url, is_published, random_question_order } = this.state.data
+        const { title, category, description, image_url, is_published, random_question_order, one_page_questions } = this.state.data
 
         const categoryOptions = categories.map((category, index) => (
             <option value={category.name} key={index}>
@@ -252,6 +253,42 @@ class SettingsForm extends Component {
                                     checked={random_question_order === false}
                                 />
                                 <label htmlFor="random_question_order__false">No</label>
+                            </div>
+                        </div>
+
+                        {
+                            errors.one_page_questions ? (
+                                <div className="message-box error">
+                                    {
+                                        errors.one_page_questions.map((error, index) => (
+                                            <p className="message-box__text" key={index}>{error}</p>
+                                        ))
+                                    }
+                                </div>
+                            ) : ''
+                        }
+                        <div className="form-inline">
+                            <label className="form-inline__label" htmlFor="one_page_questions">Questions on one page:</label>
+                            <div className="switch-btn" id="one_page_questions">
+                                <input
+                                    type="radio"
+                                    id="one_page_questions__true"
+                                    name="one_page_questions"
+                                    value="true"
+                                    onChange={this.onChangeRadio}
+                                    checked={one_page_questions === true}
+                                />
+                                <label htmlFor="one_page_questions__true">Yes</label>
+
+                                <input
+                                    type="radio"
+                                    id="one_page_questions__false"
+                                    name="one_page_questions"
+                                    value="false"
+                                    onChange={this.onChangeRadio}
+                                    checked={one_page_questions === false}
+                                />
+                                <label htmlFor="one_page_questions__false">No</label>
                             </div>
                         </div>
                     </div>
