@@ -10,11 +10,7 @@ from quizzes.models import (
     Question,
     Category,
     Section,
-    PsychologyAnswer,
-    PreferentialAnswer,
-    PsychologyResults,
-    UniversalAnswer,
-    KnowledgeAnswer
+    Answer,
 )
 
 
@@ -60,6 +56,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     image_url = serializers.CharField(allow_blank=True)
+    answers = serializers.SerializerMethodField('get_answers')
+
+    def get_answers(self, obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(reverse('quiz-question-answers', args=[obj.quiz.author.slug, obj.quiz.slug, obj.slug]))
 
     def validate_image_url(self, value):
         if not(valid_url_extension(value)):
@@ -74,8 +75,15 @@ class QuestionSerializer(serializers.ModelSerializer):
             'image_url',
             'summery',
             'slug',
+            'answers'
         )
         read_only_fields = ('slug',)
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = '__all__'
 
 
 class QuizSerializer(serializers.Serializer):

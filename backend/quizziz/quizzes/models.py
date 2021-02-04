@@ -81,6 +81,7 @@ class Quiz(models.Model):
         Section, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
+    one_page_questions = models.BooleanField(default=False)
     image_url = models.URLField(default=DEFAULT_IMAGE)
     solved_times = models.PositiveIntegerField(default=0)
     is_published = models.BooleanField(default=True)
@@ -126,50 +127,13 @@ class Question(models.Model):
         return self.question
 
 
-class Answer(models.Model):
-    answer = models.CharField(max_length=100)
-    image_url = models.URLField(blank=True)
-
-    def __str__(self):
-        return self.answer
-
-    class Meta:
-        abstract = True
-
-
-class KnowledgeAnswer(Answer):
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='knowledge_answers')
-    is_correct = models.BooleanField(default=False)
-
-
+########################################################################################
 class PsychologyResults(models.Model):
-    quiz = models.ForeignKey(
-        Quiz, on_delete=models.CASCADE, related_name='psychology_results')
     result = models.CharField(max_length=50)
     description = models.TextField(blank=True)
 
 
-class PsychologyAnswer(Answer):
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='psychology_answers')
-    results = models.ManyToManyField(PsychologyResults)
-
-
-class PreferentialAnswer(Answer):
-    question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='preferential_answers')
-    answered_times = models.PositiveIntegerField(default=0)
-
-    def save(self, *args, **kwargs):
-        if self.image_url and not(valid_url_extension(self.image_url)):
-            raise EnvironmentError(
-                f"Field 'image_url' got wrong URL, it should end with {[i for i in VALID_IMAGE_EXTENSIONS]}")
-
-        return super(self.__class__, self).save(*args, **kwargs)
-
-
-class UniversalAnswer(Answer):
+class Answer(models.Model):
     POINTS = (
         ('1', 1),
         ('2', 2),
@@ -184,6 +148,22 @@ class UniversalAnswer(Answer):
     )
 
     question = models.ForeignKey(
-        Question, on_delete=models.CASCADE, related_name='universal_answers')
+        Question, on_delete=models.CASCADE, related_name='answers')
+    answer = models.CharField(max_length=100)
+    image_url = models.URLField(blank=True)
+
+    # Knowledge
+    is_correct = models.BooleanField(default=False)
+
+    # Psychology
+    results = models.ManyToManyField(PsychologyResults, blank=True)
+
+    # Preferentail
+    answered_times = models.PositiveIntegerField(default=0)
+
+    # Universal
     points = models.CharField(
-        max_length=2, choices=POINTS, default=POINTS[0][0])
+        max_length=2, choices=POINTS, blank=True)
+
+    def __str__(self):
+        return self.answer

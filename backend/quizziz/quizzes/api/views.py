@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from quizzes.models import Quiz, Section, Category, KnowledgeAnswer, Question
+from quizzes.models import Quiz, Section, Category, Question, Answer
 
 from . import serializers, permissions, mixins
 
@@ -46,6 +46,25 @@ class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
 class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'question_slug'
+
+
+class AnswerListAPIView(generics.ListCreateAPIView):
+    permission_classes = (permissions.IsOwner,)
+    serializer_class = serializers.AnswerSerializer
+
+    def get_queryset(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        question_slug = self.kwargs.get('question_slug')
+
+        try:
+            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+            question = Question.objects.get(quiz=quiz, slug=question_slug)
+        except ObjectDoesNotExist:
+            raise APIException(
+                _('The quiz you are looking for does not exist'))
+
+        return Answer.objects.filter(question=question)
 
 
 class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):

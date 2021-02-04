@@ -1,19 +1,20 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from quizzes.api.views import ImageValidatorAPIView, QuizListAPIView, QuizDetailAPIView, SectionViewSet, CategoryViewSet, QuestionListAPIView, QuestionDetailAPIView
+from quizzes.api.views import (
+    ImageValidatorAPIView,
+    QuizListAPIView,
+    QuizDetailAPIView,
+    SectionViewSet,
+    CategoryViewSet,
+    QuestionListAPIView,
+    QuestionDetailAPIView,
+    AnswerListAPIView
+)
 
 router = DefaultRouter()
-# router.register('quizzes', QuizViewSet)
 router.register('sections', SectionViewSet)
 router.register('categories', CategoryViewSet)
-
-# quiz_detail = QuizViewSet.as_view({
-#     'get': 'retrieve',
-#     'put': 'update',
-#     'patch': 'partial_update',
-#     'delete': 'destroy',
-# })
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -25,8 +26,16 @@ urlpatterns = [
             path('', QuizDetailAPIView.as_view(), name='quiz-detail'),
             path('questions/', include([
                 path('', QuestionListAPIView.as_view(), name='quiz-questions'),
-                path('<slug:question_slug>/', QuestionDetailAPIView.as_view(),
-                     name='quiz-questions-detail'),
+                path('<slug:question_slug>/', include([
+                    path('', QuestionDetailAPIView.as_view(),
+                         name='quiz-questions-detail'),
+                    path('answers/', include([
+                        path('', AnswerListAPIView.as_view(),
+                             name='quiz-question-answers'),
+                        # path('<slug:answer_slug>/',
+                        #      name='quiz-question-answer-detail')
+                    ])),
+                ])),
             ])),
         ])),
     ])),

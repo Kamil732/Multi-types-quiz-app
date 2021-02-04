@@ -5,10 +5,7 @@ from .models import (
     Question,
     Category,
     Section,
-    PsychologyAnswer,
-    PreferentialAnswer,
-    PsychologyResults,
-    UniversalAnswer,
+    Answer
 )
 
 
@@ -29,8 +26,4 @@ admin.site.register(Section)
 
 admin.site.register(Question)
 
-admin.site.register(PsychologyAnswer)
-admin.site.register(PsychologyResults)
-
-admin.site.register(PreferentialAnswer)
-admin.site.register(UniversalAnswer)
+admin.site.register(Answer)

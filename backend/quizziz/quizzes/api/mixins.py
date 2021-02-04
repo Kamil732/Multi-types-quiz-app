@@ -1,3 +1,6 @@
+from django.utils.translation import gettext as _
+from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.exceptions import APIException
 from quizzes.models import Quiz, Question
 from .permissions import IsOwner
 from .pagination import QuizListPagination
@@ -36,4 +39,10 @@ class QuestionMixin(object):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
 
-        return Question.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
+        try:
+            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+        except ObjectDoesNotExist:
+            raise APIException(
+                _('The quiz you are looking for does not exist'))
+
+        return Question.objects.filter(quiz=quiz)
