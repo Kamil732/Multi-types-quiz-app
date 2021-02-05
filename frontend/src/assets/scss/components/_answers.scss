@@ -1,0 +1,24 @@
+.answer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.answer {
+    & > input {
+        display: none;
+    }
+
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left: 4px solid $primary-color;
+    cursor: pointer;
+    background: linear-gradient(to left, $background-color 50%, $primary-color 50%) right;
+    background-size: 200%;
+    transition: background-position 0.2s ease-in-out, color 0.2s ease-in-out;
+
+    &:hover, &.active {
+        background-position: left;
+        color: set-text-color(set-text-color($primary-color));
+    }
+}
