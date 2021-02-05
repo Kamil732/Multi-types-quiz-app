@@ -127,7 +127,6 @@ class Question(models.Model):
         return self.question
 
 
-########################################################################################
 class PsychologyResults(models.Model):
     result = models.CharField(max_length=50)
     description = models.TextField(blank=True)
@@ -151,6 +150,8 @@ class Answer(models.Model):
         Question, on_delete=models.CASCADE, related_name='answers')
     answer = models.CharField(max_length=100)
     image_url = models.URLField(blank=True)
+    slug = AutoSlugField(populate_from='answer', unique_with=[
+                         'question'], max_length=120)
 
     # Knowledge
     is_correct = models.BooleanField(default=False)
