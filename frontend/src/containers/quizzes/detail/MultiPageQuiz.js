@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 class MultiPageQuiz extends Component {
     static propTypes = {
         questions: PropTypes.array,
+        section: PropTypes.string.isRequired,
     }
 
     render() {

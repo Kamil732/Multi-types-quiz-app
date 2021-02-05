@@ -23,6 +23,7 @@ class Start extends Component {
         }
 
         this.getQuestions = this.getQuestions.bind(this)
+        this.onSubmit = this.onSubmit.bind(this)
     }
 
     getQuestions = () => {
@@ -51,6 +52,38 @@ class Start extends Component {
             this.getQuestions()
     }
 
+    onSubmit = e => {
+        e.preventDefault()
+        const { questions } = this.state
+
+        let answeredQuestions = []
+
+        for (const question of questions) {
+            try {
+                const answer = document.querySelector(`input[name="answer-${question.id}"]:checked`).value
+
+                answeredQuestions.push({
+                    questionId: question.id,
+                    answer: answer,
+                })
+            } catch (err) {
+                answeredQuestions.push({
+                    questionId: question.id,
+                    answer: '',
+                })
+            }
+        //     const answerBtns = document.getElementsByName(`answer-${question.id}`)
+
+        //     for (let i=0; i<answerBtns.length; i++) {
+        //         if (answerBtns[i].checked) {
+        //             answerBtns[i] =
+        //         }
+        //     }
+        }
+
+        console.table(answeredQuestions)
+    }
+
     render() {
         const { data } = this.props
         const { loading, questions } = this.state
@@ -62,15 +95,21 @@ class Start extends Component {
             <>
                 <Title title={`Start Quiz - ${data.title}`} />
 
-                {
-                    data.one_page_questions === true ?
-                        <OnePageQuiz
-                            questions={questions}
-                        /> :
-                        <MultiPageQuiz
-                            questions={questions}
-                        />
-                }
+                <form onSubmit={this.onSubmit}>
+                    {
+                        data.one_page_questions === true ?
+                            <OnePageQuiz
+                                questions={questions}
+                                section={data.section.name}
+                            /> :
+                            <MultiPageQuiz
+                                questions={questions}
+                                section={data.section.name}
+                            />
+                    }
+
+                    <button className="btn btn__submit btn__contrast">Finish</button>
+                </form>
             </>
         )
     }
