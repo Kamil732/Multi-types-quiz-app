@@ -56,7 +56,11 @@ class CategorySerializer(serializers.ModelSerializer):
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
-        fields = '__all__'
+        fields = (
+            'image_url',
+            'answer',
+            'slug',
+        )
 
 
 class QuestionSerializer(serializers.ModelSerializer):

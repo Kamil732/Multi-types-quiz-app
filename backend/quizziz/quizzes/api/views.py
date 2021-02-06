@@ -1,7 +1,7 @@
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
-from rest_framework import generics, viewsets, permissions
+from rest_framework import views, generics, viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
@@ -91,3 +91,37 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class QuizFinishAPIView(views.APIView):
+    def post(self, request, fromat=False, *args, **kwargs):
+        section = request.data.get('section')
+        data = []
+
+        for answered_answer in request.data.get('data'):
+            question_id = answered_answer.get('questionId')
+            answered = answered_answer.get('answer')
+
+            if not(answered):
+                data.append({
+                    'questionId': question_id,
+                    'correct': False,
+                })
+
+                continue
+
+            answer = Answer.objects.get(question__id=question_id, slug=answered)
+
+            if section == 'knowledge_quiz':
+                data.append({
+                    'questionId': question_id,
+                    'correct': answer.is_correct,
+                })
+            elif section == 'psychology_quiz':
+                pass
+            elif section == 'preferential_quiz':
+                pass
+            elif section == 'universal_quiz':
+                pass
+
+        return Response(data, status=status.HTTP_200_OK)
