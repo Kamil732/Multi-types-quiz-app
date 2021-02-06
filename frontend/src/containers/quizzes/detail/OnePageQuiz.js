@@ -6,52 +6,60 @@ import PreferentailAnswers from './answers/PreferentailAnswers'
 import UniversalAnswers from './answers/UniversalAnswers'
 
 class OnePageQuiz extends Component {
-    static propTypes = {
-        questions: PropTypes.array,
-        section: PropTypes.string.isRequired,
-    }
+	static propTypes = {
+		questions: PropTypes.array,
+		section: PropTypes.string.isRequired,
+		finished: PropTypes.bool,
+	}
 
-    render() {
-        const { questions, section } = this.props
+	render() {
+		const { questions, section, finished } = this.props
 
-        const questionList = questions.map((question, index) => {
-            let answers
+		const questionList = questions.map((question, index) => {
+			let answers
 
-            if (section === 'knowledge_quiz')
-                answers = <KnowledgeAnswers
-                    answers={question.answers}
-                    questionId={question.id}
-                />
-            else if (section === 'psychology_quiz')
-                answers = <PsychologyAnswers
-                    answers={question.answers}
-                    questionId={question.id}
-                />
-            else if (section === 'preferential_quiz')
-                answers = <PreferentailAnswers
-                    answers={question.answers}
-                    questionId={question.id}
-                />
-            else if (section === 'universal_quiz')
-                answers = <UniversalAnswers
-                    answers={question.answers}
-                    questionId={question.id}
-                />
+			if (section === 'knowledge_quiz')
+				answers = (
+					<KnowledgeAnswers
+						answers={question.answers}
+						questionId={question.id}
+						finished={finished}
+					/>
+				)
+			else if (section === 'psychology_quiz')
+				answers = (
+					<PsychologyAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
+			else if (section === 'preferential_quiz')
+				answers = (
+					<PreferentailAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
+			else if (section === 'universal_quiz')
+				answers = (
+					<UniversalAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
 
-            return (
-                <div className="card" key={index}>
-                    <div className="card__header">{question.question}</div>
-                    <div className="card__body">
-                        <div className="answer-container">
-                            {answers}
-                        </div>
-                    </div>
-                </div>
-            )
-        })
+			return (
+				<div className="card" key={index}>
+					<div className="card__header">{question.question}</div>
+					<div className="card__body">
+						<div className="answer-container">{answers}</div>
+					</div>
+				</div>
+			)
+		})
 
-        return questionList
-    }
+		return questionList
+	}
 }
 
 export default OnePageQuiz
