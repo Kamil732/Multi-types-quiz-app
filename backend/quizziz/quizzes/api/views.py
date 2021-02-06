@@ -95,28 +95,38 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
 
 class QuizFinishAPIView(views.APIView):
     def post(self, request, fromat=False, *args, **kwargs):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
         section = request.data.get('section')
-        data = []
+        retrieveData = {
+            'section': section,
+            'data': [],
+        }
 
-        for answered_answer in request.data.get('data'):
-            question_id = answered_answer.get('questionId')
-            answered = answered_answer.get('answer')
+        # Check if quiz exists and plus 1 to solved_times
+        try:
+            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+            quiz.solved_times += 1
+            quiz.save()
+        except ObjectDoesNotExist:
+            raise APIException(
+                _('The quiz you are looking for does not exist'))
 
-            if not(answered):
-                data.append({
-                    'questionId': question_id,
-                    'correct': False,
-                })
-
-                continue
-
-            answer = Answer.objects.get(question__id=question_id, slug=answered)
+        for answer in request.data.get('data'):
+            question_id = answer.get('questionId')
+            answer_slug = answer.get('answer')
 
             if section == 'knowledge_quiz':
-                data.append({
+                # Get all the correct answers from question
+                correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
+                    question__id=question_id, is_correct=True).values('slug')]
+
+                retrieveData['data'].append({
                     'questionId': question_id,
-                    'correct': answer.is_correct,
+                    'selected': answer_slug,
+                    'correct_answers': correct_answers,
                 })
+
             elif section == 'psychology_quiz':
                 pass
             elif section == 'preferential_quiz':
@@ -124,4 +134,4 @@ class QuizFinishAPIView(views.APIView):
             elif section == 'universal_quiz':
                 pass
 
-        return Response(data, status=status.HTTP_200_OK)
+        return Response(retrieveData, status=status.HTTP_200_OK)

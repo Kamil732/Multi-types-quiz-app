@@ -20,7 +20,7 @@ class Start extends Component {
 		this.state = {
 			loading: true,
 			questions: [],
-			finished: false,
+			finished_data: {},
 		}
 
 		this.getQuestions = this.getQuestions.bind(this)
@@ -96,15 +96,15 @@ class Start extends Component {
 				body,
 				config
 			)
-			.then(() => {
-				this.setState({ finished: true })
+			.then((res) => {
+				this.setState({ finished_data: res.data })
 				window.scrollTo(0, 0)
 			})
 	}
 
 	render() {
 		const { data } = this.props
-		const { loading, questions, finished } = this.state
+		const { loading, questions, finished_data } = this.state
 
 		if (loading === true) return <CircleLoader />
 
@@ -117,13 +117,13 @@ class Start extends Component {
 						<OnePageQuiz
 							questions={questions}
 							section={data.section.name}
-							finished={finished}
+							finishedData={finished_data}
 						/>
 					) : (
 						<MultiPageQuiz
 							questions={questions}
 							section={data.section.name}
-							finished={finished}
+							finishedData={finished_data}
 						/>
 					)}
 

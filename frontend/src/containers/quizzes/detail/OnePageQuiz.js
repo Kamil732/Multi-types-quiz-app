@@ -9,11 +9,11 @@ class OnePageQuiz extends Component {
 	static propTypes = {
 		questions: PropTypes.array,
 		section: PropTypes.string.isRequired,
-		finished: PropTypes.bool,
+		finishedData: PropTypes.object,
 	}
 
 	render() {
-		const { questions, section, finished } = this.props
+		const { questions, section, finishedData } = this.props
 
 		const questionList = questions.map((question, index) => {
 			let answers
@@ -21,9 +21,10 @@ class OnePageQuiz extends Component {
 			if (section === 'knowledge_quiz')
 				answers = (
 					<KnowledgeAnswers
+						questionNumber={index}
 						answers={question.answers}
 						questionId={question.id}
-						finished={finished}
+						finishedData={finishedData}
 					/>
 				)
 			else if (section === 'psychology_quiz')
