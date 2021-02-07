@@ -7,6 +7,7 @@ from quizziz.utils import valid_url_extension
 
 from quizzes.models import (
     Quiz,
+    QuizFeedback,
     Question,
     Category,
     Section,
@@ -169,3 +170,9 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
             'id',
         )
         read_only_fields = ('questions', 'author',)
+
+
+class QuizFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuizFeedback
+        exclude = ('quiz',)

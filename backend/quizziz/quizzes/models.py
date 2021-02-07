@@ -98,7 +98,7 @@ class Quiz(models.Model):
         return self.title
 
 
-class QuizReview(models.Model):
+class QuizFeedback(models.Model):
     GENDER = (
         ('man', 'Man'),
         ('woman', 'Woman'),
@@ -111,7 +111,7 @@ class QuizReview(models.Model):
     opinion = models.TextField(blank=True)
 
     def __str__(self):
-        return self.name
+        return self.email
 
 
 class Question(models.Model):
