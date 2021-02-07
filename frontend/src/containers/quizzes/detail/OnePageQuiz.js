@@ -51,8 +51,30 @@ class OnePageQuiz extends Component {
 
 			return (
 				<div className="card" key={index}>
-					<div className="card__header">{question.question}</div>
+					<div className="card__header">Question {index + 1}</div>
 					<div className="card__body">
+						<div className="card card__body">
+							<div
+								className="quiz-detail"
+								style={{ backgroundColor: 'inherit' }}
+							>
+								{question.image_url.length > 0 ? (
+									<img
+										src={question.image_url}
+										className="quiz-detail__img"
+										alt=""
+									/>
+								) : null}
+								<p
+									style={{
+										fontWeight: '600',
+										fontSize: '1.1rem',
+									}}
+								>
+									{question.question}
+								</p>
+							</div>
+						</div>
 						<div className="answer-container">{answers}</div>
 					</div>
 				</div>
