@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Title from '../../../common/Title'
 import axios from 'axios'
+
 import CircleLoader from '../../../components/loaders/CircleLoader'
 import OnePageQuiz from './OnePageQuiz'
 import MultiPageQuiz from './MultiPageQuiz'
