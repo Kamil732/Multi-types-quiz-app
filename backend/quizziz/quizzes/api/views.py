@@ -118,6 +118,10 @@ class QuizFinishAPIView(views.APIView):
             question_id = answer.get('questionId')
             answer_slug = answer.get('answer')
 
+            if not(answer_slug):
+                raise APIException(
+                    _('You have not answered all the questions'))
+
             if section == 'knowledge_quiz':
                 # Get all the correct answers from question
                 correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
