@@ -32,7 +32,7 @@ class AccountQuizzesAPIView(QuizListMixin, generics.ListAPIView):
     lookup_url_kwarg = 'account_slug'
 
     def get_queryset(self, *args, **kwargs):
-        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg)).order_by('-pub_date')
+        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg), is_published=True).order_by('-pub_date')
 
 
 class CurrentAccountAPIView(generics.RetrieveUpdateDestroyAPIView):
