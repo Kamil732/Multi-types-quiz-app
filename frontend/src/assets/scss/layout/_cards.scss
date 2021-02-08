@@ -1,72 +1,72 @@
 .card-col {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
 }
 
 .card-row {
-    display: flex;
-    flex-direction: row;
-    gap: 30px;
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
 }
 
 .card {
-    @include card;
-    max-width: 100%;
-    margin-bottom: 1.5rem;
+	@include card;
+	max-width: 100%;
+	margin-bottom: 1.5rem;
 
-    & > &__header {
-        @include card__header;
-    }
+	& > &__header {
+		@include card__header;
+	}
 
-    div:not(.card) > &__header {
-        @include card__header;
-        @include shadow-sm;
+	div:not(.card) > &__header {
+		@include card__header;
+		@include shadow-sm;
 
-        border-top: 6px solid $primary-color;
-        border-radius: 1rem;
-        margin-bottom: 1.5rem;
-    }
+		border-top: 6px solid $primary-color;
+		border-radius: 1rem;
+		margin-bottom: 1.5rem;
+	}
 
-    &__body {
-        background-color: $surface-color;
-        // border-bottom-left-radius: 10px;
-        // border-bottom-right-radius: 10px;
-        padding: 1.5rem;
-    }
+	&__body {
+		background-color: $surface-color;
+		// border-bottom-left-radius: 10px;
+		// border-bottom-right-radius: 10px;
+		padding: 1.5rem;
+	}
 
-    & > &__footer {
-        @include card__footer;
-    }
+	& > &__footer {
+		@include card__footer;
+	}
 
-    div:not(.card) > &__footer {
-        @include card__footer;
-        @include shadow-sm;
+	div:not(.card) > &__footer {
+		@include card__footer;
+		@include shadow-sm;
 
-        border-bottom: 6px solid $primary-variant-color;
-        border-radius: 1rem;
-        margin-bottom: 1.5rem;
-    }
+		border-bottom: 6px solid $primary-variant-color;
+		border-radius: 1rem;
+		margin-bottom: 1.5rem;
+	}
 }
 
 .card-inline {
-    @include card;
-    margin-top: 1.25rem;
+	@include card;
+	margin-top: 1.25rem;
 
-    &:first-child {
-        margin-top: 0;
-    }
+	&:first-child {
+		margin-top: 0;
+	}
 
-    &__body {
-        padding: 0.7rem 1.3rem;
-        width: 100%;
-    }
+	&__body {
+		padding: 0.7rem 1.3rem;
+		width: 100%;
+	}
 
-    &__img {
-        box-shadow: 2px 0 3px grey;
-        border-radius: 1rem 1rem 0 0;
-        object-fit: cover;
-        width: 100%;
-        z-index: 0;
-    }
+	&__img {
+		box-shadow: 2px 0 3px grey;
+		border-radius: 1rem 1rem 0 0;
+		object-fit: cover;
+		width: 100%;
+		z-index: 0;
+	}
 }

@@ -5,8 +5,13 @@
 }
 
 .answer {
+	position: relative;
+
 	& > input {
-		display: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0;
 	}
 
 	border-top-left-radius: 0;
