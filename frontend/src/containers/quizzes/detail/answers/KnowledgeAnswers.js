@@ -68,6 +68,7 @@ class KnowledgeAnswers extends Component {
 						value={answer_.slug}
 						onChange={this.onChange}
 						checked={answer === answer_.slug}
+						required
 					/>
 
 					{answer_.answer}

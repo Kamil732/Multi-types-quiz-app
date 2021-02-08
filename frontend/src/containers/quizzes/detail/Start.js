@@ -177,8 +177,12 @@ class Start extends Component {
 							/>
 						)}
 
-						<div className="card__footer">
-							<button className="btn btn__submit">Finish</button>
+						<div>
+							<div className="card__footer">
+								<button className="btn btn__submit">
+									Finish
+								</button>
+							</div>
 						</div>
 					</form>
 				)}
