@@ -16,6 +16,7 @@ class FeedbackForm extends Component {
 		ask_opinion: PropTypes.bool,
 		author_slug: PropTypes.string.isRequired,
 		quiz_slug: PropTypes.string.isRequired,
+		callback: PropTypes.func,
 		errors: PropTypes.object,
 		clearErrors: PropTypes.func.isRequired,
 	}
@@ -37,7 +38,7 @@ class FeedbackForm extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
-		const { author_slug, quiz_slug } = this.props
+		const { author_slug, quiz_slug, callback } = this.props
 		const { name, email, gender, opinion } = this.state
 
 		const config = {
@@ -56,9 +57,7 @@ class FeedbackForm extends Component {
 				body,
 				config
 			)
-			.then(() =>
-				this.props.history.push(`/quizzes/${author_slug}/${quiz_slug}`)
-			)
+			.then(() => callback())
 			.catch((err) => {
 				if (err.response)
 					this.props.addError(err.response.data, err.response.status)

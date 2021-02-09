@@ -24,6 +24,7 @@ class Start extends Component {
 			questions: [],
 			timer: 0,
 			finished_data: {},
+			sentFeedback: false,
 		}
 
 		this.getQuestions = this.getQuestions.bind(this)
@@ -117,7 +118,13 @@ class Start extends Component {
 
 	render() {
 		const { data } = this.props
-		const { loading, questions, timer, finished_data } = this.state
+		const {
+			loading,
+			questions,
+			timer,
+			finished_data,
+			sentFeedback,
+		} = this.state
 
 		if (loading === true) return <CircleLoader />
 
@@ -137,29 +144,48 @@ class Start extends Component {
 				{Object.keys(finished_data).length > 0 ? (
 					<div className="card">
 						<div className="card__body">
-							<h6>You have finished quiz in {timer} seconds</h6>
-							<h3>{result}</h3>
-							{data.is_published === false ? (
+							{data.is_published === false && sentFeedback === false ? (
+								<>
+									<div className="card__body">
+										<FeedbackForm
+											ask_name={data.ask_name}
+											ask_email={data.ask_email}
+											ask_gender={data.ask_gender}
+											ask_opinion={data.ask_opinion}
+											author_slug={data.author_slug}
+											quiz_slug={data.slug}
+											callback={() => this.setState({ sentFeedback: true })}
+										/>
+									</div>
+									<div className="message-box info">
+										<span className="message-box__text">
+											To see the result you need to sent a
+											feedback
+										</span>
+									</div>
+								</>
+							) : (
+								<>
+									<h6>
+										You have finished quiz in {timer}{' '}
+										seconds
+									</h6>
+									<h3>{result}</h3>
+								</>
+							)}
+						</div>
+						{data.is_published === true || sentFeedback === true ? (
+							<>
+								<hr />
 								<div className="card__body">
-									<FeedbackForm
-										ask_name={data.ask_name}
-										ask_email={data.ask_email}
-										ask_gender={data.ask_gender}
-										ask_opinion={data.ask_opinion}
-										author_slug={data.author_slug}
-										quiz_slug={data.slug}
+									<OnePageQuiz
+										questions={questions}
+										section={data.section.name}
+										finishedData={finished_data}
 									/>
 								</div>
-							) : null}
-						</div>
-						<hr />
-						<div className="card__body">
-							<OnePageQuiz
-								questions={questions}
-								section={data.section.name}
-								finishedData={finished_data}
-							/>
-						</div>
+							</>
+						) : null}
 					</div>
 				) : (
 					<form onSubmit={this.onSubmit}>
