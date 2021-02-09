@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from faker import Faker
 
 from accounts.models import Account
-from quizzes.models import Quiz, Question, Section, Category
+from quizzes.models import Quiz, Question, Answer, Section, Category
 
 
 class TestSetUp(APITestCase):
@@ -60,6 +60,20 @@ class TestSetUp(APITestCase):
         description = self.fake.sentence()
         image_url = 'https://cdn.pixabay.com/photo/2020/12/19/03/27/person-5843476_960_720.jpg'
 
+        user_data = register_data
+        user_data.pop('password2')
+        user = Account.objects.create_user(**user_data)
+
+        quiz = Quiz.objects.create(author=user, title=title, description=description, image_url=image_url,
+                                   section=self.fake.random.choice(sections), category=self.fake.random.choice(categories))
+
+        questions = [Question.objects.create(
+            quiz=quiz, question=self.fake.unique.sentence()) for _ in range(7)]
+
+        # Knowledge answers
+        knowledge_answers = [Answer.objects.create(question=self.fake.random.choice(
+            questions), answer=self.fake.sentence(), is_correct=self.fake.boolean(chance_of_getting_true=40)) for _ in range(20)]
+
         self.quizzes_create_data = {
             'title': title,
             'description': description,
@@ -110,15 +124,22 @@ class TestSetUp(APITestCase):
             'summery': description,
         }
 
-        user_data = register_data
-        user_data.pop('password2')
-        user = Account.objects.create_user(**user_data)
+        self.finish_knowledge_quiz_data = {
+            'section': 'knowledge_quiz',
+            'data': [
+                {
+                    'questionId': answer.question.id,
+                    'answer': answer.slug,
+                } for answer in knowledge_answers
+            ],
+        }
 
-        quiz = Quiz.objects.create(author=user, title=title, description=description, image_url=image_url,
-                                   section=self.fake.random.choice(sections), category=self.fake.random.choice(categories))
-
-        Question.objects.create(
-            quiz=quiz, question=self.fake.unique.sentence())
+        self.feedback_quiz_data = {
+            'name': username,
+            'email': email,
+            'gender': self.fake.random.choice(['woman', 'man']),
+            'opinion': description,
+        }
 
         self.client.post(register_url, register_data, format='json')
         self.access_token = self.client.post(
@@ -140,6 +161,8 @@ class TestSetUp(APITestCase):
         self.quizzes_create_url = reverse('quiz-list')
         self.quizzes_create_question_url = reverse(
             'quiz-questions', args=[quiz.author.slug, quiz.slug])
+        self.finish_quiz_url = reverse('quiz-finish', args=[quiz.author.slug, quiz.slug])
+        self.feedback_quiz_url = reverse('quiz-feedback', args=[quiz.author.slug, quiz.slug])
 
         return super(TestSetUp, self).setUp()
 

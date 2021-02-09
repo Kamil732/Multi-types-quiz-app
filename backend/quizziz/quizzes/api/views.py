@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import views, generics, viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ValidationError, NotFound
 
 from quizzes.models import Quiz, QuizFeedback, Section, Category, Question, Answer
 
@@ -61,7 +61,7 @@ class AnswerListAPIView(generics.ListCreateAPIView):
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
             question = Question.objects.get(quiz=quiz, slug=question_slug)
         except ObjectDoesNotExist:
-            raise APIException(
+            raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
         return Answer.objects.filter(question=question)
@@ -80,7 +80,7 @@ class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
         except ObjectDoesNotExist:
-            raise APIException(
+            raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
 
@@ -111,7 +111,7 @@ class QuizFinishAPIView(views.APIView):
             quiz.solved_times += 1
             quiz.save()
         except ObjectDoesNotExist:
-            raise APIException(
+            raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
         for answer in request.data.get('data'):
@@ -119,7 +119,7 @@ class QuizFinishAPIView(views.APIView):
             answer_slug = answer.get('answer')
 
             if not(answer_slug):
-                raise APIException(
+                raise ValidationError(
                     _('You have not answered all the questions'))
 
             if section == 'knowledge_quiz':
@@ -155,7 +155,7 @@ class QuizFeedbackAPIView(generics.ListCreateAPIView):
         try:
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
         except ObjectDoesNotExist:
-            raise APIException(
+            raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
         return QuizFeedback.objects.filter(quiz=quiz)

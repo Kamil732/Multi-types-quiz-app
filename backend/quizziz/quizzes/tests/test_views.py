@@ -66,6 +66,33 @@ class TestViews(TestSetUp):
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.data.get('image_url'), '')
 
+    def test_finish_knowledge_quiz_no_answer(self):
+        request_data = self.finish_knowledge_quiz_data
+        request_data['data'][0]['answer'] = None
+        res = self.client.post(self.finish_quiz_url, request_data, format='json')
+
+        self.assertEqual(res.status_code, 400)
+
+    def test_finish_knowledge_quiz(self):
+        res = self.client.post(self.finish_quiz_url, self.finish_knowledge_quiz_data, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data.get('section'), self.finish_knowledge_quiz_data['section'])
+        self.assertIsInstance(res.data['correctAnswers'], int)
+        self.assertIsInstance(res.data['data'][0]['correct_answers'], list)
+        self.assertIsInstance(res.data['data'][0]['questionId'], int)
+        self.assertIsInstance(res.data['data'][0]['selected'], str)
+        self.assertIsNotNone(res.data['data'][0]['selected'])
+
+    def test_feedback_quiz(self):
+        res = self.client.post(self.feedback_quiz_url, self.feedback_quiz_data, format='json')
+
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.data.get('email'), self.feedback_quiz_data['email'])
+        self.assertEqual(res.data.get('name'), self.feedback_quiz_data['name'])
+        self.assertEqual(res.data.get('gender'), self.feedback_quiz_data['gender'])
+        self.assertEqual(res.data.get('opinion'), self.feedback_quiz_data['opinion'])
+
     ######## GET METHODS ########
 
     def test_get_sections(self):
