@@ -140,24 +140,16 @@ class Start extends Component {
 							<h6>You have finished quiz in {timer} seconds</h6>
 							<h3>{result}</h3>
 							{data.is_published === false ? (
-								<>
-									<div className="card__body">
-										<FeedbackForm
-											ask_name={data.ask_name}
-											ask_email={data.ask_email}
-											ask_gender={data.ask_gender}
-											ask_opinion={data.ask_opinion}
-											author_slug={data.author_slug}
-											quiz_slug={data.slug}
-										/>
-									</div>
-									<div className="message-box info">
-										<span className="message-box__text">
-											If you don't send a feedback your
-											answers won't be counted
-										</span>
-									</div>
-								</>
+								<div className="card__body">
+									<FeedbackForm
+										ask_name={data.ask_name}
+										ask_email={data.ask_email}
+										ask_gender={data.ask_gender}
+										ask_opinion={data.ask_opinion}
+										author_slug={data.author_slug}
+										quiz_slug={data.slug}
+									/>
+								</div>
 							) : null}
 						</div>
 						<hr />

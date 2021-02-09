@@ -91,6 +91,8 @@ class QuizSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     author_slug = serializers.ReadOnlyField(source='author.slug')
     pub_date = serializers.SerializerMethodField('get_pub_date')
+    solves = serializers.SerializerMethodField('get_solves')
+    solves_average = serializers.SerializerMethodField('get_solves_average')
     image_url = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
@@ -101,6 +103,15 @@ class QuizSerializer(serializers.Serializer):
 
     def get_question_amount(self, obj):
         return Question.objects.filter(quiz_id=obj.id).count()
+
+    def get_solves(self, obj):
+        return len(obj.solves)
+
+    def get_solves_average(self, obj):
+        try:
+            return round(sum(obj.solves) / len(obj.solves), 2) if self.get_question_amount(obj) > 0 else None
+        except:
+            return None
 
     def validate_section(self, value):
         return Section.objects.get(
@@ -139,7 +150,8 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'category',
             'title',
             'description',
-            'solved_times',
+            'solves',
+            'solves_average',
             'slug',
             'author',
             'author_slug',
@@ -147,7 +159,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'category',
             'question_amount',
         )
-        read_only_fields = ('slug', 'solved_times',)
+        read_only_fields = ('slug', 'solves_times',)
 
 
 class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):

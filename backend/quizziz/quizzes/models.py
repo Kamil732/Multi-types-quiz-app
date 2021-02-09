@@ -83,7 +83,7 @@ class Quiz(models.Model):
         Category, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
     one_page_questions = models.BooleanField(default=False)
     image_url = models.URLField(default=DEFAULT_IMAGE)
-    solved_times = models.PositiveIntegerField(default=0)
+    solves = models.JSONField(default=list, blank=True)
     is_published = models.BooleanField(default=True)
     random_question_order = models.BooleanField(default=True)
     password = models.CharField(max_length=20, blank=True)

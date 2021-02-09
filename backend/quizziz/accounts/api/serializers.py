@@ -16,9 +16,9 @@ class AccountSerializer(serializers.ModelSerializer):
 
     def get_quizzes_solves(self, obj):
         quizzes_solves_list = Quiz.objects.filter(
-            author__email=obj.email).values_list('solved_times', flat=True)
+            author__email=obj.email).values_list('solves', flat=True)
 
-        return sum(quizzes_solves_list)
+        return sum([sum(array) for array in quizzes_solves_list])
 
     class Meta:
         model = Account
