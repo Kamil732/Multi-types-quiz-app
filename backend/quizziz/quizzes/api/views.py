@@ -105,11 +105,12 @@ class QuizFinishAPIView(views.APIView):
             'data': [],
         }
 
-        # Check if quiz exists and plus 1 to solved_times
+        # Check if quiz exists
         try:
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
-            quiz.solved_times += 1
-            quiz.save()
+            if (quiz.is_published):
+                quiz.solved_times += 1
+                quiz.save()
         except ObjectDoesNotExist:
             raise NotFound(
                 _('The quiz you are looking for does not exist'))
@@ -163,7 +164,11 @@ class QuizFeedbackAPIView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
-        quiz_id = Quiz.objects.filter(
-            author__slug=author_slug, slug=quiz_slug).values_list('id', flat=True).first()
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+        print(quiz)
 
-        serializer.save(quiz_id=quiz_id)
+        if not(quiz.is_published):
+            quiz.solved_times += 1
+            quiz.save()
+
+        serializer.save(quiz_id=quiz.id)
