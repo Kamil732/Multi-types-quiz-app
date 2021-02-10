@@ -185,6 +185,18 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        quiz = self.context['quiz']
+
+        if quiz['ask_name'] and not(data['name']):
+            raise serializers.ValidationError({'name': _('Name cannot be blank')})
+        if quiz['ask_email'] and not(data['email']):
+            raise serializers.ValidationError({'email': _('Email cannot be blank')})
+        if quiz['ask_gender'] and not(data['gender']):
+            raise serializers.ValidationError({'gender': _('Gender cannot be blank')})
+
+        return data
+
     class Meta:
         model = QuizFeedback
         exclude = ('quiz',)

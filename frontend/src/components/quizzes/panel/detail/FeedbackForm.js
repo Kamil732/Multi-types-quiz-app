@@ -84,9 +84,9 @@ class FeedbackForm extends Component {
 
 				{ask_name ? (
 					<>
-						{errors.ask_name ? (
+						{errors.name ? (
 							<div className="message-box error">
-								{errors.ask_name.map((error, index) => (
+								{errors.name.map((error, index) => (
 									<p
 										className="message-box__text"
 										key={index}
@@ -119,9 +119,9 @@ class FeedbackForm extends Component {
 
 				{ask_email ? (
 					<>
-						{errors.ask_email ? (
+						{errors.email ? (
 							<div className="message-box error">
-								{errors.ask_email.map((error, index) => (
+								{errors.email.map((error, index) => (
 									<p
 										className="message-box__text"
 										key={index}
@@ -154,9 +154,9 @@ class FeedbackForm extends Component {
 
 				{ask_gender ? (
 					<>
-						{errors.ask_gender ? (
+						{errors.gender ? (
 							<div className="message-box error">
-								{errors.ask_gender.map((error, index) => (
+								{errors.gender.map((error, index) => (
 									<p
 										className="message-box__text"
 										key={index}
@@ -204,9 +204,9 @@ class FeedbackForm extends Component {
 
 				{ask_opinion ? (
 					<>
-						{errors.ask_opinion ? (
+						{errors.opinion ? (
 							<div className="message-box error">
-								{errors.ask_opinion.map((error, index) => (
+								{errors.opinion.map((error, index) => (
 									<p
 										className="message-box__text"
 										key={index}
