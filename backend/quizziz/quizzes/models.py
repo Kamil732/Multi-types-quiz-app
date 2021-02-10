@@ -98,6 +98,16 @@ class Quiz(models.Model):
         return self.title
 
 
+class QuizPunctation(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='punctations')
+    from_score = models.PositiveIntegerField()
+    to_score = models.PositiveIntegerField()
+    summery = models.TextField()
+
+    def __str__(self):
+        return self.quiz.title
+
+
 class QuizFeedback(models.Model):
     GENDER = (
         ('man', 'Man'),

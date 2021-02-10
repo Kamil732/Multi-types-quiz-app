@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 
-from quizzes.models import Quiz, QuizFeedback, Section, Category, Question, Answer
+from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Section, Category, Question, Answer
 
 from . import serializers, permissions, mixins
 
@@ -101,6 +101,7 @@ class QuizFinishAPIView(views.APIView):
 
         retrieveData = {
             'section': section,
+            'summery': '',
             'correctAnswers': 0,
             'data': [],
         }
@@ -133,18 +134,38 @@ class QuizFinishAPIView(views.APIView):
                     'correct_answers': correct_answers,
                 })
 
+            elif section == 'universal_quiz':
+                pass
             elif section == 'psychology_quiz':
                 pass
             elif section == 'preferential_quiz':
-                pass
-            elif section == 'universal_quiz':
                 pass
 
         if section == 'knowledge_quiz':
             quiz.solves.append(retrieveData['correctAnswers'])
             quiz.save()
 
+            summery = QuizPunctaction.objects.filter(
+                quiz=quiz, from_score=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
+            retrieveData['summery'] = summery
+
         return Response(retrieveData, status=status.HTTP_200_OK)
+
+
+class QuizPunctationAPIView(
+    generics.ListAPIView,
+    generics.CreateAPIView,
+    generics.UpdateAPIView,
+    generics.DestroyAPIView
+):
+    serializer_class = serializers.QuizPunctationSerializer
+    permission_classes = (permissions.IsOwnerEverything,)
+
+    def get_queryset(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+
+        return QuizPunctation.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
 
 
 class QuizFeedbackAPIView(generics.ListCreateAPIView):
@@ -155,12 +176,23 @@ class QuizFeedbackAPIView(generics.ListCreateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
 
         try:
-            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+            quiz = QuizFeedback.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
         except ObjectDoesNotExist:
             raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
-        return QuizFeedback.objects.filter(quiz=quiz)
+        return quiz
+
+    def get_serializer_context(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values(
+            'ask_name', 'ask_email', 'ask_gender').first()
+
+        return {
+            'quiz': quiz,
+            'request': self.request,
+        }
 
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')

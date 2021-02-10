@@ -8,6 +8,7 @@ from quizziz.utils import valid_url_extension
 from quizzes.models import (
     Quiz,
     QuizFeedback,
+    QuizPunctation,
     Question,
     Category,
     Section,
@@ -182,6 +183,18 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
             'id',
         )
         read_only_fields = ('questions', 'author',)
+
+
+class QuizPunctationSerializer(serializers.ModelSerializer):
+    def vaildate(self, data):
+        if (data['from_score'] > data['to_score']):
+            raise serializers.ValidationError({'detail': _('From score cannot be greater than to score')})
+
+        return data
+
+    class Meta:
+        model = QuizPunctation
+        exclude = ('quiz',)
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):

@@ -132,8 +132,10 @@ class Start extends Component {
 		if (finished_data.section === 'knowledge_quiz')
 			result = (
 				<>
-					On {questions.length} questions you have answered{' '}
-					{finished_data.correctAnswers} corrctly
+					Your score is{' '}
+					<span style={{ fontWeight: '600' }}>
+						{finished_data.correctAnswers} / {questions.length}
+					</span>
 				</>
 			)
 
@@ -144,7 +146,8 @@ class Start extends Component {
 				{Object.keys(finished_data).length > 0 ? (
 					<div className="card">
 						<div className="card__body">
-							{data.is_published === false && sentFeedback === false ? (
+							{data.is_published === false &&
+							sentFeedback === false ? (
 								<>
 									<div className="card__body">
 										<FeedbackForm
@@ -154,7 +157,11 @@ class Start extends Component {
 											ask_opinion={data.ask_opinion}
 											author_slug={data.author_slug}
 											quiz_slug={data.slug}
-											callback={() => this.setState({ sentFeedback: true })}
+											callback={() =>
+												this.setState({
+													sentFeedback: true,
+												})
+											}
 										/>
 									</div>
 									<div className="message-box info">
@@ -166,11 +173,17 @@ class Start extends Component {
 								</>
 							) : (
 								<>
-									<h6>
-										You have finished quiz in {timer}{' '}
-										seconds
-									</h6>
-									<h3>{result}</h3>
+									<p style={{ fontSize: '1.5rem' }}>
+										{result}
+										<br />
+										<span>
+											Your time is{' '}
+											<span style={{ fontWeight: '600' }}>
+												{timer}s
+											</span>
+										</span>
+									</p>
+									<p>{finished_data.summery}</p>
 								</>
 							)}
 						</div>

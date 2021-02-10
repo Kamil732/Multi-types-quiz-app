@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Quiz,
     QuizFeedback,
+    QuizPunctation,
     Question,
     Category,
     Section,
@@ -22,6 +23,7 @@ class QuizAdmin(admin.ModelAdmin):
 
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(QuizFeedback)
+admin.site.register(QuizPunctation)
 admin.site.register(Category)
 admin.site.register(Section)
 
