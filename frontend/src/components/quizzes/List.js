@@ -73,8 +73,8 @@ class List extends Component {
 								</Link>
 								&ensp;&bull;&ensp;
 								<span>
-									Solved {quiz.solves} time
-									{quiz.solves !== 1 ? 's' : ''}
+									Solved {quiz.solved_times} time
+									{quiz.solved_times !== 1 ? 's' : ''}
 								</span>
 							</p>
 						</footer>

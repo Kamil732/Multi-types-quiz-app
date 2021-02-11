@@ -65,7 +65,7 @@ class AnswerDetailAPIView(mixins.AnswerMixin, generics.RetrieveUpdateDestroyAPIV
 
 class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.order_by(
-        '-pub_date', '-solves')
+        '-pub_date', '-solved_times')
     permission_classes = (permissions.IsOwner,)
     serializer_class = serializers.QuizDetailSerializer
 
@@ -82,7 +82,7 @@ class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
     queryset = Quiz.objects.order_by(
-        '-pub_date', '-solves').filter(is_published=True)
+        '-pub_date', '-solved_times').filter(is_published=True)
     permission_classes = (permissions.CreateIsAuthenticated,)
 
     def perform_create(self, serializer):
@@ -105,6 +105,9 @@ class QuizFinishAPIView(views.APIView):
         # Check if quiz exists
         try:
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+            # Add 1 to solved_times
+            quiz.solved_times += 1
+            quiz.save
         except ObjectDoesNotExist:
             raise NotFound(
                 _('The quiz you are looking for does not exist'))
@@ -138,7 +141,7 @@ class QuizFinishAPIView(views.APIView):
                 pass
 
         if section == 'knowledge_quiz':
-            quiz.solves.append(retrieveData['correctAnswers'])
+            quiz.answers_data.append(retrieveData['correctAnswers'])
             quiz.save()
 
             summery = QuizPunctation.objects.filter(

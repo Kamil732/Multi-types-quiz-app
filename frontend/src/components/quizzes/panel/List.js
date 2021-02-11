@@ -144,11 +144,12 @@ class List extends Component {
 				</td>
 				<td className="numbers">{quiz.question_amount}</td>
 				<td className="numbers">
-					{quiz.solves}
-					{quiz.solves_average ? (
+					{quiz.solved_times}
+					{quiz.average_correct_answers ? (
 						<>
 							<h6>
-								{quiz.solves_average} / {quiz.question_amount}
+								{quiz.average_correct_answers} /{' '}
+								{quiz.question_amount}
 							</h6>
 						</>
 					) : null}
