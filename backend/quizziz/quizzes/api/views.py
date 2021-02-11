@@ -48,23 +48,19 @@ class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroy
     lookup_url_kwarg = 'question_slug'
 
 
-class AnswerListAPIView(generics.ListCreateAPIView):
-    permission_classes = (permissions.IsOwner,)
-    serializer_class = serializers.AnswerSerializer
-
-    def get_queryset(self):
+class AnswerListAPIView(mixins.AnswerMixin, generics.ListCreateAPIView):
+    def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
         question_slug = self.kwargs.get('question_slug')
+        question = Question.objects.get(quiz__author__slug=author_slug, quiz__slug=quiz_slug, slug=question_slug)
 
-        try:
-            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
-            question = Question.objects.get(quiz=quiz, slug=question_slug)
-        except ObjectDoesNotExist:
-            raise NotFound(
-                _('The quiz you are looking for does not exist'))
+        serializer.save(question_id=question.id)
 
-        return Answer.objects.filter(question=question)
+
+class AnswerDetailAPIView(mixins.AnswerMixin, generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'answer_slug'
 
 
 class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -145,27 +141,25 @@ class QuizFinishAPIView(views.APIView):
             quiz.solves.append(retrieveData['correctAnswers'])
             quiz.save()
 
-            summery = QuizPunctaction.objects.filter(
+            summery = QuizPunctation.objects.filter(
                 quiz=quiz, from_score=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
             retrieveData['summery'] = summery
 
         return Response(retrieveData, status=status.HTTP_200_OK)
 
 
-class QuizPunctationAPIView(
-    generics.ListAPIView,
-    generics.CreateAPIView,
-    generics.UpdateAPIView,
-    generics.DestroyAPIView
-):
-    serializer_class = serializers.QuizPunctationSerializer
-    permission_classes = (permissions.IsOwnerEverything,)
-
-    def get_queryset(self):
+class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateAPIView):
+    def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        return QuizPunctation.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
+        serializer.save(quiz_id=quiz.id)
+
+
+class QuizPunctationDetailAPIView(mixins.QuizPunctationMixin, generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    lookup_url_kwarg = 'punctation_id'
 
 
 class QuizFeedbackAPIView(generics.ListCreateAPIView):

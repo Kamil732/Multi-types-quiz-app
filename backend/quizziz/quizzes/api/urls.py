@@ -5,14 +5,16 @@ from quizzes.api.views import (
     ImageValidatorAPIView,
     QuizListAPIView,
     QuizDetailAPIView,
-    QuizPunctationAPIView,
+    QuizPunctationListAPIView,
+    QuizPunctationDetailAPIView,
     QuizFinishAPIView,
     QuizFeedbackAPIView,
     SectionViewSet,
     CategoryViewSet,
     QuestionListAPIView,
     QuestionDetailAPIView,
-    AnswerListAPIView
+    AnswerListAPIView,
+    AnswerDetailAPIView
 )
 
 router = DefaultRouter()
@@ -26,16 +28,19 @@ urlpatterns = [
         path('', QuizListAPIView.as_view(), name='quiz-list'),
         path('<slug:author_slug>/<slug:quiz_slug>/', include([
             path('', QuizDetailAPIView.as_view(), name='quiz-detail'),
-            path('punctation/', QuizPunctationAPIView.as_view(), name='quiz-punctaction'),
             path('finish/', QuizFinishAPIView.as_view(), name='quiz-finish'),
             path('feedback/', QuizFeedbackAPIView.as_view(), name='quiz-feedback'),
+            path('punctation/', include([
+                path('', QuizPunctationListAPIView.as_view(), name='quiz-punctation-list'),
+                path('<int:punctation_id>/', QuizPunctationDetailAPIView.as_view(), name='quiz-punctation-detail'),
+            ])),
             path('questions/', include([
-                path('', QuestionListAPIView.as_view(), name='quiz-questions'),
+                path('', QuestionListAPIView.as_view(), name='quiz-question-list'),
                 path('<slug:question_slug>/', include([
-                    path('', QuestionDetailAPIView.as_view(), name='quiz-questions-detail'),
+                    path('', QuestionDetailAPIView.as_view(), name='quiz-question-detail'),
                     path('answers/', include([
-                        path('', AnswerListAPIView.as_view(), name='quiz-question-answers'),
-                        # path('<slug:answer_slug>/', name='quiz-question-answer-detail')
+                        path('', AnswerListAPIView.as_view(), name='quiz-answer-list'),
+                        path('<slug:answer_slug>/', AnswerDetailAPIView.as_view(), name='quiz-answer-detail')
                     ])),
                 ])),
             ])),

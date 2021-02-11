@@ -175,7 +175,7 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
 
     def get_questions(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri(reverse('quiz-questions', args=[obj.author.slug, obj.slug]))
+        return request.build_absolute_uri(reverse('quiz-question-list', args=[obj.author.slug, obj.slug]))
 
     class Meta:
         model = Quiz
