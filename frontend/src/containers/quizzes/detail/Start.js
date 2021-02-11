@@ -42,6 +42,14 @@ class Start extends Component {
 					loading: false,
 					questions: res.data,
 				})
+
+				this.timer = setInterval(
+					() =>
+						this.setState((prevState) => ({
+							timer: prevState.timer + 1,
+						})),
+					1000
+				)
 			})
 			.catch((err) =>
 				this.setState({
@@ -51,15 +59,7 @@ class Start extends Component {
 			)
 	}
 
-	componentDidMount = () => {
-		this.getQuestions()
-
-		this.timer = setInterval(
-			() =>
-				this.setState((prevState) => ({ timer: prevState.timer + 1 })),
-			1000
-		)
-	}
+	componentDidMount = () => this.getQuestions()
 
 	componentDidUpdate(prevProps, _) {
 		if (prevProps.data !== this.props.data) this.getQuestions()
@@ -143,87 +143,104 @@ class Start extends Component {
 			<>
 				<Title title={`Start Quiz - ${data.title}`} />
 
-				{Object.keys(finished_data).length > 0 ? (
-					<div className="card">
-						<div className="card__body">
-							{data.is_published === false &&
-							sentFeedback === false ? (
-								<>
-									<div className="card__body">
-										<FeedbackForm
-											ask_name={data.ask_name}
-											ask_email={data.ask_email}
-											ask_gender={data.ask_gender}
-											ask_opinion={data.ask_opinion}
-											author_slug={data.author_slug}
-											quiz_slug={data.slug}
-											callback={() =>
-												this.setState({
-													sentFeedback: true,
-												})
-											}
-										/>
-									</div>
-									<div className="message-box info">
-										<span className="message-box__text">
-											To see the result you need to sent a
-											feedback
-										</span>
-									</div>
-								</>
-							) : (
-								<>
-									<p style={{ fontSize: '1.5rem' }}>
-										{result}
-										<br />
-										<span>
-											Your time is{' '}
-											<span style={{ fontWeight: '600' }}>
-												{timer}s
-											</span>
-										</span>
-									</p>
-									<p>{finished_data.summery}</p>
-								</>
-							)}
-						</div>
-						{data.is_published === true || sentFeedback === true ? (
-							<>
-								<hr />
+				{timer >= 3 ? (
+					<>
+						{Object.keys(finished_data).length > 0 ? (
+							<div className="card">
 								<div className="card__body">
+									{data.is_published === false &&
+									sentFeedback === false ? (
+										<>
+											<div className="card__body">
+												<FeedbackForm
+													ask_name={data.ask_name}
+													ask_email={data.ask_email}
+													ask_gender={data.ask_gender}
+													ask_opinion={
+														data.ask_opinion
+													}
+													author_slug={
+														data.author_slug
+													}
+													quiz_slug={data.slug}
+													callback={() =>
+														this.setState({
+															sentFeedback: true,
+														})
+													}
+												/>
+											</div>
+											<div className="message-box info">
+												<span className="message-box__text">
+													To see the result you need
+													to sent a feedback
+												</span>
+											</div>
+										</>
+									) : (
+										<>
+											<p style={{ fontSize: '1.5rem' }}>
+												{result}
+												<br />
+												<span>
+													Your time is{' '}
+													<span
+														style={{
+															fontWeight: '600',
+														}}
+													>
+														{timer - 3}s
+													</span>
+												</span>
+											</p>
+											<p>{finished_data.summery}</p>
+										</>
+									)}
+								</div>
+								{data.is_published === true ||
+								sentFeedback === true ? (
+									<>
+										<hr />
+										<div className="card__body">
+											<OnePageQuiz
+												questions={questions}
+												section={data.section.name}
+												finishedData={finished_data}
+											/>
+										</div>
+									</>
+								) : null}
+							</div>
+						) : (
+							<form onSubmit={this.onSubmit}>
+								{data.one_page_questions === true ? (
 									<OnePageQuiz
 										questions={questions}
 										section={data.section.name}
 										finishedData={finished_data}
 									/>
-								</div>
-							</>
-						) : null}
-					</div>
-				) : (
-					<form onSubmit={this.onSubmit}>
-						{data.one_page_questions === true ? (
-							<OnePageQuiz
-								questions={questions}
-								section={data.section.name}
-								finishedData={finished_data}
-							/>
-						) : (
-							<MultiPageQuiz
-								questions={questions}
-								section={data.section.name}
-								finishedData={finished_data}
-							/>
-						)}
+								) : (
+									<MultiPageQuiz
+										questions={questions}
+										section={data.section.name}
+										finishedData={finished_data}
+									/>
+								)}
 
-						<div>
-							<div className="card__footer">
-								<button className="btn btn__submit">
-									Finish
-								</button>
-							</div>
-						</div>
-					</form>
+								<div>
+									<div className="card__footer">
+										<button className="btn btn__submit">
+											Finish
+										</button>
+									</div>
+								</div>
+							</form>
+						)}
+					</>
+				) : (
+					<div className="card card__body auth-form">
+						<h4>Quiz will start in</h4> <h2>{3 - timer}s</h2>
+					</div>
 				)}
 			</>
 		)
