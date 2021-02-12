@@ -14,6 +14,7 @@ class Routes extends Component {
 	render() {
 		return (
 			<>
+				<br />
 				<Navigation data={this.props.data} />
 
 				<Switch>
