@@ -1,12 +1,12 @@
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
-from rest_framework import generics, viewsets, permissions
+from rest_framework import views, generics, viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.exceptions import APIException
+from rest_framework.exceptions import ValidationError, NotFound
 
-from quizzes.models import Quiz, Section, Category, KnowledgeAnswer, Question
+from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Section, Category, Question, Answer
 
 from . import serializers, permissions, mixins
 
@@ -17,17 +17,6 @@ class ImageValidatorAPIView(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        # image_url = serializer.data.get('image_url')
-        # data = {}
-
-        # try:
-        #     image_request = requests.head(image_url)
-        #     data['success'] = image_request.status_code == requests.codes.ok
-        # except:
-        #     data['success'] = False
-
-        # data['image_url'] = image_url if data['success'] else Quiz.DEFAULT_IMAGE
 
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -59,6 +48,21 @@ class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroy
     lookup_url_kwarg = 'question_slug'
 
 
+class AnswerListAPIView(mixins.AnswerMixin, generics.ListCreateAPIView):
+    def perform_create(self, serializer):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        question_slug = self.kwargs.get('question_slug')
+        question = Question.objects.get(quiz__author__slug=author_slug, quiz__slug=quiz_slug, slug=question_slug)
+
+        serializer.save(question_id=question.id)
+
+
+class AnswerDetailAPIView(mixins.AnswerMixin, generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'answer_slug'
+
+
 class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.order_by(
         '-pub_date', '-solved_times')
@@ -72,7 +76,7 @@ class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         try:
             return Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
         except ObjectDoesNotExist:
-            raise APIException(
+            raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
 
@@ -83,3 +87,113 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class QuizFinishAPIView(views.APIView):
+    def post(self, request, fromat=False, *args, **kwargs):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        section = request.data.get('section')
+
+        retrieveData = {
+            'section': section,
+            'summery': '',
+            'correctAnswers': 0,
+            'data': [],
+        }
+
+        # Check if quiz exists
+        try:
+            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+            # Add 1 to solved_times
+            quiz.solved_times += 1
+            quiz.save
+        except ObjectDoesNotExist:
+            raise NotFound(
+                _('The quiz you are looking for does not exist'))
+
+        for answer in request.data.get('data'):
+            question_id = answer.get('questionId')
+            answer_slug = answer.get('answer')
+
+            if not(answer_slug):
+                raise ValidationError(
+                    _('You have not answered all the questions'))
+
+            if section == 'knowledge_quiz':
+                # Get all the correct answers from question
+                correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
+                    question__id=question_id, is_correct=True).values('slug')]
+
+                # Add 1 to correctAnswers if it is correct answer
+                retrieveData['correctAnswers'] += 1 if answer_slug in correct_answers else 0
+                retrieveData['data'].append({
+                    'questionId': question_id,
+                    'selected': answer_slug,
+                    'correct_answers': correct_answers,
+                })
+
+            elif section == 'universal_quiz':
+                pass
+            elif section == 'psychology_quiz':
+                pass
+            elif section == 'preferential_quiz':
+                pass
+
+        if section == 'knowledge_quiz':
+            quiz.answers_data.append(retrieveData['correctAnswers'])
+            quiz.save()
+
+            summery = QuizPunctation.objects.filter(
+                quiz=quiz, from_score=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
+            retrieveData['summery'] = summery
+
+        return Response(retrieveData, status=status.HTTP_200_OK)
+
+
+class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateAPIView):
+    def perform_create(self, serializer):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+
+        serializer.save(quiz_id=quiz.id)
+
+
+class QuizPunctationDetailAPIView(mixins.QuizPunctationMixin, generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    lookup_url_kwarg = 'punctation_id'
+
+
+class QuizFeedbackAPIView(generics.ListCreateAPIView):
+    serializer_class = serializers.QuizFeedbackSerializer
+
+    def get_queryset(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+
+        try:
+            quiz = QuizFeedback.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
+        except ObjectDoesNotExist:
+            raise NotFound(
+                _('The quiz you are looking for does not exist'))
+
+        return quiz
+
+    def get_serializer_context(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values(
+            'ask_name', 'ask_email', 'ask_gender').first()
+
+        return {
+            'quiz': quiz,
+            'request': self.request,
+        }
+
+    def perform_create(self, serializer):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+
+        serializer.save(quiz_id=quiz.id)

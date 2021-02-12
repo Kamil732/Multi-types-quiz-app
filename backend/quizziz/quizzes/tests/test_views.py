@@ -5,14 +5,21 @@ from quizzes.models import Quiz
 class TestViews(TestSetUp):
     ######## POST METHODS ########
 
+    def test_image_validation(self):
+        res = self.client.post(self.image_validator_url, self.image_validator_data, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data['image_url'], self.image_validator_data['image_url'])
+        self.assertIsInstance(res.data['success'], bool)
+
     def test_create_quiz_not_authenticated(self):
-        res = self.client.post(self.quizzes_create_url,
+        res = self.client.post(self.quizzes_list_url,
                                self.quizzes_create_data, format='json')
 
         self.assertEqual(res.status_code, 401)
 
     def test_create_quiz(self):
-        res = self.client.post(self.quizzes_create_url, self.quizzes_create_data,
+        res = self.client.post(self.quizzes_list_url, self.quizzes_create_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
@@ -28,27 +35,27 @@ class TestViews(TestSetUp):
                          self.quizzes_create_data['category'])
 
     def test_create_quiz_without_image_url(self):
-        res = self.client.post(self.quizzes_create_url, self.quizzes_create_no_image_url_data,
+        res = self.client.post(self.quizzes_list_url, self.quizzes_create_no_image_url_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.data.get('image_url'), Quiz.DEFAULT_IMAGE)
 
     def test_create_quiz_with_bad_image_url(self):
-        res = self.client.post(self.quizzes_create_url, self.quizzes_create_bad_image_url_data,
+        res = self.client.post(self.quizzes_list_url, self.quizzes_create_bad_image_url_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.data.get('image_url'), Quiz.DEFAULT_IMAGE)
 
     def test_create_quiz_question_not_authenticated(self):
-        res = self.client.post(self.quizzes_create_question_url, self.quizzes_create_question_data,
+        res = self.client.post(self.quizzes_question_list_url, self.quizzes_create_question_data,
                                format='json')
 
         self.assertEqual(res.status_code, 401)
 
     def test_create_quiz_question(self):
-        res = self.client.post(self.quizzes_create_question_url, self.quizzes_create_question_data,
+        res = self.client.post(self.quizzes_question_list_url, self.quizzes_create_question_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
@@ -60,13 +67,77 @@ class TestViews(TestSetUp):
                          self.quizzes_create_question_data['summery'])
 
     def test_create_quiz_question_bad_image_url(self):
-        res = self.client.post(self.quizzes_create_question_url, self.quizzes_create_question_bad_image_url_data,
+        res = self.client.post(self.quizzes_question_list_url, self.quizzes_create_question_bad_image_url_data,
                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 201)
         self.assertEqual(res.data.get('image_url'), '')
 
+    def test_create_quiz_punctation_not_authenticated(self):
+        res = self.client.post(self.quiz_punctation_list_url, self.quiz_punctation_data, format='json')
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_create_quiz_punctation_not_owner(self):
+        res = self.client.post(self.quiz_punctation_list_url, self.quiz_punctation_data,
+                               format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_create_quiz_punctation(self):
+        res = self.client.post(self.quiz_punctation_list_url, self.quiz_punctation_data,
+                               format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.data['from_score'], self.quiz_punctation_data['from_score'])
+        self.assertEqual(res.data['to_score'], self.quiz_punctation_data['to_score'])
+        self.assertEqual(res.data['summery'], self.quiz_punctation_data['summery'])
+
+    def test_finish_knowledge_quiz_no_answer(self):
+        request_data = self.finish_knowledge_quiz_data
+        request_data['data'][0]['answer'] = None
+        res = self.client.post(self.finish_quiz_url, request_data, format='json')
+
+        self.assertEqual(res.status_code, 400)
+
+    def test_finish_knowledge_quiz(self):
+        res = self.client.post(self.finish_quiz_url, self.finish_knowledge_quiz_data, format='json')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data.get('section'), self.finish_knowledge_quiz_data['section'])
+        self.assertIsInstance(res.data['correctAnswers'], int)
+        self.assertIsInstance(res.data['data'][0]['correct_answers'], list)
+        self.assertIsInstance(res.data['data'][0]['questionId'], int)
+        self.assertIsInstance(res.data['data'][0]['selected'], str)
+        self.assertIsNotNone(res.data['data'][0]['selected'])
+
+    def test_feedback_quiz(self):
+        res = self.client.post(self.feedback_quiz_url, self.feedback_quiz_data, format='json')
+
+        self.assertEqual(res.status_code, 201)
+        self.assertEqual(res.data.get('email'), self.feedback_quiz_data['email'])
+        self.assertEqual(res.data.get('name'), self.feedback_quiz_data['name'])
+        self.assertEqual(res.data.get('gender'), self.feedback_quiz_data['gender'])
+        self.assertEqual(res.data.get('opinion'), self.feedback_quiz_data['opinion'])
+
     ######## GET METHODS ########
+
+    def test_get_quiz_punctation_not_authenticated(self):
+        res = self.client.get(self.quiz_punctation_list_url, self.quiz_punctation_data, format='json')
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_get_quiz_punctation_not_owner(self):
+        res = self.client.get(self.quiz_punctation_list_url, self.quiz_punctation_data,
+                              format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_get_quiz_punctation(self):
+        res = self.client.get(self.quiz_punctation_list_url, data={
+        }, format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+
+        self.assertEqual(res.status_code, 200)
 
     def test_get_sections(self):
         res = self.client.get(self.sections_url)
@@ -79,7 +150,7 @@ class TestViews(TestSetUp):
         self.assertEqual(res.status_code, 200)
 
     def test_get_quizzes(self):
-        res = self.client.get(self.quizzes_url)
+        res = self.client.get(self.quizzes_list_url)
 
         self.assertEqual(res.status_code, 200)
 
@@ -89,27 +160,47 @@ class TestViews(TestSetUp):
         self.assertEqual(res.status_code, 200)
 
     def test_get_quiz_quesitons(self):
-        res = self.client.get(self.quizzes_questions_detail_url)
+        res = self.client.get(self.quizzes_question_detail_url)
 
         self.assertEqual(res.status_code, 200)
 
-    ######## PUT METHODS ########
+    ######## PATCH METHODS ########
+
+    def test_update_quiz_punctation_not_authenticated(self):
+        res = self.client.patch(self.quiz_punctation_detail_url, self.update_quiz_punctation_data, format='json')
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_update_quiz_punctation_not_owner(self):
+        res = self.client.patch(self.quiz_punctation_detail_url, self.update_quiz_punctation_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_update_quiz_punctation(self):
+        res = self.client.patch(self.quiz_punctation_detail_url, self.update_quiz_punctation_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.data['from_score'], self.update_quiz_punctation_data['from_score'])
+        self.assertEqual(res.data['to_score'], self.update_quiz_punctation_data['to_score'])
+        self.assertEqual(res.data['summery'], self.update_quiz_punctation_data['summery'])
 
     def test_update_quiz_not_authenticated(self):
-        res = self.client.put(self.quizzes_detail_url,
-                              self.quizzes_update_data, format='json')
+        res = self.client.patch(self.quizzes_detail_url,
+                                self.quizzes_update_data, format='json')
 
         self.assertEqual(res.status_code, 401)
 
     def test_update_quiz_not_owner(self):
-        res = self.client.put(self.quizzes_detail_url, self.quizzes_update_data,
-                              format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+        res = self.client.patch(self.quizzes_detail_url, self.quizzes_update_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
 
         self.assertEqual(res.status_code, 403)
 
     def test_update_quiz(self):
-        res = self.client.put(self.quizzes_detail_url, self.quizzes_update_data,
-                              format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        res = self.client.patch(self.quizzes_detail_url, self.quizzes_update_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data.get('title'),
@@ -123,30 +214,47 @@ class TestViews(TestSetUp):
                          self.quizzes_update_data['category'])
 
     def test_update_question_not_authenticated(self):
-        res = self.client.put(self.quizzes_questions_detail_url,
-                              self.quizzes_questions_update_data, format='json')
+        res = self.client.patch(self.quizzes_question_detail_url,
+                                self.quizzes_question_update_data, format='json')
 
         self.assertEqual(res.status_code, 401)
 
     def test_update_question_not_owner(self):
-        res = self.client.put(self.quizzes_questions_detail_url, self.quizzes_questions_update_data,
-                              format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+        res = self.client.patch(self.quizzes_question_detail_url, self.quizzes_question_update_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
 
         self.assertEqual(res.status_code, 403)
 
     def test_update_question(self):
-        res = self.client.put(self.quizzes_questions_detail_url, self.quizzes_questions_update_data,
-                              format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        res = self.client.patch(self.quizzes_question_detail_url, self.quizzes_question_update_data,
+                                format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(res.data.get('question'),
-                         self.quizzes_questions_update_data['question'])
+                         self.quizzes_question_update_data['question'])
         self.assertEqual(res.data.get('image_url'),
-                         self.quizzes_questions_update_data['image_url'])
+                         self.quizzes_question_update_data['image_url'])
         self.assertEqual(res.data.get('summery'),
-                         self.quizzes_questions_update_data['summery'])
+                         self.quizzes_question_update_data['summery'])
 
     ######## DELETE METHODS ########
+
+    # def test_delete_quiz_punctation_not_authenticated(self):
+        res = self.client.delete(self.quiz_punctation_detail_url)
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_delete_quiz_punctation_not_owner(self):
+        res = self.client.delete(self.quiz_punctation_detail_url, data={}, format='json',
+                                 HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_delete_quiz_punctation(self):
+        res = self.client.delete(self.quiz_punctation_detail_url, data={},
+                                 format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+
+        self.assertEqual(res.status_code, 204)
 
     def test_delete_quiz_not_authenticated(self):
         res = self.client.delete(self.quizzes_detail_url)
@@ -167,18 +275,18 @@ class TestViews(TestSetUp):
 
     def test_delete_question_not_authenticated(self):
         res = self.client.delete(
-            self.quizzes_questions_detail_url, data={}, format='json')
+            self.quizzes_question_detail_url, data={}, format='json')
 
         self.assertEqual(res.status_code, 401)
 
     def test_delete_question_not_owner(self):
-        res = self.client.delete(self.quizzes_questions_detail_url, data={
+        res = self.client.delete(self.quizzes_question_detail_url, data={
         }, format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
 
         self.assertEqual(res.status_code, 403)
 
     def test_delete_question(self):
-        res = self.client.delete(self.quizzes_questions_detail_url, data={
+        res = self.client.delete(self.quizzes_question_detail_url, data={
         }, format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
 
         self.assertEqual(res.status_code, 204)

@@ -35,7 +35,7 @@ class TestSetUp(APITestCase):
         }
 
         self.patch_data = {
-            'username': self.fake.email().split('@')[0],
+            'username': self.fake.email().split('@')[0][:12],
             'bio': username,
         }
 

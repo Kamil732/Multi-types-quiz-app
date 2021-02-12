@@ -4,7 +4,7 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import NotFound from '../containers/errors/NotFound'
 
 import Home from '../containers/quizzes/Home'
-import { default as QuizDetail } from '../containers/quizzes/Detail'
+import { default as QuizDetailRoutes } from '../containers/quizzes/detail/Routes'
 
 import Auth from '../containers/accounts/Auth';
 import Profile from '../containers/accounts/Profile';
@@ -16,7 +16,7 @@ function Routes() {
         <section>
 			<Switch>
                 <Route exact path="/" component={Home} />
-                <Route exact path="/quizzes/:author_slug/:quiz_slug" component={QuizDetail} />
+                <Route path="/quizzes/:author_slug/:quiz_slug" component={QuizDetailRoutes} />
 
                 <Route exact path="/login" component={() => <Auth type="login" />} />
                 <Route exact path="/register" component={() => <Auth type="register" />} />

@@ -1,63 +1,63 @@
 .no-quizzes {
-    padding: 50px 0;
-    text-align: center;
+	padding: 50px 0;
+	text-align: center;
 }
 
 .img-preview__img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid grey;
-    vertical-align: middle;
+	max-width: 100%;
+	height: auto;
+	border: 1px solid grey;
+	vertical-align: middle;
 }
 
 .quiz-detail {
-    background-color: darken($surface-color, 4%);
-    color: set-text-color($surface-color);
-    min-height: 100%;
+	background-color: darken($surface-color, 4%);
+	color: set-text-color($surface-color);
+	min-height: 100%;
 
-    &__img {
-        max-width: 100%;
-        height: auto;
-        margin-right: 10px;
-        border: 1px solid grey;
-        box-shadow: 0 2px 3px grey;
-    }
+	&__img {
+		max-width: 100%;
+		height: auto;
+		margin-right: 10px;
+		border: 1px solid grey;
+		box-shadow: 0 2px 3px grey;
+	}
 
-    &__title {
-        margin-bottom: 5px;
-        font-size: 1.4rem;
-    }
+	&__title {
+		margin-bottom: 5px;
+		font-size: 1.4rem;
+	}
 }
 
 .quiz-card {
-    &__body {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
+	&__body {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
 
-    &__img {
-        max-height: 180px !important;
-    }
+	&__img {
+		max-height: 180px !important;
+	}
 
-    &__link {
-        color: set-text-color($surface-color);
-        font-weight: 600;
-        font-size: 1.18rem;
-        transition: color .2s ease-in-out;
+	&__link {
+		color: set-text-color($surface-color);
+		font-weight: 600;
+		font-size: 1.18rem;
+		transition: color 0.2s ease-in-out;
 
-        &:hover {
-            color: $primary-color;
-        }
-    }
+		&:hover {
+			color: $primary-color;
+		}
+	}
 
-    &__description {
-        font-size: 1rem;
-        opacity: 0.8;
-        margin-bottom: 5px;
-    }
+	&__description {
+		font-size: 1rem;
+		opacity: 0.8;
+		margin-bottom: 5px;
+	}
 
-    &__header {
-        margin-bottom: 15px;
-    }
+	&__header {
+		margin-bottom: 15px;
+	}
 }

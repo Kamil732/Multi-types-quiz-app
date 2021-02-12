@@ -30,7 +30,7 @@ class QuizDetail extends Component {
                     <div className="card__body" style={{ textAlign: 'center' }}>
                         <h4>URL address to your quiz:</h4>
                         <br />
-                        <a rel="noreferrer" target="_blank" href={`/quizzes/${this.props.author_slug}/${data.slug}`} style={{ fontSize: '1.1rem' }}>
+                        <a rel="noreferrer" target="_blank" href={`/quizzes/${this.props.author_slug}/${data.slug}`} style={{ fontSize: '1.1rem', wordWrap: 'break-word' }}>
                             {`${window.location.origin}/quizzes/${this.props.author_slug}/${data.slug}`}
                         </a>
                     </div>

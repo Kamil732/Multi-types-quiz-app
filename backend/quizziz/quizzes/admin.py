@@ -2,13 +2,12 @@ from django.contrib import admin
 
 from .models import (
     Quiz,
+    QuizFeedback,
+    QuizPunctation,
     Question,
     Category,
     Section,
-    PsychologyAnswer,
-    PreferentialAnswer,
-    PsychologyResults,
-    UniversalAnswer,
+    Answer
 )
 
 
@@ -23,14 +22,12 @@ class QuizAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Quiz, QuizAdmin)
+admin.site.register(QuizFeedback)
+admin.site.register(QuizPunctation)
 admin.site.register(Category)
 admin.site.register(Section)
 
 
 admin.site.register(Question)
 
-admin.site.register(PsychologyAnswer)
-admin.site.register(PsychologyResults)
-
-admin.site.register(PreferentialAnswer)
-admin.site.register(UniversalAnswer)
+admin.site.register(Answer)

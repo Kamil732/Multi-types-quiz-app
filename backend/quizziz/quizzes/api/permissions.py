@@ -15,3 +15,10 @@ class IsOwner(BasePermission):
 
             return author_slug == request.user.slug if request.user.is_authenticated else False
         return True
+
+
+class IsOwnerEverything(BasePermission):
+    def has_permission(self, request, view):
+        author_slug = view.kwargs.get('author_slug')
+
+        return author_slug == request.user.slug if request.user.is_authenticated else False

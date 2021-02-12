@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from faker import Faker
 
 from accounts.models import Account
-from quizzes.models import Quiz, Question, Section, Category
+from quizzes.models import Quiz, QuizPunctation, Question, Answer, Section, Category
 
 
 class TestSetUp(APITestCase):
@@ -60,6 +60,24 @@ class TestSetUp(APITestCase):
         description = self.fake.sentence()
         image_url = 'https://cdn.pixabay.com/photo/2020/12/19/03/27/person-5843476_960_720.jpg'
 
+        user_data = register_data
+        user_data.pop('password2')
+        user = Account.objects.create_user(**user_data)
+
+        quiz = Quiz.objects.create(author=user, title=title, description=description, image_url=image_url,
+                                   section=self.fake.random.choice(sections), category=self.fake.random.choice(categories))
+
+        questions = [Question.objects.create(
+            quiz=quiz, question=self.fake.unique.sentence()) for _ in range(7)]
+
+        # Knowledge answers
+        knowledge_answers = [Answer.objects.create(question=self.fake.random.choice(
+            questions), answer=self.fake.sentence(), is_correct=self.fake.boolean(chance_of_getting_true=40)) for _ in range(20)]
+
+        self.image_validator_data = {
+            'image_url': image_url
+        }
+
         self.quizzes_create_data = {
             'title': title,
             'description': description,
@@ -104,21 +122,46 @@ class TestSetUp(APITestCase):
             'summery': '',
         }
 
-        self.quizzes_questions_update_data = {
+        self.quizzes_question_update_data = {
             'question': self.fake.sentence(),
             'image_url': 'https://cdn.pixabay.com/photo/2020/12/28/22/48/buddha-5868759_960_720.jpg',
             'summery': description,
         }
 
-        user_data = register_data
-        user_data.pop('password2')
-        user = Account.objects.create_user(**user_data)
+        from_score = self.fake.random_int(min=0, max=10)
+        to_score = from_score + self.fake.random_int(min=0, max=10)
 
-        quiz = Quiz.objects.create(author=user, title=title, description=description, image_url=image_url,
-                                   section=self.fake.random.choice(sections), category=self.fake.random.choice(categories))
+        self.quiz_punctation_data = {
+            'from_score': from_score,
+            'to_score': to_score,
+            'summery': self.fake.sentence()
+        }
 
-        Question.objects.create(
-            quiz=quiz, question=self.fake.unique.sentence())
+        QuizPunctation.objects.create(quiz=quiz, **self.quiz_punctation_data)
+
+        num = self.fake.random_int(min=0, max=10)
+        self.update_quiz_punctation_data = {
+            'from_score': from_score + num,
+            'to_score': to_score + num,
+            'summery': self.fake.sentence()
+        }
+
+        self.finish_knowledge_quiz_data = {
+            'section': 'knowledge_quiz',
+            'data': [
+                {
+                    'questionId': answer.question.id,
+                    'answer': answer.slug,
+                } for answer in knowledge_answers
+            ],
+        }
+
+        self.feedback_quiz_data = {
+            'name': username,
+            'email': email,
+            'gender': self.fake.random.choice(['woman', 'man']),
+            'opinion': description,
+        }
 
         self.client.post(register_url, register_data, format='json')
         self.access_token = self.client.post(
@@ -127,19 +170,21 @@ class TestSetUp(APITestCase):
         self.access_token_other = self.client.post(
             login_url, login_data_other, format='json').data.get('access')
 
+        self.image_validator_url = reverse('image-validator')
         self.sections_url = reverse('section-list')
         self.categories_url = reverse('category-list')
-        self.quizzes_url = reverse('quiz-list')
+        self.quizzes_list_url = reverse('quiz-list')
         self.quizzes_detail_url = reverse(
             'quiz-detail', args=[quiz.author.slug, quiz.slug])
-        self.quizzes_questions_url = reverse(
-            'quiz-questions', args=[quiz.author.slug, quiz.slug])
-        self.quizzes_questions_detail_url = reverse(
-            'quiz-questions-detail', args=[quiz.author.slug, quiz.slug, quiz.questions.first().slug])
-
-        self.quizzes_create_url = reverse('quiz-list')
-        self.quizzes_create_question_url = reverse(
-            'quiz-questions', args=[quiz.author.slug, quiz.slug])
+        self.quizzes_question_list_url = reverse(
+            'quiz-question-list', args=[quiz.author.slug, quiz.slug])
+        self.quizzes_question_detail_url = reverse(
+            'quiz-question-detail', args=[quiz.author.slug, quiz.slug, quiz.questions.first().slug])
+        self.quiz_punctation_list_url = reverse('quiz-punctation-list', args=[quiz.author.slug, quiz.slug])
+        self.quiz_punctation_detail_url = reverse(
+            'quiz-punctation-detail', args=[quiz.author.slug, quiz.slug, quiz.punctations.first().id])
+        self.finish_quiz_url = reverse('quiz-finish', args=[quiz.author.slug, quiz.slug])
+        self.feedback_quiz_url = reverse('quiz-feedback', args=[quiz.author.slug, quiz.slug])
 
         return super(TestSetUp, self).setUp()
 

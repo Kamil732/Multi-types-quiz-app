@@ -7,14 +7,12 @@ from quizziz.utils import valid_url_extension
 
 from quizzes.models import (
     Quiz,
+    QuizFeedback,
+    QuizPunctation,
     Question,
     Category,
     Section,
-    PsychologyAnswer,
-    PreferentialAnswer,
-    PsychologyResults,
-    UniversalAnswer,
-    KnowledgeAnswer
+    Answer,
 )
 
 
@@ -57,9 +55,19 @@ class CategorySerializer(serializers.ModelSerializer):
 #         model = PsychologyResults
 #         fields = '__all__'
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'image_url',
+            'answer',
+            'slug',
+        )
+
 
 class QuestionSerializer(serializers.ModelSerializer):
     image_url = serializers.CharField(allow_blank=True)
+    answers = AnswerSerializer(many=True, read_only=True)
 
     def validate_image_url(self, value):
         if not(valid_url_extension(value)):
@@ -70,10 +78,12 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = (
+            'id',
             'question',
             'image_url',
             'summery',
             'slug',
+            'answers'
         )
         read_only_fields = ('slug',)
 
@@ -82,6 +92,7 @@ class QuizSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     author_slug = serializers.ReadOnlyField(source='author.slug')
     pub_date = serializers.SerializerMethodField('get_pub_date')
+    average_correct_answers = serializers.SerializerMethodField('get_average_correct_answers')
     image_url = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
@@ -92,6 +103,12 @@ class QuizSerializer(serializers.Serializer):
 
     def get_question_amount(self, obj):
         return Question.objects.filter(quiz_id=obj.id).count()
+
+    def get_average_correct_answers(self, obj):
+        try:
+            return round(sum(obj.answers_data) / obj.solved_times, 2) if self.get_question_amount(obj) > 0 else None
+        except:
+            return None
 
     def validate_section(self, value):
         return Section.objects.get(
@@ -131,6 +148,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'title',
             'description',
             'solved_times',
+            'average_correct_answers',
             'slug',
             'author',
             'author_slug',
@@ -153,7 +171,7 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
 
     def get_questions(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri(reverse('quiz-questions', args=[obj.author.slug, obj.slug]))
+        return request.build_absolute_uri(reverse('quiz-question-list', args=[obj.author.slug, obj.slug]))
 
     class Meta:
         model = Quiz
@@ -161,3 +179,33 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
             'id',
         )
         read_only_fields = ('questions', 'author',)
+
+
+class QuizPunctationSerializer(serializers.ModelSerializer):
+    def vaildate(self, data):
+        if (data['from_score'] > data['to_score']):
+            raise serializers.ValidationError({'detail': _('From score cannot be greater than to score')})
+
+        return data
+
+    class Meta:
+        model = QuizPunctation
+        exclude = ('quiz',)
+
+
+class QuizFeedbackSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        quiz = self.context['quiz']
+
+        if quiz['ask_name'] and not(data['name']):
+            raise serializers.ValidationError({'name': _('Name cannot be blank')})
+        if quiz['ask_email'] and not(data['email']):
+            raise serializers.ValidationError({'email': _('Email cannot be blank')})
+        if quiz['ask_gender'] and not(data['gender']):
+            raise serializers.ValidationError({'gender': _('Gender cannot be blank')})
+
+        return data
+
+    class Meta:
+        model = QuizFeedback
+        exclude = ('quiz',)
