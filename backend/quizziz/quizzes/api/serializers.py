@@ -163,6 +163,7 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     random_question_order = serializers.BooleanField(
         default=True)
     questions = serializers.SerializerMethodField('get_questions')
+    max_score = serializers.SerializerMethodField('get_max_score')
     author = serializers.SerializerMethodField('get_author')
 
     def get_author(self, obj):
@@ -172,6 +173,15 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     def get_questions(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri(reverse('quiz-question-list', args=[obj.author.slug, obj.slug]))
+
+    def get_max_score(self, obj):
+        if obj.section.name == 'knowledge_quiz':
+            return self.get_question_amount(obj)
+        elif obj.section.name == 'universal_quiz':
+            answers = Answer.objects.filter(question__quiz__author__slug=obj.author.slug,
+                                            question__quiz__slug=obj.slug).values_list('points', flat=True)
+
+            return sum(answers)
 
     class Meta:
         model = Quiz
