@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 import { getQuizPunctations } from '../../../../redux/actions/quizzes'
 
 import CircleLoader from '../../../../components/loaders/CircleLoader'
-import PunctationItem from '../../../../components/quizzes/panel/detail/PunctationItem'
+import PunctationList from '../../../../components/quizzes/panel/detail/PunctationList'
 
 class Punctation extends Component {
 	static propTypes = {
@@ -51,25 +51,6 @@ class Punctation extends Component {
 
 		if (!loading && punctations.length === 0)
 			return <Redirect to="/not-found" />
-
-		const punctationList = punctations.map((punctation, index) => (
-			<div key={index}>
-				<PunctationItem
-					punctation={punctation}
-					section_name={data.section.name}
-					max_score={data.max_score}
-					nextId={
-						punctations.indexOf(punctations[index]) ===
-						punctations.length - 1
-							? null
-							: punctations[index + 1].id
-					}
-				/>
-
-				<hr />
-			</div>
-		))
-
 		return (
 			<div className="card">
 				{loading ? (
@@ -77,7 +58,13 @@ class Punctation extends Component {
 						<CircleLoader />
 					</div>
 				) : (
-					<form onSubmit={this.onSubmit}>{punctationList}</form>
+					<form onSubmit={this.onSubmit}>
+						<PunctationList
+							punctations={punctations}
+							section_name={data.section.name}
+							max_score={data.max_score}
+						/>
+					</form>
 				)}
 			</div>
 		)
