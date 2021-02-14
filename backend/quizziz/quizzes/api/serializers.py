@@ -200,7 +200,7 @@ class QuizPunctationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuizPunctation
-        exclude = ('quiz',)
+        exclude = ('id', 'quiz',)
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):
