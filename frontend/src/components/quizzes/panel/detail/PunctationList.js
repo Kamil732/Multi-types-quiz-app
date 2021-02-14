@@ -15,15 +15,6 @@ class PunctationList extends Component {
 		this.onChange = this.onChange.bind(this)
 	}
 
-	componentDidMount = () => {
-		this.next_from_score = document.getElementById(
-			`from-score-${this.props.id + 1}`
-		)
-		this.next_to_score = document.getElementById(
-			`to-score-${this.props.id + 1}`
-		)
-	}
-
 	onChange = (e) => {
 		const target = e.target ? e.target : e
 
