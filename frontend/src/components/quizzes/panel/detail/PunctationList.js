@@ -25,69 +25,21 @@ class PunctationList extends Component {
 	}
 
 	onChange = (e) => {
-		// const target = e.target ? e.target : e
-
-		// const id = parseInt(target.getAttribute('data-id'))
-
-		// if (document.getElementById(`to-score-${id + 1}`)) {
-		// 	document.getElementById(`from-score-${id + 1}`).value =
-		// 		parseInt(target.value) + 1
-		// 	document.getElementById(
-		// 		`to-score-${id + 1}`
-		// 	).min = document.getElementById(`from-score-${id + 1}`).value
-
-		// 	if (
-		// 		document.getElementById(`from-score-${id + 1}`).value >
-		// 		document.getElementById(`to-score-${id + 1}`).value
-		// 	)
-		// 		document.getElementById(`to-score-${id + 1}`).value =
-		// 			parseInt(target.value) + 1
-
-		// 	if (
-		// 		document.getElementById(`from-score-${id + 1}`).value >
-		// 		target.value
-		// 	)
-		// 		document.getElementById(`from-score-${id + 1}`).value =
-		// 			parseInt(target.value) + 1
-
-		// 	if (document.getElementById(`to-score-${id + 2}`)) {
-		// 		if (
-		// 			document.getElementById(`to-score-${id + 1}`).value >
-		// 			document.getElementById(`from-score-${id + 2}`).value
-		// 		) {
-		// 			let i = 0
-		// 			while (document.getElementById(`to-score-${id + 2 + i}`)) {
-		// 				console.log(
-		// 					document.getElementById(`to-score-${id + 1 + i}`)
-		// 				)
-		// 				this.onChange(
-		// 					document.getElementById(`to-score-${id + 1 + i}`)
-		// 				)
-
-		// 				i++
-		// 			}
-		// 		}
-		// 	}
-		// } else
-		// 	document.getElementById(
-		// 		`to-score-${id}`
-		// 	).value = this.props.max_score
-
 		const target = e.target ? e.target : e
 
 		const id = parseInt(target.getAttribute('data-id'))
-		console.log(target)
 
 		// If from_score is greater than to_score
 		if (
 			document.getElementById(`from-score-${id}`).value >
 			document.getElementById(`to-score-${id}`).value
 		)
+			// Add 1 to to_score
 			document.getElementById(`to-score-${id}`).value =
 				parseInt(document.getElementById(`to-score-${id}`).value) + 1
 
 		if (document.getElementById(`from-score-${id + 1}`)) {
-			// Set the next from_score
+			// Add 1 to the next from_score
 			document.getElementById(`from-score-${id + 1}`).value =
 				parseInt(target.value) + 1
 
@@ -101,18 +53,17 @@ class PunctationList extends Component {
 				if (
 					document.getElementById(`to-score-${id - 1}`).value >=
 					document.getElementById(`from-score-${id}`).value
-				) {
+				)
 					document.getElementById(`from-score-${id}`).value =
 						parseInt(
 							document.getElementById(`from-score-${id}`).value
 						) + 1
-				}
-			} else {
-				// If its first
-				// Set the next from_score
+			}
+			// If its first
+			// Set the next from_score
+			else
 				document.getElementById(`from-score-${id + 1}`).value =
 					parseInt(target.value) + 1
-			}
 
 			// Recursion to validate other inputs
 			this.onChange(document.getElementById(`to-score-${id + 1}`))
