@@ -16,13 +16,14 @@ class Punctation extends Component {
 
 	constructor(props) {
 		super(props)
-		const { punctations } = this.props
 
 		this.state = {
 			loading: true,
+			hasChanged: false,
 		}
 
 		this.getPunctations = this.getPunctations.bind(this)
+		this.resetForm = this.resetForm.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 	}
 
@@ -33,6 +34,13 @@ class Punctation extends Component {
 		await this.props.getQuizPunctations(data.author_slug, data.slug)
 
 		this.setState({ loading: false })
+	}
+
+	resetForm = () => {
+		const { data } = this.props
+		this.props.getQuizPunctations(data.author_slug, data.slug)
+
+		this.setState({ hasChanged: false })
 	}
 
 	onSubmit = (e) => {
@@ -46,11 +54,12 @@ class Punctation extends Component {
 	}
 
 	render() {
-		const { loading } = this.state
+		const { loading, hasChanged } = this.state
 		const { data, punctations } = this.props
 
 		if (!loading && punctations.length === 0)
 			return <Redirect to="/not-found" />
+
 		return (
 			<div className="card">
 				{loading ? (
@@ -63,7 +72,39 @@ class Punctation extends Component {
 							punctations={punctations}
 							section_name={data.section.name}
 							max_score={data.max_score}
+							hasChanged={(state) =>
+								this.setState({ hasChanged: state })
+							}
 						/>
+
+						<div className="card__body">
+							<div className="inline-btns">
+								<button className="btn">Add Grade</button>
+								<button className="btn btn__danger">
+									Remove Grade
+								</button>
+							</div>
+							<br /> <br />
+							<div className="inline-btns f-w">
+								<button
+									type="reset"
+									onClick={this.resetForm}
+									className={`btn ${
+										!hasChanged ? 'btn__disabled' : ''
+									}`}
+								>
+									Cancel
+								</button>
+								<button
+									type="submit"
+									className={`btn btn__contrast ${
+										!hasChanged ? 'btn__disabled' : ''
+									}`}
+								>
+									Save
+								</button>
+							</div>
+						</div>
 					</form>
 				)}
 			</div>

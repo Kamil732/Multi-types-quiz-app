@@ -125,7 +125,8 @@ export const getQuizPunctations = (author_slug, quiz_slug) => async (
 	} catch (err) {
 		if (err.response.status === 401) {
 			await dispatch(refreshToken())
-			if (getState().auth.token) await dispatch(getQuizPunctations())
+			if (getState().auth.token)
+				await dispatch(getQuizPunctations(author_slug, quiz_slug))
 		} else dispatch({ type: GET_QUIZ_PUNCTATIONS_FAIL })
 	}
 }
