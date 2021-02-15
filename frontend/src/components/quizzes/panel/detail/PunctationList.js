@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import PropTypes, { any } from 'prop-types'
+import PropTypes from 'prop-types'
 import Textarea from '../../../Textarea'
 
 import objectsEquals from '../../../../helpers/objectsEquals'
@@ -16,6 +16,8 @@ class PunctationList extends Component {
 
 		this.data = Object.values(this.props.punctations)
 
+		this.dataRefs = []
+
 		this.onChange = this.onChange.bind(this)
 	}
 
@@ -23,26 +25,20 @@ class PunctationList extends Component {
 		const target = e.target ? e.target : e
 		const id = parseInt(target.getAttribute('data-id'))
 
-		const previous_from_score = document.getElementById(
-			`from-score-${id - 1}`
-		)
-		const previous_to_score = document.getElementById(`to-score-${id - 1}`)
+		const from_score = this.dataRefs[id].from_score
+		const to_score = this.dataRefs[id].to_score
 
-		const from_score = document.getElementById(`from-score-${id}`)
-		const to_score = document.getElementById(`to-score-${id}`)
-
-		const next_from_score = document.getElementById(`from-score-${id + 1}`)
-		const next_to_score = document.getElementById(`to-score-${id + 1}`)
-
-		const summery = document.getElementById(`summery-${id}`)
+		const summery = this.dataRefs[id].summery
 
 		if (this.props.hasChanged) {
+			// Update data
 			this.data[id] = {
 				from_score: parseInt(from_score.value),
 				to_score: parseInt(to_score.value),
 				summery: summery.value,
 			}
 
+			// array of booleans, true if object has change otherwise false
 			const hasChangedArray = this.data.map(
 				(_, index) =>
 					!objectsEquals(
@@ -51,6 +47,7 @@ class PunctationList extends Component {
 					)
 			)
 
+			// If true in array than the form has changed
 			this.props.hasChanged(
 				hasChangedArray.some((hasChanged) => hasChanged === true)
 			)
@@ -61,14 +58,19 @@ class PunctationList extends Component {
 			// Add 1 to to_score
 			to_score.value = parseInt(to_score.value) + 1
 
-		if (next_from_score) {
+		if (this.dataRefs[id + 1]) {
+			const next_from_score = this.dataRefs[id + 1].from_score
+			const next_to_score = this.dataRefs[id + 1].to_score
+
 			// Add 1 to the next_from_score
 			next_from_score.value = parseInt(to_score.value) + 1
 
 			// Set to_score MIN to from_score VALUE
 			to_score.min = from_score.value
 
-			if (previous_from_score) {
+			if (this.dataRefs[id - 1]) {
+				const previous_to_score = this.dataRefs[id - 1].to_score
+
 				// If previous_to_score is greater than or equal to from_score
 				if (previous_to_score.value >= from_score.value)
 					from_score.value = parseInt(from_score.value) + 1
@@ -85,10 +87,18 @@ class PunctationList extends Component {
 		}
 	}
 
+	componentDidUpdate(prevProps, _) {
+		if (prevProps.punctations !== this.props.punctations) {
+			console.log(this.dataRefs[0].to_score)
+		}
+	}
+
+	setToScoreRef = (element) => (this.toScore = element)
+
 	render() {
 		const { section_name, punctations } = this.props
 
-		return punctations.map((punctation, index) => (
+		const punctationList = punctations.map((punctation, index) => (
 			<div key={index}>
 				<div className="card__body">
 					{section_name === 'knowledge_quiz' ||
@@ -98,16 +108,21 @@ class PunctationList extends Component {
 								Grand range:
 							</label>
 							<input
-								id={`from-score-${index}`}
 								data-id={index}
 								type="number"
 								name="from_score"
 								className="form-inline__input disabled"
 								defaultValue={punctation.from_score}
 								readOnly
+								required
+								ref={(ref) =>
+									(this.dataRefs[index] = {
+										...this.dataRefs[index],
+										from_score: ref,
+									})
+								}
 							/>
 							<input
-								id={`to-score-${index}`}
 								data-id={index}
 								type="number"
 								name="to_score"
@@ -120,13 +135,19 @@ class PunctationList extends Component {
 								}
 								onChange={this.onChange}
 								defaultValue={punctation.to_score}
+								required
+								ref={(ref) =>
+									(this.dataRefs[index] = {
+										...this.dataRefs[index],
+										to_score: ref,
+									})
+								}
 							/>
 						</div>
 					) : null}
 					<div className="form-control">
 						<label>Description:</label>
 						<Textarea
-							id={`summery-${index}`}
 							data-id={index}
 							onChange={this.onChange}
 							name="summery"
@@ -134,12 +155,21 @@ class PunctationList extends Component {
 							className="form-control__input form-control__textarea"
 							placeholder="Pass the description..."
 							rows="3"
+							required
+							ref={(ref) =>
+								(this.dataRefs[index] = {
+									...this.dataRefs[index],
+									summery: ref,
+								})
+							}
 						/>
 					</div>
 				</div>
 				<hr />
 			</div>
 		))
+
+		return punctationList
 	}
 }
 

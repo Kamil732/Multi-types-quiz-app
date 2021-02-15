@@ -19,12 +19,26 @@ class Punctation extends Component {
 
 		this.state = {
 			loading: true,
+			punctations: props.punctations,
 			hasChanged: false,
 		}
 
 		this.getPunctations = this.getPunctations.bind(this)
 		this.resetForm = this.resetForm.bind(this)
+		this.addGrade = this.addGrade.bind(this)
+		this.removeGrade = this.removeGrade.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
+	}
+
+	static getDerivedStateFromProps(nextProps, prevState) {
+		if (
+			prevState.hasChanged === false &&
+			prevState.punctations !== nextProps.punctations
+		) {
+			return { punctations: nextProps.punctations }
+		}
+
+		return null
 	}
 
 	getPunctations = async () => {
@@ -37,10 +51,42 @@ class Punctation extends Component {
 	}
 
 	resetForm = () => {
-		const { data } = this.props
+		const { data, punctations } = this.props
 		this.props.getQuizPunctations(data.author_slug, data.slug)
 
-		this.setState({ hasChanged: false })
+		this.setState({
+			punctations,
+			hasChanged: false,
+		})
+	}
+
+	addGrade = () => {
+		const { punctations } = this.state
+
+		if (punctations.length < 7)
+			this.setState({
+				hasChanged: true,
+				punctations: [
+					...this.state.punctations,
+					{
+						summery: '',
+						from_score:
+							this.state.punctations[punctations.length - 1]
+								.to_score + 1,
+						to_score: this.props.data.max_score,
+					},
+				],
+			})
+	}
+
+	removeGrade = () => {
+		const { punctations } = this.state
+
+		if (punctations.length > 1)
+			this.setState({
+				hasChanged: true,
+				punctations: this.state.punctations.slice(0, -1),
+			})
 	}
 
 	onSubmit = (e) => {
@@ -54,10 +100,10 @@ class Punctation extends Component {
 	}
 
 	render() {
-		const { loading, hasChanged } = this.state
-		const { data, punctations } = this.props
+		const { loading, hasChanged, punctations } = this.state
+		const { data } = this.props
 
-		if (!loading && punctations.length === 0)
+		if (!loading && Object.keys(data).length === 0)
 			return <Redirect to="/not-found" />
 
 		return (
@@ -79,8 +125,24 @@ class Punctation extends Component {
 
 						<div className="card__body">
 							<div className="inline-btns">
-								<button className="btn">Add Grade</button>
-								<button className="btn btn__danger">
+								<button
+									className={`btn ${
+										punctations.length >= 7
+											? 'btn__disabled'
+											: ''
+									}`}
+									onClick={this.addGrade}
+								>
+									Add Grade
+								</button>
+								<button
+									className={`btn btn__danger ${
+										punctations.length <= 1
+											? 'btn__disabled'
+											: ''
+									}`}
+									onClick={this.removeGrade}
+								>
 									Remove Grade
 								</button>
 							</div>
