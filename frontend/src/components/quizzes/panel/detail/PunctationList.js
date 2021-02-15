@@ -15,10 +15,47 @@ class PunctationList extends Component {
 		super(props)
 
 		this.data = Object.values(this.props.punctations)
-
 		this.dataRefs = []
 
+		this.setAddedPunctationsInputs = this.setAddedPunctationsInputs.bind(
+			this
+		)
 		this.onChange = this.onChange.bind(this)
+	}
+
+	setAddedPunctationsInputs = (index = this.dataRefs.length - 1) => {
+		const to_score = this.dataRefs[index].to_score
+		const from_score = this.dataRefs[index].from_score
+
+		// If from_score is greater than to_score
+		if (from_score.value > to_score.value)
+			from_score.value = parseInt(from_score.value) - 1
+
+		if (this.dataRefs[index - 1]) {
+			const previous_to_score = this.dataRefs[index - 1].to_score
+
+			// Minus 1 from previous_to_score
+			previous_to_score.value = parseInt(from_score.value) - 1
+
+			// Set to_score MIN to from_score VALUE
+			to_score.min = from_score.value
+
+			// Set previous_to_score MAX to to_score VALUE minus 1
+			previous_to_score.max = parseInt(to_score.value) - 1
+
+			// Recursion to validate other inputs
+			this.setAddedPunctationsInputs(index - 1)
+		}
+	}
+
+	componentDidUpdate(prevProps, _) {
+		if (prevProps.punctations.length < this.props.punctations.length)
+			this.setAddedPunctationsInputs()
+		else if (prevProps.punctations.length > this.props.punctations.length) {
+			this.dataRefs.pop()
+			if (this.props.hasChanged === false)
+				this.setAddedPunctationsInputs()
+		}
 	}
 
 	onChange = (e) => {
@@ -30,6 +67,7 @@ class PunctationList extends Component {
 
 		const summery = this.dataRefs[id].summery
 
+		// Set the hasChanged
 		if (this.props.hasChanged) {
 			// Update data
 			this.data[id] = {
@@ -75,25 +113,13 @@ class PunctationList extends Component {
 				if (previous_to_score.value >= from_score.value)
 					from_score.value = parseInt(from_score.value) + 1
 			}
-			// If its first
-			// Set the next_from_score
-			else next_from_score.value = parseInt(to_score.value) + 1
 
 			// Recursion to validate other inputs
 			this.onChange(next_to_score)
-		} else {
-			// If its the last
-			to_score.value = this.props.max_score
 		}
+		// If its the last
+		else to_score.value = this.props.max_score
 	}
-
-	componentDidUpdate(prevProps, _) {
-		if (prevProps.punctations !== this.props.punctations) {
-			console.log(this.dataRefs[0].to_score)
-		}
-	}
-
-	setToScoreRef = (element) => (this.toScore = element)
 
 	render() {
 		const { section_name, punctations } = this.props

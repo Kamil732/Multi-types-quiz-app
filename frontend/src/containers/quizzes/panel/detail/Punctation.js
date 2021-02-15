@@ -34,9 +34,10 @@ class Punctation extends Component {
 		if (
 			prevState.hasChanged === false &&
 			prevState.punctations !== nextProps.punctations
-		) {
-			return { punctations: nextProps.punctations }
-		}
+		)
+			return {
+				punctations: nextProps.punctations,
+			}
 
 		return null
 	}
@@ -63,16 +64,17 @@ class Punctation extends Component {
 	addGrade = () => {
 		const { punctations } = this.state
 
-		if (punctations.length < 7)
+		if (punctations.length - 1 < this.props.data.max_score)
 			this.setState({
 				hasChanged: true,
 				punctations: [
 					...this.state.punctations,
 					{
 						summery: '',
-						from_score:
-							this.state.punctations[punctations.length - 1]
-								.to_score + 1,
+						// from_score: this.state.punctations[
+						// 	punctations.length - 1
+						// ].to_score,
+						from_score: this.props.data.max_score,
 						to_score: this.props.data.max_score,
 					},
 				],
@@ -127,7 +129,7 @@ class Punctation extends Component {
 							<div className="inline-btns">
 								<button
 									className={`btn ${
-										punctations.length >= 7
+										punctations.length - 1 >= this.props.data.max_score
 											? 'btn__disabled'
 											: ''
 									}`}
