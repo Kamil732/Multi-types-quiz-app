@@ -84,10 +84,17 @@ class PunctationList extends Component {
 			this.setDeletedPunctationsInputs(index - 1)
 		}
 
-		if (this.dataRefs[index + 1])
-			to_score.max = parseInt(this.dataRefs[index + 1].to_score.max) - 1
-		// Its the last
-		else {
+		if (this.dataRefs[index + 1]) {
+			const next_to_score = this.dataRefs[index + 1].to_score
+			const next_from_score = this.dataRefs[index + 1].from_score
+
+			to_score.max =
+				next_to_score.value === next_from_score.value
+					? parseInt(next_to_score.max)
+					: parseInt(next_to_score.max) - 1
+		} else {
+			// Its the last
+
 			to_score.value = this.props.max_score
 			to_score.max = this.props.max_score
 		}
