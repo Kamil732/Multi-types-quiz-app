@@ -20,6 +20,9 @@ class PunctationList extends Component {
 		this.setAddedPunctationsInputs = this.setAddedPunctationsInputs.bind(
 			this
 		)
+		this.setDeletedPunctationsInputs = this.setDeletedPunctationsInputs.bind(
+			this
+		)
 		this.onChange = this.onChange.bind(this)
 	}
 
@@ -48,13 +51,65 @@ class PunctationList extends Component {
 		}
 	}
 
+	setDeletedPunctationsInputs = (index = this.dataRefs.length - 1) => {
+		const to_score = this.dataRefs[index].to_score
+		const from_score = this.dataRefs[index].from_score
+
+		to_score.value = parseInt(to_score.value) + 1
+
+		if (from_score.value > to_score.value)
+			from_score.value = parseInt(from_score.value) - 1
+
+		if (this.dataRefs[index - 1]) {
+			const previous_to_score = this.dataRefs[index - 1].to_score
+			const previous_from_score = this.dataRefs[index - 1].from_score
+
+			// If from_score is greater than to_score
+			if (from_score.value > previous_to_score.value)
+				// Add 1 to to_score
+				previous_to_score.value = parseInt(previous_to_score.value) - 1
+
+			// Add 1 to the previous_from_score
+			// previous_from_score.value = parseInt(to_score.value) + 1
+
+			// Set to_score MIN to from_score VALUE
+			to_score.min = from_score.value
+
+			// If previous_to_score is greater than or equal to from_score
+			if (previous_to_score.value >= from_score.value)
+				previous_from_score.value =
+					parseInt(previous_from_score.value) - 1
+
+			// Recursion to validate other inputs
+			this.setDeletedPunctationsInputs(index - 1)
+		}
+
+		if (this.dataRefs[index + 1])
+			to_score.max = parseInt(this.dataRefs[index + 1].to_score.max) - 1
+		// Its the last
+		else {
+			to_score.value = this.props.max_score
+			to_score.max = this.props.max_score
+		}
+	}
+
 	componentDidUpdate(prevProps, _) {
 		if (prevProps.punctations.length < this.props.punctations.length)
 			this.setAddedPunctationsInputs()
 		else if (prevProps.punctations.length > this.props.punctations.length) {
-			this.dataRefs.pop()
-			if (this.props.hasChanged === false)
-				this.setAddedPunctationsInputs()
+			// Delete unnecessary refs the
+			for (
+				let i = 0;
+				i <
+				prevProps.punctations.length - this.props.punctations.length;
+				i++
+			) {
+				this.dataRefs.pop()
+				this.data.pop()
+			}
+			console.log(this.dataRefs)
+
+			this.setDeletedPunctationsInputs()
 		}
 	}
 
@@ -106,6 +161,8 @@ class PunctationList extends Component {
 			// Set to_score MIN to from_score VALUE
 			to_score.min = from_score.value
 
+			to_score.max = parseInt(next_to_score.max) - 1
+
 			if (this.dataRefs[id - 1]) {
 				const previous_to_score = this.dataRefs[id - 1].to_score
 
@@ -118,7 +175,10 @@ class PunctationList extends Component {
 			this.onChange(next_to_score)
 		}
 		// If its the last
-		else to_score.value = this.props.max_score
+		else {
+			to_score.value = this.props.max_score
+			to_score.max = this.props.max_score
+		}
 	}
 
 	render() {

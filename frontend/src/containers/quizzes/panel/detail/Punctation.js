@@ -52,8 +52,7 @@ class Punctation extends Component {
 	}
 
 	resetForm = () => {
-		const { data, punctations } = this.props
-		this.props.getQuizPunctations(data.author_slug, data.slug)
+		const { punctations } = this.props
 
 		this.setState({
 			punctations,
@@ -68,12 +67,9 @@ class Punctation extends Component {
 			this.setState({
 				hasChanged: true,
 				punctations: [
-					...this.state.punctations,
+					...punctations,
 					{
 						summery: '',
-						// from_score: this.state.punctations[
-						// 	punctations.length - 1
-						// ].to_score,
 						from_score: this.props.data.max_score,
 						to_score: this.props.data.max_score,
 					},
@@ -87,7 +83,7 @@ class Punctation extends Component {
 		if (punctations.length > 1)
 			this.setState({
 				hasChanged: true,
-				punctations: this.state.punctations.slice(0, -1),
+				punctations: punctations.slice(0, -1),
 			})
 	}
 
@@ -129,7 +125,8 @@ class Punctation extends Component {
 							<div className="inline-btns">
 								<button
 									className={`btn ${
-										punctations.length - 1 >= this.props.data.max_score
+										punctations.length - 1 >=
+										this.props.data.max_score
 											? 'btn__disabled'
 											: ''
 									}`}
