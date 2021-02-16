@@ -107,7 +107,6 @@ class PunctationList extends Component {
 				this.dataRefs.pop()
 				this.data.pop()
 			}
-			console.log(this.dataRefs)
 
 			this.setDeletedPunctationsInputs()
 		}
