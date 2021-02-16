@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Textarea from '../../../Textarea'
 
+import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io'
+
 import objectsEquals from '../../../../helpers/objectsEquals'
 class PunctationList extends Component {
 	static propTypes = {
@@ -17,16 +19,14 @@ class PunctationList extends Component {
 		this.data = Object.values(this.props.punctations)
 		this.dataRefs = []
 
-		this.setAddedPunctationsInputs = this.setAddedPunctationsInputs.bind(
+		this.recalculateAddedRatings = this.recalculateAddedRatings.bind(this)
+		this.recalculateDeletedRatings = this.recalculateDeletedRatings.bind(
 			this
 		)
-		this.setDeletedPunctationsInputs = this.setDeletedPunctationsInputs.bind(
-			this
-		)
-		this.onChange = this.onChange.bind(this)
+		this.recalculateRatings = this.recalculateRatings.bind(this)
 	}
 
-	setAddedPunctationsInputs = (index = this.dataRefs.length - 1) => {
+	recalculateAddedRatings = (index = this.dataRefs.length - 1) => {
 		const to_score = this.dataRefs[index].to_score
 		const from_score = this.dataRefs[index].from_score
 
@@ -47,11 +47,11 @@ class PunctationList extends Component {
 			previous_to_score.max = parseInt(to_score.value) - 1
 
 			// Recursion to validate other inputs
-			this.setAddedPunctationsInputs(index - 1)
+			this.recalculateAddedRatings(index - 1)
 		}
 	}
 
-	setDeletedPunctationsInputs = (index = this.dataRefs.length - 1) => {
+	recalculateDeletedRatings = (index = this.dataRefs.length - 1) => {
 		const to_score = this.dataRefs[index].to_score
 		const from_score = this.dataRefs[index].from_score
 
@@ -79,7 +79,7 @@ class PunctationList extends Component {
 					parseInt(previous_from_score.value) - 1
 
 			// Recursion to validate other inputs
-			this.setDeletedPunctationsInputs(index - 1)
+			this.recalculateDeletedRatings(index - 1)
 		}
 
 		if (this.dataRefs[index + 1]) {
@@ -100,7 +100,7 @@ class PunctationList extends Component {
 
 	componentDidUpdate(prevProps, _) {
 		if (prevProps.punctations.length < this.props.punctations.length)
-			this.setAddedPunctationsInputs()
+			this.recalculateAddedRatings()
 		else if (prevProps.punctations.length > this.props.punctations.length) {
 			// Delete unnecessary data
 			for (
@@ -113,11 +113,11 @@ class PunctationList extends Component {
 				this.data.pop()
 			}
 
-			this.setDeletedPunctationsInputs()
+			this.recalculateDeletedRatings()
 		}
 	}
 
-	onChange = (e) => {
+	recalculateRatings = (e) => {
 		const target = e.target ? e.target : e
 		const id = parseInt(target.getAttribute('data-id'))
 
@@ -176,7 +176,7 @@ class PunctationList extends Component {
 			}
 
 			// Recursion to validate other inputs
-			this.onChange(next_to_score)
+			this.recalculateRatings(next_to_score)
 		} else {
 			// If its the last
 			to_score.value = this.props.max_score
@@ -196,49 +196,92 @@ class PunctationList extends Component {
 							<label className="form-inline__label">
 								Grand range:
 							</label>
-							<input
-								data-id={index}
-								type="number"
-								name="from_score"
-								className="form-inline__input disabled"
-								defaultValue={punctation.from_score}
-								readOnly
-								required
-								ref={(ref) =>
-									(this.dataRefs[index] = {
-										...this.dataRefs[index],
-										from_score: ref,
-									})
-								}
-							/>
-							<input
-								data-id={index}
-								type="number"
-								name="to_score"
-								className="form-inline__input"
-								min={punctation.from_score}
-								max={
-									punctations[index + 1]
-										? punctations[index + 1].to_score - 1
-										: this.props.max_score
-								}
-								onChange={this.onChange}
-								defaultValue={punctation.to_score}
-								required
-								ref={(ref) =>
-									(this.dataRefs[index] = {
-										...this.dataRefs[index],
-										to_score: ref,
-									})
-								}
-							/>
+							<div className="number-field">
+								<input
+									data-id={index}
+									type="text"
+									name="from_score"
+									className="form-inline__input number-field__input"
+									defaultValue={punctation.from_score}
+									readOnly
+									required
+									ref={(ref) =>
+										(this.dataRefs[index] = {
+											...this.dataRefs[index],
+											from_score: ref,
+										})
+									}
+								/>
+							</div>
+							<div className="number-field">
+								<input
+									data-id={index}
+									type="text"
+									name="to_score"
+									className="form-inline__input number-field__input"
+									min={punctation.from_score}
+									max={
+										punctations[index + 1]
+											? punctations[index + 1].to_score -
+											  1
+											: this.props.max_score
+									}
+									defaultValue={punctation.to_score}
+									required
+									readOnly
+									ref={(ref) =>
+										(this.dataRefs[index] = {
+											...this.dataRefs[index],
+											to_score: ref,
+										})
+									}
+								/>
+								<div className="number-field__btns">
+									<button
+										className="number-field__btn"
+										onClick={(e) => {
+											e.preventDefault()
+
+											const to_score = this.dataRefs[
+												index
+											].to_score
+
+											if (to_score.value < to_score.max)
+												to_score.value =
+													parseInt(to_score.value) + 1
+
+											this.recalculateRatings(to_score)
+										}}
+									>
+										<IoMdArrowDropup />
+									</button>
+									<button
+										className="number-field__btn"
+										onClick={(e) => {
+											e.preventDefault()
+
+											const to_score = this.dataRefs[
+												index
+											].to_score
+
+											if (to_score.value > to_score.min)
+												to_score.value =
+													parseInt(to_score.value) - 1
+
+											this.recalculateRatings(to_score)
+										}}
+									>
+										<IoMdArrowDropdown />
+									</button>
+								</div>
+							</div>
 						</div>
 					) : null}
 					<div className="form-control">
 						<label>Description:</label>
 						<Textarea
 							data-id={index}
-							onChange={this.onChange}
+							onChange={this.recalculateRatings}
 							name="summery"
 							defaultValue={punctation.summery}
 							className="form-control__input form-control__textarea"
