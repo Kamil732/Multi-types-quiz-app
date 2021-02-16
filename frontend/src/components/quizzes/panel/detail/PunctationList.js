@@ -30,20 +30,20 @@ class PunctationList extends Component {
 		const to_score = this.dataRefs[index].to_score
 		const from_score = this.dataRefs[index].from_score
 
-		// If from_score is greater than to_score
 		if (from_score.value > to_score.value)
+			// Minus 1 from from_score
 			from_score.value = parseInt(from_score.value) - 1
 
 		if (this.dataRefs[index - 1]) {
 			const previous_to_score = this.dataRefs[index - 1].to_score
 
-			// Minus 1 from previous_to_score
+			// Set previous_to_score to from_score minus 1
 			previous_to_score.value = parseInt(from_score.value) - 1
 
-			// Set to_score MIN to from_score VALUE
+			// Set to_score MIN to from_score
 			to_score.min = from_score.value
 
-			// Set previous_to_score MAX to to_score VALUE minus 1
+			// Set previous_to_score MAX to to_score minus 1
 			previous_to_score.max = parseInt(to_score.value) - 1
 
 			// Recursion to validate other inputs
@@ -55,28 +55,26 @@ class PunctationList extends Component {
 		const to_score = this.dataRefs[index].to_score
 		const from_score = this.dataRefs[index].from_score
 
+		// Add 1 to to_score
 		to_score.value = parseInt(to_score.value) + 1
 
 		if (from_score.value > to_score.value)
+			// minus 1 from from_score
 			from_score.value = parseInt(from_score.value) - 1
 
 		if (this.dataRefs[index - 1]) {
 			const previous_to_score = this.dataRefs[index - 1].to_score
 			const previous_from_score = this.dataRefs[index - 1].from_score
 
-			// If from_score is greater than to_score
 			if (from_score.value > previous_to_score.value)
-				// Add 1 to to_score
+				// Minus 1 from previous_to_score
 				previous_to_score.value = parseInt(previous_to_score.value) - 1
-
-			// Add 1 to the previous_from_score
-			// previous_from_score.value = parseInt(to_score.value) + 1
 
 			// Set to_score MIN to from_score VALUE
 			to_score.min = from_score.value
 
-			// If previous_to_score is greater than or equal to from_score
 			if (previous_to_score.value >= from_score.value)
+				// Set previous_from_score to previous_from_score minus 1
 				previous_from_score.value =
 					parseInt(previous_from_score.value) - 1
 
@@ -88,13 +86,13 @@ class PunctationList extends Component {
 			const next_to_score = this.dataRefs[index + 1].to_score
 			const next_from_score = this.dataRefs[index + 1].from_score
 
+			// Set to_score MAX to next_to_score MAX
 			to_score.max =
 				next_to_score.value === next_from_score.value
 					? parseInt(next_to_score.max)
 					: parseInt(next_to_score.max) - 1
 		} else {
 			// Its the last
-
 			to_score.value = this.props.max_score
 			to_score.max = this.props.max_score
 		}
@@ -104,7 +102,7 @@ class PunctationList extends Component {
 		if (prevProps.punctations.length < this.props.punctations.length)
 			this.setAddedPunctationsInputs()
 		else if (prevProps.punctations.length > this.props.punctations.length) {
-			// Delete unnecessary refs the
+			// Delete unnecessary data
 			for (
 				let i = 0;
 				i <
@@ -152,7 +150,6 @@ class PunctationList extends Component {
 			)
 		}
 
-		// If from_score is greater than to_score
 		if (from_score.value > to_score.value)
 			// Add 1 to to_score
 			to_score.value = parseInt(to_score.value) + 1
@@ -161,27 +158,27 @@ class PunctationList extends Component {
 			const next_from_score = this.dataRefs[id + 1].from_score
 			const next_to_score = this.dataRefs[id + 1].to_score
 
-			// Add 1 to the next_from_score
+			// Set next_from_score to to_score plus 1
 			next_from_score.value = parseInt(to_score.value) + 1
 
 			// Set to_score MIN to from_score VALUE
 			to_score.min = from_score.value
 
+			// Set to_score MAX to next_to_score MAX minus 1
 			to_score.max = parseInt(next_to_score.max) - 1
 
 			if (this.dataRefs[id - 1]) {
 				const previous_to_score = this.dataRefs[id - 1].to_score
 
-				// If previous_to_score is greater than or equal to from_score
+				// If previous_to_score is greater than or equal to from_score then add 1 to form_score
 				if (previous_to_score.value >= from_score.value)
 					from_score.value = parseInt(from_score.value) + 1
 			}
 
 			// Recursion to validate other inputs
 			this.onChange(next_to_score)
-		}
-		// If its the last
-		else {
+		} else {
+			// If its the last
 			to_score.value = this.props.max_score
 			to_score.max = this.props.max_score
 		}
