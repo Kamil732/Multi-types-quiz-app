@@ -147,7 +147,7 @@ class QuizFinishAPIView(views.APIView):
             quiz.save()
 
             summery = QuizPunctation.objects.filter(
-                quiz=quiz, from_score=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
+                quiz=quiz, from_score__lte=retrieveData['correctAnswers'], to_score__gte=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
             retrieveData['summery'] = summery
 
         return Response(retrieveData, status=status.HTTP_200_OK)
