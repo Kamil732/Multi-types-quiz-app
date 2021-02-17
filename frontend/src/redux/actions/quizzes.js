@@ -14,6 +14,7 @@ import {
 	QUIZZES_LOADING,
 	UPDATE_QUIZ,
 	DELETE_QUIZ,
+	UPDATE_QUIZ_PUNCTATIONS,
 } from './types'
 
 import { addError } from './errors'
@@ -128,6 +129,34 @@ export const getQuizPunctations = (author_slug, quiz_slug) => async (
 			if (getState().auth.token)
 				await dispatch(getQuizPunctations(author_slug, quiz_slug))
 		} else dispatch({ type: GET_QUIZ_PUNCTATIONS_FAIL })
+	}
+}
+
+export const updatePunctations = (data, author_slug, quiz_slug) => async (
+	dispatch,
+	getState
+) => {
+	try {
+		const config = getAccessToken(getState)
+
+		const body = JSON.stringify(data)
+
+		const res = await axios.put(
+			`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/punctation/`,
+			body,
+			config
+		)
+
+		dispatch({
+			type: UPDATE_QUIZ_PUNCTATIONS,
+			payload: res.data,
+		})
+	} catch (err) {
+		if (err.response.status === 401) {
+			await dispatch(refreshToken())
+			if (getState().auth.token)
+				await dispatch(updatePunctations(data, author_slug, quiz_slug))
+		}
 	}
 }
 

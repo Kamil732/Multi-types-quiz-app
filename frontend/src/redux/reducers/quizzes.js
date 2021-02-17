@@ -13,6 +13,7 @@ import {
 	GET_QUIZ_SUCCESS,
 	GET_QUIZ_FAIL,
 	DELETE_QUIZ,
+	UPDATE_QUIZ_PUNCTATIONS,
 } from '../actions/types'
 
 const initialState = {
@@ -81,6 +82,7 @@ export default function (state = initialState, action) {
 					data: action.payload.categories,
 				},
 			}
+		case UPDATE_QUIZ_PUNCTATIONS:
 		case GET_QUIZ_PUNCTATIONS_SUCCESS:
 			return {
 				...state,

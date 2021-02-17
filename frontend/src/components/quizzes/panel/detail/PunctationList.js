@@ -198,6 +198,7 @@ class PunctationList extends Component {
 							</label>
 							<div className="number-field">
 								<input
+									id={`from-score-${index}`}
 									data-id={index}
 									type="text"
 									name="from_score"
@@ -215,6 +216,7 @@ class PunctationList extends Component {
 							</div>
 							<div className="number-field">
 								<input
+									id={`to-score-${index}`}
 									data-id={index}
 									type="text"
 									name="to_score"
@@ -278,8 +280,9 @@ class PunctationList extends Component {
 						</div>
 					) : null}
 					<div className="form-control">
-						<label>Description:</label>
+						<label className="form-control__label">Summery:</label>
 						<Textarea
+							id={`summery-${index}`}
 							data-id={index}
 							onChange={this.recalculateRatings}
 							name="summery"

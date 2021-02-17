@@ -3,7 +3,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
-import { getQuizPunctations } from '../../../../redux/actions/quizzes'
+import {
+	getQuizPunctations,
+	updatePunctations,
+} from '../../../../redux/actions/quizzes'
 
 import CircleLoader from '../../../../components/loaders/CircleLoader'
 import PunctationList from '../../../../components/quizzes/panel/detail/PunctationList'
@@ -12,6 +15,8 @@ class Punctation extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		punctations: PropTypes.array,
+		getQuizPunctations: PropTypes.func.isRequired,
+		updatePunctations: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -89,6 +94,32 @@ class Punctation extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
+
+		let data = []
+
+		for (let i = 0; i < this.state.punctations.length; i++) {
+			const from_score = parseInt(
+				document.getElementById(`from-score-${i}`).value
+			)
+			const to_score = parseInt(
+				document.getElementById(`to-score-${i}`).value
+			)
+			const summery = document.getElementById(`summery-${i}`).value
+
+			data.push({
+				from_score,
+				to_score,
+				summery,
+			})
+		}
+
+		this.props.updatePunctations(
+			data,
+			this.props.data.author_slug,
+			this.props.data.slug
+		)
+
+		this.setState({ hasChanged: false })
 	}
 
 	componentDidMount = () => this.getPunctations()
@@ -124,6 +155,7 @@ class Punctation extends Component {
 						<div className="card__body">
 							<div className="inline-btns">
 								<button
+									type="button"
 									className={`btn ${
 										punctations.length - 1 >=
 										this.props.data.max_score
@@ -135,6 +167,7 @@ class Punctation extends Component {
 									Add Grade
 								</button>
 								<button
+									type="button"
 									className={`btn btn__danger ${
 										punctations.length <= 1
 											? 'btn__disabled'
@@ -179,6 +212,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
 	getQuizPunctations,
+	updatePunctations,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Punctation)
