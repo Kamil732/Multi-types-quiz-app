@@ -16,6 +16,7 @@ factory-boy = "*"
 faker = "*"
 requests = "*"
 django-autoslug = "*"
+django-bulk-sync = "*"
 
 [requires]
 python_version = "3.8"

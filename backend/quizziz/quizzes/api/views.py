@@ -1,6 +1,8 @@
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
+from bulk_sync import bulk_sync
 from rest_framework import views, generics, viewsets, permissions
 from rest_framework import status
 from rest_framework.response import Response
@@ -151,7 +153,7 @@ class QuizFinishAPIView(views.APIView):
         return Response(retrieveData, status=status.HTTP_200_OK)
 
 
-class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateAPIView):
+class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateAPIView, generics.UpdateAPIView):
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
@@ -159,10 +161,22 @@ class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateA
 
         serializer.save(quiz_id=quiz.id)
 
+    def update(self, request, *args, **kwargs):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
 
-class QuizPunctationDetailAPIView(mixins.QuizPunctationMixin, generics.RetrieveUpdateDestroyAPIView):
-    lookup_field = 'id'
-    lookup_url_kwarg = 'punctation_id'
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+        new_models = [QuizPunctation(quiz=quiz, summery=model['summery'], from_score=model['from_score'],
+                                     to_score=model['to_score']) for model in request.data]
+
+        bulk_sync(
+            new_models=new_models,
+            filters=Q(quiz__author__slug=author_slug, quiz__slug=quiz_slug),
+            fields=['summery', 'from_score', 'to_score'],
+            key_fields=('summery', 'from_score', 'to_score',)
+        )
+
+        return Response(request.data, status=status.HTTP_200_OK)
 
 
 class QuizFeedbackAPIView(generics.ListCreateAPIView):
