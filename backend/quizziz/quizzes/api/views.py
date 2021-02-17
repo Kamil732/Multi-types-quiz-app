@@ -171,9 +171,9 @@ class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateA
 
         bulk_sync(
             new_models=new_models,
-            filters=Q(quiz__author__slug=author_slug, quiz__slug=quiz_slug),
+            filters=Q(quiz_id=quiz.id),
             fields=['summery', 'from_score', 'to_score'],
-            key_fields=('summery', 'from_score', 'to_score',)
+            key_fields=('id',)
         )
 
         return Response(request.data, status=status.HTTP_200_OK)
