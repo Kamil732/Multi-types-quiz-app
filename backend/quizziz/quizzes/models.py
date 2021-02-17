@@ -36,38 +36,6 @@ Make a model for each type of quiz
 
 
 class Quiz(models.Model):
-    # CATEGORY = (
-    #     ('general_knowledge', 'General knowledge'),
-    #     ('celebrities', 'Celebrities'),
-    #     ('for_kids', 'For kids'),
-    #     ('movies', 'Movies'),
-    #     ('geography', 'Geography'),
-    #     ('history', 'History'),
-    #     ('literature', 'Literature'),
-    #     ('people', 'People'),
-    #     ('music', 'Music'),
-    #     ('science', 'Science'),
-    #     ('policy', 'Policy'),
-    #     ('nature', 'Nature'),
-    #     ('psychology', 'Psychology'),
-    #     ('religion', 'Religion'),
-    #     ('entertainment', 'Entertainment'),
-    #     ('sport', 'Sport'),
-    #     ('technology', 'Technology'),
-    #     ('television', 'Television'),
-    #     ('funny', 'Funny'),
-    #     ('puzzles', 'Puzzles'),
-    #     ('health_and_beauty', 'Health and beauty'),
-    #     ('animals', 'Animals'),
-    # )
-
-    # SECTION = (
-    #     ('knowledge_quiz', 'Knowledge Quiz'),
-    #     ('psychology_quiz', 'Psychology Quiz'),
-    #     ('preferential_quiz', 'Preferential Quiz'),
-    #     ('universal_quiz', 'Universal Quiz'),
-    # )
-
     DEFAULT_IMAGE = 'https://cdn.pixabay.com/photo/2017/01/24/00/21/question-2004314_960_720.jpg'
 
     DEFAULT_DESCRIPTION = _('Welcome to my quiz!')
@@ -101,9 +69,11 @@ class Quiz(models.Model):
 
 class QuizPunctation(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='punctations')
+    summery = models.TextField()
+
+    # Universal and knowledge quiz
     from_score = models.PositiveIntegerField()
     to_score = models.PositiveIntegerField()
-    summery = models.TextField()
 
     def __str__(self):
         return self.quiz.title

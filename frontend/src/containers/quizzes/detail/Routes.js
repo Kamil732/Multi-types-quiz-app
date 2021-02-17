@@ -107,7 +107,7 @@ class Routes extends Component {
 const mapStateTopProps = (state) => ({
 	user_loading: state.auth.loading,
 	user_slug: state.auth.user.slug,
-	data: state.quizzes.quizzes.item,
+	data: state.quizzes.quizzes.item.data,
 })
 
 const mapDispatchToProps = {

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a9435b82cd87b22a71259b5367bbb2e06d93e4fa36e4546a301a2ebd1f5c8a0b"
+            "sha256": "e3da913363fb6acb0b57af1f32c89aff6ce80be9ff0cdbc9a51972195a3f8c40"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -39,11 +39,11 @@
         },
         "django": {
             "hashes": [
-                "sha256:2d78425ba74c7a1a74b196058b261b9733a8570782f4e2828974777ccca7edf7",
-                "sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9"
+                "sha256:169e2e7b4839a7910b393eec127fd7cbae62e80fa55f89c6510426abf673fe5f",
+                "sha256:c6c0462b8b361f8691171af1fb87eceb4442da28477e12200c40420176206ba7"
             ],
             "index": "pypi",
-            "version": "==3.1.5"
+            "version": "==3.1.6"
         },
         "django-autoslug": {
             "hashes": [
@@ -52,6 +52,14 @@
             ],
             "index": "pypi",
             "version": "==1.9.8"
+        },
+        "django-bulk-sync": {
+            "hashes": [
+                "sha256:5c7dcd1cde6e313daca91dd561f8b4bf758aed8e9667e8a5e273a23c2c821e7b",
+                "sha256:ef7a7a2a84283d7f1986b2cb00e02fece0bc96d65dcccb8f4c8cce8c84bf3657"
+            ],
+            "index": "pypi",
+            "version": "==3.2.0"
         },
         "django-cors-headers": {
             "hashes": [
@@ -87,11 +95,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:0783729c61501d52efea2967aff6e6fcb8370f0f6b5a558f2a81233642ae529a",
-                "sha256:6b2995ffff6c2b02bc5daad96f8c24c021e5bd491d9d53d31bcbd66f348181d4"
+                "sha256:bf2a9b3f8d00a5dada61fc4a3f80fe0d6795c7f02a138a7d2ef2db5817c7d017",
+                "sha256:d4aecdb877519d06c2fdc01ffc5ecf70658981acf5e13cd07ded9892994ef5c6"
             ],
             "index": "pypi",
-            "version": "==5.8.0"
+            "version": "==6.1.1"
         },
         "idna": {
             "hashes": [
@@ -175,10 +183,10 @@
         },
         "pytz": {
             "hashes": [
-                "sha256:16962c5fb8db4a8f63a26646d8886e9d769b6c511543557bc84e9569fb9a9cb4",
-                "sha256:180befebb1927b16f6b57101720075a984c019ac16b1b7575673bea42c6c3da5"
+                "sha256:83a4a90894bf38e243cf052c8b58f381bfe9a7a483f6a9cab140bc7f702ac4da",
+                "sha256:eb10ce3e7736052ed3623d49975ce333bcd712c7bb19a58b9e2089d4057d0798"
             ],
-            "version": "==2020.5"
+            "version": "==2021.1"
         },
         "requests": {
             "hashes": [

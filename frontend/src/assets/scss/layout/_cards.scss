@@ -19,7 +19,7 @@
 		@include card__header;
 	}
 
-	div:not(.card) > &__header {
+	*:not(.card) > &__header {
 		@include card__header;
 		@include shadow-sm;
 
@@ -39,7 +39,7 @@
 		@include card__footer;
 	}
 
-	div:not(.card) > &__footer {
+	*:not(.card) > &__footer {
 		@include card__footer;
 		@include shadow-sm;
 
