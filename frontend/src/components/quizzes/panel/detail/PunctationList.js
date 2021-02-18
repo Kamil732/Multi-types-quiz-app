@@ -124,15 +124,13 @@ class PunctationList extends Component {
 		const from_score = this.dataRefs[id].from_score
 		const to_score = this.dataRefs[id].to_score
 
-		const summery = this.dataRefs[id].summery
-
 		// Set the hasChanged
 		if (this.props.hasChanged) {
 			// Update data
 			this.data[id] = {
 				from_score: parseInt(from_score.value),
 				to_score: parseInt(to_score.value),
-				summery: summery.value,
+				summery: this.dataRefs[id].summery.value(),
 			}
 
 			// array of booleans, true if object has change otherwise false
