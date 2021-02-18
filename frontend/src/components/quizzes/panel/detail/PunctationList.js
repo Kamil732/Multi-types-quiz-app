@@ -130,7 +130,7 @@ class PunctationList extends Component {
 			this.data[id] = {
 				from_score: parseInt(from_score.value),
 				to_score: parseInt(to_score.value),
-				summery: this.dataRefs[id].summery.value(),
+				summery: this.dataRefs[id].summery.value(), // .value() is function because summery is component
 			}
 
 			// array of booleans, true if object has change otherwise false

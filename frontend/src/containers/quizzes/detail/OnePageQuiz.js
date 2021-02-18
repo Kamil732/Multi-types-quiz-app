@@ -27,6 +27,15 @@ class OnePageQuiz extends Component {
 						finishedData={finishedData}
 					/>
 				)
+			else if (section === 'universal_quiz')
+				answers = (
+					<UniversalAnswers
+						questionNumber={index}
+						answers={question.answers}
+						questionId={question.id}
+						finishedData={finishedData}
+					/>
+				)
 			else if (section === 'psychology_quiz')
 				answers = (
 					<PsychologyAnswers
@@ -37,13 +46,6 @@ class OnePageQuiz extends Component {
 			else if (section === 'preferential_quiz')
 				answers = (
 					<PreferentailAnswers
-						answers={question.answers}
-						questionId={question.id}
-					/>
-				)
-			else if (section === 'universal_quiz')
-				answers = (
-					<UniversalAnswers
 						answers={question.answers}
 						questionId={question.id}
 					/>

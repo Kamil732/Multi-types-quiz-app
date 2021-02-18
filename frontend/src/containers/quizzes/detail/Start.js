@@ -129,12 +129,15 @@ class Start extends Component {
 		if (loading === true) return <CircleLoader />
 
 		let result
-		if (finished_data.section === 'knowledge_quiz')
+		if (
+			finished_data.section === 'knowledge_quiz' ||
+			finished_data.section === 'universal_quiz'
+		)
 			result = (
 				<>
 					Your score is{' '}
 					<span style={{ fontWeight: '600' }}>
-						{finished_data.correctAnswers} / {questions.length}
+						{finished_data.points} / {data.max_score}
 					</span>
 				</>
 			)

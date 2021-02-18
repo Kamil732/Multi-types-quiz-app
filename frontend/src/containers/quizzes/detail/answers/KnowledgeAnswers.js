@@ -28,32 +28,30 @@ class KnowledgeAnswers extends Component {
 
 		const answerList = answers.map((answer_, index) => {
 			if (Object.keys(finishedData).length > 0)
-				if (finishedData.section === 'knowledge_quiz') {
-					return (
-						<div
-							className={`card card__body answer finished ${
-								// add 'correct' class if the answer is correct
-								finishedData.data[
-									questionNumber
-								].correct_answers.includes(answer_.slug)
-									? 'correct'
-									: ''
-							} ${
-								// Add 'wrong' class if the selected answer is wrong
-								finishedData.data[questionNumber].selected ===
-									answer_.slug &&
-								!finishedData.data[
-									questionNumber
-								].correct_answers.includes(answer_.slug)
-									? 'wrong'
-									: ''
-							}`}
-							key={index}
-						>
-							{answer_.answer}
-						</div>
-					)
-				}
+				return (
+					<div
+						className={`card card__body answer finished ${
+							// add 'correct' class if the answer is correct
+							finishedData.data[
+								questionNumber
+							].correct_answers.includes(answer_.slug)
+								? 'correct'
+								: ''
+						} ${
+							// Add 'wrong' class if the selected answer is wrong
+							finishedData.data[questionNumber].selected ===
+								answer_.slug &&
+							!finishedData.data[
+								questionNumber
+							].correct_answers.includes(answer_.slug)
+								? 'wrong'
+								: ''
+						}`}
+						key={index}
+					>
+						{answer_.answer}
+					</div>
+				)
 
 			return (
 				<label

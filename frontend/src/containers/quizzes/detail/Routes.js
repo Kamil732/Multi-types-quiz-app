@@ -62,7 +62,7 @@ class Routes extends Component {
 		const { author_slug } = this.props.match.params
 		const { loading, isOwner } = this.state
 
-		if (loading) return <CircleLoader />
+		if (loading === true) return <CircleLoader />
 		else if (Object.keys(data).length === 0)
 			return <Redirect to="/not-found" />
 
