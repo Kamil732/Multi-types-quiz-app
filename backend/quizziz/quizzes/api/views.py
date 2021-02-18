@@ -100,7 +100,7 @@ class QuizFinishAPIView(views.APIView):
         retrieveData = {
             'section': section,
             'summery': '',
-            'correctAnswers': 0,
+            'points': 0,
             'data': [],
         }
 
@@ -127,8 +127,8 @@ class QuizFinishAPIView(views.APIView):
                 correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
                     question__id=question_id, is_correct=True).values('slug')]
 
-                # Add 1 to correctAnswers if it is correct answer
-                retrieveData['correctAnswers'] += 1 if answer_slug in correct_answers else 0
+                # Add 1 to points if it is correct answer
+                retrieveData['points'] += 1 if answer_slug in correct_answers else 0
                 retrieveData['data'].append({
                     'questionId': question_id,
                     'selected': answer_slug,
@@ -136,18 +136,26 @@ class QuizFinishAPIView(views.APIView):
                 })
 
             elif section == 'universal_quiz':
-                pass
+                points = int(Answer.objects.filter(question__id=question_id,
+                                                   slug=answer_slug).values_list('points', flat=True).first())
+
+                # Add 1 to points if it is correct answer
+                retrieveData['points'] += points
+                retrieveData['data'].append({
+                    'questionId': question_id,
+                    'selected': answer_slug,
+                })
             elif section == 'psychology_quiz':
                 pass
             elif section == 'preferential_quiz':
                 pass
 
-        if section == 'knowledge_quiz':
-            quiz.answers_data.append(retrieveData['correctAnswers'])
+        if section == 'knowledge_quiz' or section == 'universal_quiz':
+            quiz.answers_data.append(retrieveData['points'])
             quiz.save()
 
             summery = QuizPunctation.objects.filter(
-                quiz=quiz, from_score__lte=retrieveData['correctAnswers'], to_score__gte=retrieveData['correctAnswers']).values_list('summery', flat=True).first()
+                quiz=quiz, from_score__lte=retrieveData['points'], to_score__gte=retrieveData['points']).values_list('summery', flat=True).first()
             retrieveData['summery'] = summery
 
         return Response(retrieveData, status=status.HTTP_200_OK)
