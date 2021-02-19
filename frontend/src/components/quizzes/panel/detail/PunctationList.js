@@ -20,12 +20,14 @@ class PunctationList extends Component {
 		this.dataRefs = []
 
 		this.recalculateRatings = this.recalculateRatings.bind(this)
+		this.hasChanged = this.hasChanged.bind(this)
+		this.setInput = this.setInput.bind(this)
 	}
 
 	recalculateRatings() {
-		const { max_score, punctations, hasChanged } = this.props
+		const { max_score } = this.props
 
-		const shown = this.dataRefs.length - 1
+		const shown = this.dataRefs.length
 		let expectedFrom = 0
 
 		for (let i = 0; i < shown; i++) {
@@ -38,14 +40,13 @@ class PunctationList extends Component {
 				expectedTo = expectedFrom
 				to_score.value = expectedTo
 			}
+
 			expectedFrom = expectedTo + 1
-			if (expectedFrom > max_score) {
-				expectedFrom = max_score
-			}
+			if (expectedFrom > max_score) expectedFrom = max_score
 		}
 
 		let expectedTo = max_score
-		for (let i = shown; i >= 0; --i) {
+		for (let i = shown - 1; i >= 0; --i) {
 			const { from_score, to_score } = this.dataRefs[i]
 
 			to_score.value = expectedTo
@@ -57,15 +58,19 @@ class PunctationList extends Component {
 
 			expectedTo = expectedFrom - 1 >= 0 ? expectedFrom - 1 : 0
 		}
+	}
+
+	hasChanged = () => {
+		const { hasChanged, punctations } = this.props
 
 		// Set the hasChanged
-		if (hasChanged && punctations.length === this.data.length) {
+		if (hasChanged) {
 			// Update data
 			for (let i = 0; i < this.dataRefs.length; i++)
 				this.data[i] = {
+					summery: this.dataRefs[i].summery.value(), // .value() is function because summery is component
 					from_score: parseInt(this.dataRefs[i].from_score.value),
 					to_score: parseInt(this.dataRefs[i].to_score.value),
-					summery: this.dataRefs[i].summery.value(), // .value() is function because summery is component
 				}
 
 			// array of booleans, true if object has change otherwise false
@@ -99,6 +104,19 @@ class PunctationList extends Component {
 
 			this.recalculateRatings()
 		}
+	}
+
+	setInput = (e, index, add = true) => {
+		e.preventDefault()
+
+		const to_score = this.dataRefs[index].to_score
+
+		to_score.value = add
+			? parseInt(to_score.value) + 1
+			: parseInt(to_score.value) - 1
+
+		this.recalculateRatings()
+		this.hasChanged()
 	}
 
 	render() {
@@ -151,35 +169,17 @@ class PunctationList extends Component {
 								<div className="number-field__btns">
 									<button
 										className="number-field__btn"
-										onClick={(e) => {
-											e.preventDefault()
-
-											const to_score = this.dataRefs[
-												index
-											].to_score
-
-											to_score.value =
-												parseInt(to_score.value) + 1
-
-											this.recalculateRatings()
-										}}
+										onClick={(e) =>
+											this.setInput(e, index, true)
+										}
 									>
 										<IoMdArrowDropup />
 									</button>
 									<button
 										className="number-field__btn"
-										onClick={(e) => {
-											e.preventDefault()
-
-											const to_score = this.dataRefs[
-												index
-											].to_score
-
-											to_score.value =
-												parseInt(to_score.value) - 1
-
-											this.recalculateRatings()
-										}}
+										onClick={(e) =>
+											this.setInput(e, index, false)
+										}
 									>
 										<IoMdArrowDropdown />
 									</button>
@@ -192,7 +192,10 @@ class PunctationList extends Component {
 						<Textarea
 							id={`summery-${index}`}
 							data-id={index}
-							onChange={this.recalculateRatings}
+							onChange={() => {
+								this.recalculateRatings()
+								this.hasChanged()
+							}}
 							name="summery"
 							defaultValue={punctation.summery}
 							className="form-control__input form-control__textarea"
