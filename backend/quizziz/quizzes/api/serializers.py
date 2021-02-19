@@ -178,10 +178,16 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
         if obj.section.name == 'knowledge_quiz':
             return self.get_question_amount(obj)
         elif obj.section.name == 'universal_quiz':
-            answers = list(map(int, Answer.objects.filter(question__quiz__author__slug=obj.author.slug,
-                                                          question__quiz__slug=obj.slug).values_list('points', flat=True)))
+            questions = Question.objects.filter(quiz__author__slug=obj.author.slug, quiz__slug=obj.slug)
 
-            return sum(answers)
+            max_scores = []
+            for question in questions:
+                question_points = list(map(int, Answer.objects.filter(
+                    question=question).values_list('points', flat=True)))
+
+                max_scores.append(max(question_points))
+
+            return sum(max_scores)
 
     class Meta:
         model = Quiz
