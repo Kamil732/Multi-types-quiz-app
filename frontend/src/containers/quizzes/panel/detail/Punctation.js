@@ -153,32 +153,38 @@ class Punctation extends Component {
 						/>
 
 						<div className="card__body">
-							<div className="inline-btns">
-								<button
-									type="button"
-									className={`btn ${
-										punctations.length - 1 >=
-										this.props.data.max_score
-											? 'btn__disabled'
-											: ''
-									}`}
-									onClick={this.addGrade}
-								>
-									Add Grade
-								</button>
-								<button
-									type="button"
-									className={`btn btn__danger ${
-										punctations.length <= 1
-											? 'btn__disabled'
-											: ''
-									}`}
-									onClick={this.removeGrade}
-								>
-									Remove Grade
-								</button>
-							</div>
-							<br /> <br />
+							{data.section.name === 'knowledge_quiz' ||
+							data.section.name === 'universal_quiz' ? (
+								<>
+									<div className="inline-btns">
+										<button
+											type="button"
+											className={`btn ${
+												punctations.length - 1 >=
+												this.props.data.max_score
+													? 'btn__disabled'
+													: ''
+											}`}
+											onClick={this.addGrade}
+										>
+											Add Grade
+										</button>
+										<button
+											type="button"
+											className={`btn btn__danger ${
+												punctations.length <= 1
+													? 'btn__disabled'
+													: ''
+											}`}
+											onClick={this.removeGrade}
+										>
+											Remove Grade
+										</button>
+									</div>
+									<br /> <br />
+								</>
+							) : null}
+
 							<div className="inline-btns f-w">
 								<button
 									type="reset"

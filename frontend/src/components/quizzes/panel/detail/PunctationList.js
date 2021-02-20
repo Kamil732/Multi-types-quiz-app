@@ -61,16 +61,23 @@ class PunctationList extends Component {
 	}
 
 	hasChanged = () => {
-		const { hasChanged, punctations } = this.props
+		const { hasChanged, punctations, section_name, max_score } = this.props
 
 		// Set the hasChanged
 		if (hasChanged) {
+			const sectionKnowledgeOrUniversal =
+				section_name === 'knowledge_quiz' ||
+				section_name === 'universal_quiz'
 			// Update data
 			for (let i = 0; i < this.dataRefs.length; i++)
 				this.data[i] = {
 					summery: this.dataRefs[i].summery.value(), // .value() is function because summery is component
-					from_score: parseInt(this.dataRefs[i].from_score.value),
-					to_score: parseInt(this.dataRefs[i].to_score.value),
+					from_score: sectionKnowledgeOrUniversal
+						? parseInt(this.dataRefs[i].from_score.value)
+						: 0,
+					to_score: sectionKnowledgeOrUniversal
+						? parseInt(this.dataRefs[i].to_score.value)
+						: max_score,
 				}
 
 			// array of booleans, true if object has change otherwise false
@@ -192,10 +199,7 @@ class PunctationList extends Component {
 						<Textarea
 							id={`summery-${index}`}
 							data-id={index}
-							onChange={() => {
-								this.recalculateRatings()
-								this.hasChanged()
-							}}
+							onChange={this.hasChanged}
 							name="summery"
 							defaultValue={punctation.summery}
 							className="form-control__input form-control__textarea"

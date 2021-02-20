@@ -119,6 +119,7 @@ class QuizSerializer(serializers.Serializer):
                 max_scores.append(max(question_points))
 
             return sum(max_scores)
+        return 0  # Default value
 
     def get_average_points(self, obj):
         try:
@@ -177,7 +178,8 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
 
     def create(self, data):
         quiz = Quiz.objects.create(**data)
-        QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0, summery='You finished the quiz')
+        QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0,
+                                      summery="That's the end of hard questions :)")
 
         return quiz
 
