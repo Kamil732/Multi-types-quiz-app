@@ -8,6 +8,7 @@ import {
 	updatePunctations,
 } from '../../../../redux/actions/quizzes'
 
+import Title from '../../../../common/Title'
 import CircleLoader from '../../../../components/loaders/CircleLoader'
 import PunctationList from '../../../../components/quizzes/panel/detail/PunctationList'
 
@@ -136,78 +137,82 @@ class Punctation extends Component {
 			return <Redirect to="/not-found" />
 
 		return (
-			<div className="card">
-				{loading ? (
-					<div className="card__body">
-						<CircleLoader />
-					</div>
-				) : (
-					<form onSubmit={this.onSubmit}>
-						<PunctationList
-							punctations={punctations}
-							section_name={data.section.name}
-							max_score={data.max_score}
-							hasChanged={(state) =>
-								this.setState({ hasChanged: state })
-							}
-						/>
+			<>
+				<Title title={`${this.props.data.title} - Punctation`} />
 
+				<div className="card">
+					{loading ? (
 						<div className="card__body">
-							{data.section.name === 'knowledge_quiz' ||
-							data.section.name === 'universal_quiz' ? (
-								<>
-									<div className="inline-btns">
-										<button
-											type="button"
-											className={`btn ${
-												punctations.length - 1 >=
-												this.props.data.max_score
-													? 'btn__disabled'
-													: ''
-											}`}
-											onClick={this.addGrade}
-										>
-											Add Grade
-										</button>
-										<button
-											type="button"
-											className={`btn btn__danger ${
-												punctations.length <= 1
-													? 'btn__disabled'
-													: ''
-											}`}
-											onClick={this.removeGrade}
-										>
-											Remove Grade
-										</button>
-									</div>
-									<br /> <br />
-								</>
-							) : null}
-
-							<div className="inline-btns f-w">
-								<button
-									type="reset"
-									onClick={this.resetForm}
-									className={`btn ${
-										!hasChanged ? 'btn__disabled' : ''
-									}`}
-								>
-									Cancel
-								</button>
-								<button
-									type="submit"
-									className={`btn btn__contrast ${
-										!hasChanged ? 'btn__disabled' : ''
-									}`}
-								>
-									Save
-								</button>
-							</div>
+							<CircleLoader />
 						</div>
-					</form>
-				)}
-			</div>
+					) : (
+						<form onSubmit={this.onSubmit}>
+							<PunctationList
+								punctations={punctations}
+								section_name={data.section.name}
+								max_score={data.max_score}
+								hasChanged={(state) =>
+									this.setState({ hasChanged: state })
+								}
+							/>
+
+							<div className="card__body">
+								{data.section.name === 'knowledge_quiz' ||
+								data.section.name === 'universal_quiz' ? (
+									<>
+										<div className="inline-btns">
+											<button
+												type="button"
+												className={`btn ${
+													punctations.length - 1 >=
+													this.props.data.max_score
+														? 'btn__disabled'
+														: ''
+												}`}
+												onClick={this.addGrade}
+											>
+												Add Grade
+											</button>
+											<button
+												type="button"
+												className={`btn btn__danger ${
+													punctations.length <= 1
+														? 'btn__disabled'
+														: ''
+												}`}
+												onClick={this.removeGrade}
+											>
+												Remove Grade
+											</button>
+										</div>
+										<br /> <br />
+									</>
+								) : null}
+
+								<div className="inline-btns f-w">
+									<button
+										type="reset"
+										onClick={this.resetForm}
+										className={`btn ${
+											!hasChanged ? 'btn__disabled' : ''
+										}`}
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										className={`btn btn__contrast ${
+											!hasChanged ? 'btn__disabled' : ''
+										}`}
+									>
+										Save
+									</button>
+								</div>
+							</div>
+						</form>
+					)}
+				</div>
+			</>
 		)
 	}
 }
