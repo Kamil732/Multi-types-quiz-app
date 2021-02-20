@@ -92,7 +92,8 @@ class QuizSerializer(serializers.Serializer):
     is_published = serializers.BooleanField(default=True)
     author_slug = serializers.ReadOnlyField(source='author.slug')
     pub_date = serializers.SerializerMethodField('get_pub_date')
-    average_correct_answers = serializers.SerializerMethodField('get_average_correct_answers')
+    max_score = serializers.SerializerMethodField('get_max_score')
+    average_points = serializers.SerializerMethodField('get_average_points')
     image_url = serializers.CharField(allow_blank=True)
     section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
@@ -104,9 +105,24 @@ class QuizSerializer(serializers.Serializer):
     def get_question_amount(self, obj):
         return Question.objects.filter(quiz_id=obj.id).count()
 
-    def get_average_correct_answers(self, obj):
+    def get_max_score(self, obj):
+        if obj.section.name == 'knowledge_quiz':
+            return self.get_question_amount(obj)
+        elif obj.section.name == 'universal_quiz':
+            questions = Question.objects.filter(quiz__author__slug=obj.author.slug, quiz__slug=obj.slug)
+
+            max_scores = []
+            for question in questions:
+                question_points = list(map(int, Answer.objects.filter(
+                    question=question).values_list('points', flat=True)))
+
+                max_scores.append(max(question_points))
+
+            return sum(max_scores)
+
+    def get_average_points(self, obj):
         try:
-            return round(sum(obj.answers_data) / obj.solved_times, 2) if self.get_question_amount(obj) > 0 else None
+            return round(sum(obj.answers_data) / obj.solved_times, 2) if self.get_max_score(obj) > 0 else None
         except:
             return None
 
@@ -148,7 +164,8 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'title',
             'description',
             'solved_times',
-            'average_correct_answers',
+            'average_points',
+            'max_score',
             'slug',
             'author',
             'author_slug',
@@ -163,7 +180,6 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     random_question_order = serializers.BooleanField(
         default=True)
     questions = serializers.SerializerMethodField('get_questions')
-    max_score = serializers.SerializerMethodField('get_max_score')
     author = serializers.SerializerMethodField('get_author')
 
     def get_author(self, obj):
@@ -173,21 +189,6 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     def get_questions(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri(reverse('quiz-question-list', args=[obj.author.slug, obj.slug]))
-
-    def get_max_score(self, obj):
-        if obj.section.name == 'knowledge_quiz':
-            return self.get_question_amount(obj)
-        elif obj.section.name == 'universal_quiz':
-            questions = Question.objects.filter(quiz__author__slug=obj.author.slug, quiz__slug=obj.slug)
-
-            max_scores = []
-            for question in questions:
-                question_points = list(map(int, Answer.objects.filter(
-                    question=question).values_list('points', flat=True)))
-
-                max_scores.append(max(question_points))
-
-            return sum(max_scores)
 
     class Meta:
         model = Quiz
