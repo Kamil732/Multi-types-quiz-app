@@ -175,6 +175,12 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
         )
         read_only_fields = ('slug', 'solved_times',)
 
+    def create(self, data):
+        quiz = Quiz.objects.create(**data)
+        QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0, summery='You finished the quiz')
+
+        return quiz
+
 
 class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
     random_question_order = serializers.BooleanField(
