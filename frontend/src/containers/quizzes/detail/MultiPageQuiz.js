@@ -93,21 +93,6 @@ class MultiPageQuiz extends Component {
 							<div className="answer-container">{answers}</div>
 						</div>
 					</div>
-
-					{index !== questions.length - 1 ? (
-						<div>
-							<div className="card__footer">
-								<button
-									type="button"
-									className="btn btn__contrast btn__submit"
-									data-id={question.id}
-									onClick={this.nextQuestion}
-								>
-									Next Question
-								</button>
-							</div>
-						</div>
-					) : null}
 				</React.Fragment>
 			)
 		})
@@ -143,12 +128,38 @@ class MultiPageQuiz extends Component {
 				{questionNumber === this.questionList.length - 1 ? (
 					<div>
 						<div className="card__footer">
-							<button type="submit" className={`btn btn__submit`}>
+							<button
+								type="submit"
+								className={`btn btn__submit ${
+									this.answersRef.current?.state.answer
+										? ''
+										: 'btn__disabled'
+								}`}
+							>
 								Finish
 							</button>
 						</div>
 					</div>
-				) : null}
+				) : (
+					<div>
+						<div className="card__footer">
+							<button
+								type="button"
+								className={`btn btn__contrast btn__submit ${
+									this.answersRef.current?.state.answer
+										? ''
+										: 'btn__disabled'
+								}`}
+								data-id={
+									this.answersRef.current?.props.questionId
+								}
+								onClick={this.nextQuestion}
+							>
+								Next Question
+							</button>
+						</div>
+					</div>
+				)}
 			</>
 		)
 	}
