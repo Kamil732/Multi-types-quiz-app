@@ -19,12 +19,15 @@ class Start extends Component {
 	constructor(props) {
 		super(props)
 
+		const { ask_name, ask_email, ask_gender, ask_opinion } = this.props.data
+
 		this.state = {
 			loading: true,
 			questions: [],
 			timer: 0,
 			finished_data: {},
-			sentFeedback: false,
+			sentFeedback:
+				!ask_name && !ask_email && !ask_gender && !ask_opinion,
 		}
 
 		this.getQuestions = this.getQuestions.bind(this)
