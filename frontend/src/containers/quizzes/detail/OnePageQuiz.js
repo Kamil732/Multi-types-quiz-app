@@ -83,7 +83,19 @@ class OnePageQuiz extends Component {
 			)
 		})
 
-		return questionList
+		return (
+			<>
+				{questionList}
+
+				{Object.keys(finishedData).length === 0 ? (
+					<div>
+						<div className="card__footer">
+							<button className="btn btn__submit">Finish</button>
+						</div>
+					</div>
+				) : null}
+			</>
+		)
 	}
 }
 

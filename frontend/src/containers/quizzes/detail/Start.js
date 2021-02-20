@@ -232,14 +232,6 @@ class Start extends Component {
 										finishedData={finished_data}
 									/>
 								)}
-
-								<div>
-									<div className="card__footer">
-										<button className="btn btn__submit">
-											Finish
-										</button>
-									</div>
-								</div>
 							</form>
 						)}
 					</>

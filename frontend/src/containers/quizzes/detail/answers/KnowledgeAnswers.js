@@ -11,20 +11,19 @@ class KnowledgeAnswers extends Component {
 
 	constructor(props) {
 		super(props)
-		const { questionId } = this.props
 
 		this.state = {
-			[`answer-${questionId}`]: '',
+			answer: '',
 		}
 
 		this.onChange = this.onChange.bind(this)
 	}
 
-	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+	onChange = (e) => this.setState({ answer: e.target.value })
 
 	render() {
 		const { questionNumber, answers, questionId, finishedData } = this.props
-		const answer = this.state[`answer-${questionId}`]
+		const { answer } = this.state
 
 		const answerList = answers.map((answer_, index) => {
 			if (Object.keys(finishedData).length > 0)
