@@ -112,7 +112,7 @@ class SettingsForm extends Component {
 		})
 
 	render() {
-		const { errors, categories } = this.props
+		const { errors, categories, data } = this.props
 		const {
 			title,
 			category,
@@ -136,9 +136,7 @@ class SettingsForm extends Component {
 						<div className="message-box error">
 							<p className="message-box__text">{errors.detail}</p>
 						</div>
-					) : (
-						''
-					)}
+					) : null}
 
 					<div className="col col-md-6">
 						{errors.title ? (
@@ -152,9 +150,7 @@ class SettingsForm extends Component {
 									</p>
 								))}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 						<div className="form-control">
 							<div className="icon-form">
 								<span className="icon">
@@ -184,9 +180,7 @@ class SettingsForm extends Component {
 									</p>
 								))}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 						<div className="form-control">
 							<label className="form-control__label">
 								Category:
@@ -212,9 +206,7 @@ class SettingsForm extends Component {
 									</p>
 								))}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 						<div className="form-control">
 							<label className="form-control__label">
 								Description:
@@ -242,9 +234,7 @@ class SettingsForm extends Component {
 									</p>
 								))}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 						<div className="form-inline">
 							<label
 								className="form-inline__label"
@@ -292,9 +282,7 @@ class SettingsForm extends Component {
 									)
 								)}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 						<div className="form-inline">
 							<label
 								className="form-inline__label"
@@ -332,55 +320,65 @@ class SettingsForm extends Component {
 							</div>
 						</div>
 
-						{errors.one_page_questions ? (
-							<div className="message-box error">
-								{errors.one_page_questions.map(
-									(error, index) => (
-										<p
-											className="message-box__text"
-											key={index}
-										>
-											{error}
-										</p>
-									)
-								)}
-							</div>
-						) : (
-							''
-						)}
-						<div className="form-inline">
-							<label
-								className="form-inline__label"
-								htmlFor="one_page_questions"
-							>
-								Questions on one page:
-							</label>
-							<div className="switch-btn" id="one_page_questions">
-								<input
-									type="radio"
-									id="one_page_questions__true"
-									name="one_page_questions"
-									value="true"
-									onChange={this.onChangeRadio}
-									checked={one_page_questions === true}
-								/>
-								<label htmlFor="one_page_questions__true">
-									Yes
-								</label>
+						{data.section.name === 'knowledge_quiz' ||
+						data.section.name === 'universal_quiz' ? (
+							<>
+								{errors.one_page_questions ? (
+									<div className="message-box error">
+										{errors.one_page_questions.map(
+											(error, index) => (
+												<p
+													className="message-box__text"
+													key={index}
+												>
+													{error}
+												</p>
+											)
+										)}
+									</div>
+								) : null}
+								<div className="form-inline">
+									<label
+										className="form-inline__label"
+										htmlFor="one_page_questions"
+									>
+										Questions on one page:
+									</label>
+									<div
+										className="switch-btn"
+										id="one_page_questions"
+									>
+										<input
+											type="radio"
+											id="one_page_questions__true"
+											name="one_page_questions"
+											value="true"
+											onChange={this.onChangeRadio}
+											checked={
+												one_page_questions === true
+											}
+										/>
+										<label htmlFor="one_page_questions__true">
+											Yes
+										</label>
 
-								<input
-									type="radio"
-									id="one_page_questions__false"
-									name="one_page_questions"
-									value="false"
-									onChange={this.onChangeRadio}
-									checked={one_page_questions === false}
-								/>
-								<label htmlFor="one_page_questions__false">
-									No
-								</label>
-							</div>
-						</div>
+										<input
+											type="radio"
+											id="one_page_questions__false"
+											name="one_page_questions"
+											value="false"
+											onChange={this.onChangeRadio}
+											checked={
+												one_page_questions === false
+											}
+										/>
+										<label htmlFor="one_page_questions__false">
+											No
+										</label>
+									</div>
+								</div>
+							</>
+						) : null}
 					</div>
 					<div className="col col-md-6">
 						<div className="form-control">
@@ -412,9 +410,7 @@ class SettingsForm extends Component {
 									</p>
 								))}
 							</div>
-						) : (
-							''
-						)}
+						) : null}
 					</div>
 				</div>
 

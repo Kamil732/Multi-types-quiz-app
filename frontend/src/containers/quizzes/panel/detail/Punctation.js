@@ -99,18 +99,18 @@ class Punctation extends Component {
 		let data = []
 
 		for (let i = 0; i < this.state.punctations.length; i++) {
-			const from_score = parseInt(
-				document.getElementById(`from-score-${i}`).value
-			)
-			const to_score = parseInt(
-				document.getElementById(`to-score-${i}`).value
-			)
-			const summery = document.getElementById(`summery-${i}`).value
+			const { section, max_score } = this.props.data
+			const sectionKnowledgeOrUniversal =
+				section === 'knowledge_quiz' || section === 'universal_quiz'
 
 			data.push({
-				from_score,
-				to_score,
-				summery,
+				from_score: sectionKnowledgeOrUniversal
+					? parseInt(document.getElementById(`from-score-${i}`).value)
+					: 0,
+				to_score: sectionKnowledgeOrUniversal
+					? parseInt(document.getElementById(`to-score-${i}`).value)
+					: max_score,
+				summery: document.getElementById(`summery-${i}`).value,
 			})
 		}
 
