@@ -39,6 +39,11 @@
 		cursor: default;
 	}
 
+	&.selected {
+		background: $primary-color;
+		color: set-text-color(set-text-color($primary-color));
+	}
+
 	&.correct {
 		background: $secondary-color;
 		border-left: none;

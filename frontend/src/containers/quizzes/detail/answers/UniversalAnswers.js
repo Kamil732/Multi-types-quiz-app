@@ -30,10 +30,10 @@ class UniversalAnswers extends Component {
 			if (Object.keys(finishedData).length > 0)
 				return (
 					<div
-						className={`card card__body answer ${
+						className={`card card__body answer finished ${
 							finishedData.data[questionNumber].selected ===
 							answer_.slug
-								? 'active'
+								? 'selected'
 								: ''
 						}`}
 						key={index}
