@@ -98,7 +98,6 @@ class QuizFinishAPIView(views.APIView):
         section = request.data.get('section')
 
         retrieveData = {
-            'section': section,
             'summery': '',
             'points': 0,
             'data': [],

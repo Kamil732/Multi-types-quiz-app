@@ -76,7 +76,7 @@ class QuizPunctation(models.Model):
     to_score = models.PositiveIntegerField()
 
     def __str__(self):
-        return self.quiz.title
+        return str(self.quiz)
 
 
 class QuizFeedback(models.Model):
@@ -92,7 +92,7 @@ class QuizFeedback(models.Model):
     opinion = models.TextField(blank=True)
 
     def __str__(self):
-        return self.email
+        return str(self.quiz)
 
 
 class Question(models.Model):
