@@ -36,16 +36,18 @@ class OnePageQuiz extends Component {
 						finishedData={finishedData}
 					/>
 				)
-			else if (section === 'psychology_quiz')
-				answers = (
-					<PsychologyAnswers
-						answers={question.answers}
-						questionId={question.id}
-					/>
-				)
 			else if (section === 'preferential_quiz')
 				answers = (
 					<PreferentailAnswers
+						questionNumber={index}
+						answers={question.answers}
+						questionId={question.id}
+						finishedData={finishedData}
+					/>
+				)
+			else if (section === 'psychology_quiz')
+				answers = (
+					<PsychologyAnswers
 						answers={question.answers}
 						questionId={question.id}
 					/>

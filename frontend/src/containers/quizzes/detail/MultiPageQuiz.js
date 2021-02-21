@@ -46,17 +46,19 @@ class MultiPageQuiz extends Component {
 						ref={this.answersRef}
 					/>
 				)
-			else if (section === 'psychology_quiz')
-				answers = (
-					<PsychologyAnswers
-						answers={question.answers}
-						questionId={question.id}
-						ref={this.answersRef}
-					/>
-				)
 			else if (section === 'preferential_quiz')
 				answers = (
 					<PreferentailAnswers
+						questionNumber={index}
+						answers={question.answers}
+						questionId={question.id}
+						finishedData={finishedData}
+						ref={this.answersRef}
+					/>
+				)
+			else if (section === 'psychology_quiz')
+				answers = (
+					<PsychologyAnswers
 						answers={question.answers}
 						questionId={question.id}
 						ref={this.answersRef}
