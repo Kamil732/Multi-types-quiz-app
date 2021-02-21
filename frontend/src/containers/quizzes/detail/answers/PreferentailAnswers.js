@@ -37,7 +37,8 @@ class PreferentailAnswers extends Component {
 
 			const percentage = Math.round(
 				answered_times !== 0
-					? (answer_.answered_times * 100) / answered_times
+					? ((answer_.answered_times + (isSelected ? 1 : 0)) * 100) /
+							(answered_times + 1)
 					: 0
 			)
 
