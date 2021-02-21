@@ -42,6 +42,8 @@ class PreferentailAnswers extends Component {
 					: 0
 			)
 
+			const voted = answer_.answered_times + (isSelected ? 1 : 0)
+
 			if (Object.keys(finishedData).length > 0)
 				return (
 					<div
@@ -56,9 +58,7 @@ class PreferentailAnswers extends Component {
 						<h4 className="preferential-answer__percents">
 							{percentage}%
 						</h4>
-						<h4 className="progress-bar">
-							voted: {answer_.answered_times + 1}
-						</h4>
+						<h4 className="progress-bar">voted: {voted}</h4>
 						<h4>{answer_.answer}</h4>
 					</div>
 				)
@@ -82,9 +82,7 @@ class PreferentailAnswers extends Component {
 						<h4 className="preferential-answer__percents">
 							{percentage}%
 						</h4>
-						<h4 className="progress-bar">
-							voted: {answer_.answered_times + 1}
-						</h4>
+						<h4 className="progress-bar">voted: {voted}</h4>
 						<h4>{answer_.answer}</h4>
 					</label>
 				)

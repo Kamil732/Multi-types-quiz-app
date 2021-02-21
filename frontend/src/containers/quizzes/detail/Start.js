@@ -131,20 +131,6 @@ class Start extends Component {
 
 		if (loading === true) return <CircleLoader />
 
-		let result
-		if (
-			finished_data.section === 'knowledge_quiz' ||
-			finished_data.section === 'universal_quiz'
-		)
-			result = (
-				<>
-					Your score is{' '}
-					<span style={{ fontWeight: '600' }}>
-						{finished_data.points} / {data.max_score}
-					</span>
-				</>
-			)
-
 		return (
 			<>
 				<Title title={`Start Quiz - ${data.title}`} />
@@ -186,7 +172,25 @@ class Start extends Component {
 									) : (
 										<>
 											<p style={{ fontSize: '1.5rem' }}>
-												{result}
+												{data.section.name ===
+													'knowledge_quiz' ||
+												data.section.name ===
+													'universal_quiz' ? (
+													<>
+														Your score is{' '}
+														<span
+															style={{
+																fontWeight:
+																	'600',
+															}}
+														>
+															{
+																finished_data.points
+															}{' '}
+															/ {data.max_score}
+														</span>
+													</>
+												) : null}
 												<br />
 												<span>
 													Your time is{' '}
