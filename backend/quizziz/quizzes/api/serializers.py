@@ -61,6 +61,7 @@ class AnswerSerializer(serializers.ModelSerializer):
         fields = (
             'image_url',
             'answer',
+            'answered_times',
             'slug',
         )
 

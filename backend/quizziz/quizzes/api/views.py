@@ -145,9 +145,17 @@ class QuizFinishAPIView(views.APIView):
                     'questionId': question_id,
                     'selected': answer_slug,
                 })
-            elif section == 'psychology_quiz':
-                pass
             elif section == 'preferential_quiz':
+                answer = Answer.objects.get(question__id=question_id, slug=answer_slug)
+                answer.answered_times += 1
+                answer.save()
+
+                # Add 1 to points if it is correct answer
+                retrieveData['data'].append({
+                    'questionId': question_id,
+                    'selected': answer_slug,
+                })
+            elif section == 'psychology_quiz':
                 pass
 
         if section == 'knowledge_quiz' or section == 'universal_quiz':
@@ -156,7 +164,9 @@ class QuizFinishAPIView(views.APIView):
 
             summery = QuizPunctation.objects.filter(
                 quiz=quiz, from_score__lte=retrieveData['points'], to_score__gte=retrieveData['points']).values_list('summery', flat=True).first()
-            retrieveData['summery'] = summery
+        else:
+            summery = QuizPunctation.objects.filter(quiz=quiz).values_list('summery', flat=True).first()
+        retrieveData['summery'] = summery
 
         return Response(retrieveData, status=status.HTTP_200_OK)
 
