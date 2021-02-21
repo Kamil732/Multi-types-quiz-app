@@ -1,229 +1,297 @@
 body.dark-mode {
-    color: set-text-color($background-color-dark-mode);
-    background: $background-color-dark-mode;
+	color: set-text-color($background-color-dark-mode);
+	background: $background-color-dark-mode;
 
-    .menu-nav {
-        background-color: $surface-color-dark-mode;
-        color: set-text-color($surface-color-dark-mode);
+	.menu-nav {
+		background-color: $surface-color-dark-mode;
+		color: set-text-color($surface-color-dark-mode);
 
-        &__item.active {
-            background-color: $secondary-color-dark-mode;
-        }
+		&__item.active {
+			background-color: $secondary-color-dark-mode;
+		}
 
-        &__link {
-            background-color: $surface-color-dark-mode;
-            color: set-text-color($surface-color-dark-mode)
-        }
-    }
+		&__link {
+			background-color: $surface-color-dark-mode;
+			color: set-text-color($surface-color-dark-mode);
+		}
+	}
 
-    .nav-btn__burger {
-        $burger-color: set-text-color(set-text-color($primary-color-dark-mode));
+	.nav-btn__burger {
+		$burger-color: set-text-color(set-text-color($primary-color-dark-mode));
 
-        background-color: $burger-color;
+		background-color: $burger-color;
 
-        &::after, &::before {
-            background-color: $burger-color;
-        }
-    }
+		&::after,
+		&::before {
+			background-color: $burger-color;
+		}
+	}
 
-    .form-control {
-        &__input {
-            background-color: lighten($primary-variant-color-dark-mode, 25%);
+	.form-control {
+		&__input {
+			background-color: lighten($primary-variant-color-dark-mode, 25%);
 
-            &:focus {
-                z-index: 1;
-                box-shadow: 0 0 7px $input-focus-color-dark-mode;
-            }
-        }
+			&:focus {
+				z-index: 1;
+				box-shadow: 0 0 7px $input-focus-color-dark-mode;
+			}
+		}
 
-        &__grippie {
-            background-color: #eee;
-        }
+		&__grippie {
+			background-color: #eee;
+		}
 
-        .icon-form .icon {
-            background: $primary-variant-color-dark-mode;
-        }
-    }
+		.icon-form .icon {
+			background: $primary-variant-color-dark-mode;
+		}
+	}
 
-    .dropdown {
-        &__menu {
-            border-bottom-color: set-text-color($surface-color-dark-mode);
-            border-top-color: set-text-color($surface-color-dark-mode);
+	.dropdown {
+		&__menu {
+			border-bottom-color: set-text-color($surface-color-dark-mode);
+			border-top-color: set-text-color($surface-color-dark-mode);
 
-            &__link {
-                color: set-text-color($surface-color-dark-mode);
+			&__link {
+				color: set-text-color($surface-color-dark-mode);
 
-                &.active {
-                    color: set-text-color($secondary-color-dark-mode);
-                    background-color: $secondary-color-dark-mode;
-                }
-            }
-        }
-    }
+				&.active {
+					color: set-text-color($secondary-color-dark-mode);
+					background-color: $secondary-color-dark-mode;
+				}
+			}
+		}
+	}
 
-    .vertical-menu__item, .horizontal-menu__item {
-        background: lighten($background-color-dark-mode, 10%);
-        color: set-text-color($background-color-dark-mode);
+	.vertical-menu__item,
+	.horizontal-menu__item {
+		background: lighten($background-color-dark-mode, 10%);
+		color: set-text-color($background-color-dark-mode);
 
-        &:not(.active):hover {
-            background-color: rgba($secondary-variant-color-dark-mode, 0.6);
-            color: set-text-color($secondary-variant-color-dark-mode);
-        }
+		&:not(.active):hover {
+			background-color: rgba($secondary-variant-color-dark-mode, 0.6);
+			color: set-text-color($secondary-variant-color-dark-mode);
+		}
 
-        &.active {
-            background-color: $secondary-variant-color-dark-mode;
-            color: set-text-color($secondary-variant-color-dark-mode);
-        }
-    }
+		&.active {
+			background-color: $secondary-variant-color-dark-mode;
+			color: set-text-color($secondary-variant-color-dark-mode);
+		}
+	}
 
-    div:not(.card) > .card__header {
-        border-color: $primary-color-dark-mode;
-        box-shadow: none;
-    }
+	div:not(.card) > .card__header {
+		border-color: $primary-color-dark-mode;
+		box-shadow: none;
+	}
 
-    div:not(.card) > .card__footer {
-        border-color: $primary-variant-color-dark-mode;
-        box-shadow: none;
-    }
+	div:not(.card) > .card__footer {
+		border-color: $primary-variant-color-dark-mode;
+		box-shadow: none;
+	}
 
-    .card__body, .card-inline {
-        background: $surface-color-dark-mode;
-        color: set-text-color($surface-color-dark-mode);
-    }
+	.card__body,
+	.card-inline {
+		background: $surface-color-dark-mode;
+		color: set-text-color($surface-color-dark-mode);
+	}
 
-    .card__header {
-        $color: lighten($surface-color-dark-mode, 15%);
-        background-color: $color;
-        color: set-text-color($color);
-    }
+	.card__header {
+		$color: lighten($surface-color-dark-mode, 15%);
+		background-color: $color;
+		color: set-text-color($color);
+	}
 
-    .card-inline {
-        border: 1px solid #808080;
-    }
+	.card-inline {
+		border: 1px solid #808080;
+	}
 
-    .quiz-detail {
-        background-color: darken($surface-color-dark-mode, 2%);
-        color: set-text-color($surface-color-dark-mode);
-    }
+	.quiz-detail {
+		background-color: darken($surface-color-dark-mode, 2%);
+		color: set-text-color($surface-color-dark-mode);
+	}
 
-    .btn {
-        background: $secondary-variant-color-dark-mode;
-        color: set-text-color($secondary-variant-color-dark-mode);
+	.answer {
+		background: linear-gradient(
+				to left,
+				$background-color-dark-mode 50%,
+				$primary-color-dark-mode 50%
+			)
+			right;
+		background-size: 200%;
+		border-left-color: $primary-color-dark-mode;
+		color: set-text-color($background-color-dark-mode);
 
-        &__edit {
-            color: $primary-color-dark-mode;
-        }
+		&:hover,
+		&.active {
+			background-position: left;
+			color: set-text-color($primary-color-dark-mode);
+		}
 
-        &__danger {
-            background-color: $error-color-dark-mode;
-            color: set-text-color($error-color-dark-mode);
-        }
+		&.finished {
+			background: $background-color-dark-mode;
+			color: set-text-color($background-color-dark-mode);
+		}
 
-        &__contrast {
-            background-color: $secondary-color-dark-mode;
-            color: set-text-color($secondary-color-dark-mode);
-        }
-    }
+		&.selected {
+			background: $primary-color-dark-mode;
+			color: set-text-color($primary-color-dark-mode);
+		}
 
-    .table {
-        & tr:nth-of-type(even) {
-            background-color: #aaa;
-        }
+		&.correct {
+			background: $secondary-color-dark-mode;
+			color: set-text-color($secondary-color-dark-mode);
+		}
 
-        & td, & th {
-            border-color: #999;
-        }
+		&.wrong {
+			background: $error-color-dark-mode;
+			color: set-text-color($error-color-dark-mode);
+		}
+	}
 
-        & th {
-            background-color: #888;
-            color: set-text-color(#888);
-        }
-    }
+	.btn {
+		background: $secondary-variant-color-dark-mode;
+		color: set-text-color($secondary-variant-color-dark-mode);
 
-    .pagination__item {
-        &:hover {
-            background: rgba($secondary-color-dark-mode, 0.6);
-            color: set-text-color(rgba($secondary-color-dark-mode, 0.6));
-        }
+		&__edit {
+			color: $primary-color-dark-mode;
+		}
 
-        &.active {
-            background: $secondary-color-dark-mode;
-            color: set-text-color($secondary-color-dark-mode);
-        }
-    }
+		&__danger {
+			background-color: $error-color-dark-mode;
+			color: set-text-color($error-color-dark-mode);
+		}
 
-    .site-header {
-        background: $primary-color-dark-mode;
-        color: set-text-color($primary-color-dark-mode);
-        box-shadow: none;
-    }
+		&__contrast {
+			background-color: $secondary-color-dark-mode;
+			color: set-text-color($secondary-color-dark-mode);
+		}
+	}
 
-    .site-footer {
-        background: $primary-variant-color-dark-mode;
-        color: set-text-color($primary-variant-color-dark-mode);
-        box-shadow: none;
-    }
+	.table {
+		& tr:nth-of-type(even) {
+			background-color: #aaa;
+		}
 
-    .quiz-card {
-        &__link:hover {
-            color: $primary-color-dark-mode;
-        }
-    }
+		& td,
+		& th {
+			border-color: #999;
+		}
 
-    .error-box {
-        background: $error-color-dark-mode;
-    }
+		& th {
+			background-color: #888;
+			color: set-text-color(#888);
+		}
+	}
 
-    .spin-loader {
-        border-top-color: $primary-color-dark-mode;
-    }
+	.pagination__item {
+		&:hover {
+			background: rgba($secondary-color-dark-mode, 0.6);
+			color: set-text-color(rgba($secondary-color-dark-mode, 0.6));
+		}
 
-    .circle-loader div {
-        background: $primary-color-dark-mode;
-    }
+		&.active {
+			background: $secondary-color-dark-mode;
+			color: set-text-color($secondary-color-dark-mode);
+		}
+	}
+
+	.message-box {
+		&.error {
+			background-color: $error-color-dark-mode;
+
+			.message-box__text {
+				color: set-text-color($error-color-dark-mode);
+			}
+		}
+
+		&.info {
+			background-color: $primary-variant-color-dark-mode;
+
+			.message-box__text {
+				color: set-text-color($primary-variant-color-dark-mode);
+			}
+		}
+	}
+
+	.progress-bar {
+		background-color: lighten($surface-color-dark-mode, 5%);
+
+		& > div {
+			background-color: $secondary-color-dark-mode;
+		}
+	}
+
+	.site-header {
+		background: $primary-color-dark-mode;
+		color: set-text-color($primary-color-dark-mode);
+		box-shadow: none;
+	}
+
+	.site-footer {
+		background: $primary-variant-color-dark-mode;
+		color: set-text-color($primary-variant-color-dark-mode);
+		box-shadow: none;
+	}
+
+	.quiz-card {
+		&__link:hover {
+			color: $primary-color-dark-mode;
+		}
+	}
+
+	.error-box {
+		background: $error-color-dark-mode;
+	}
+
+	.spin-loader {
+		border-top-color: $primary-color-dark-mode;
+	}
+
+	.circle-loader div {
+		background: $primary-color-dark-mode;
+	}
 }
 
 .dark-mode-toggle {
-    margin: 0 1.25rem;
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
+	margin: 0 1.25rem;
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
 
-    &__checkbox {
-        opacity: 0;
-        width: 0;
-        height: 0;
+	&__checkbox {
+		opacity: 0;
+		width: 0;
+		height: 0;
 
-        &:checked + .dark-mode-toggle__slider {
-            background-color: #aaa;
+		&:checked + .dark-mode-toggle__slider {
+			background-color: #aaa;
 
-            &:before {
-                background-color: #fff;
-                transform: translateX(26px);
-            }
-        }
-    }
+			&:before {
+				background-color: #fff;
+				transform: translateX(26px);
+			}
+		}
+	}
 
-    &__slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: white;
-        transition: .4s;
+	&__slider {
+		position: absolute;
+		cursor: pointer;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: white;
+		transition: 0.4s;
 
-        &:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: #aaa;
-            transition: .4s;
-        }
-    }
+		&:before {
+			position: absolute;
+			content: '';
+			height: 26px;
+			width: 26px;
+			left: 4px;
+			bottom: 4px;
+			background-color: #aaa;
+			transition: 0.4s;
+		}
+	}
 }
