@@ -36,10 +36,8 @@ class PreferentailAnswers extends Component {
 				.reduce((a, b) => a + b, 0)
 
 			const percentage = Math.round(
-				answered_times !== 0
-					? ((answer_.answered_times + (isSelected ? 1 : 0)) * 100) /
-							(answered_times + 1)
-					: 0
+				((answer_.answered_times + (isSelected ? 1 : 0)) * 100) /
+					(answered_times + 1)
 			)
 
 			const voted = answer_.answered_times + (isSelected ? 1 : 0)
@@ -47,7 +45,7 @@ class PreferentailAnswers extends Component {
 			if (Object.keys(finishedData).length > 0)
 				return (
 					<div
-						className={`card card__body answer finished preferential ${
+						className={`card card__body answer finished ${
 							finishedData.data[questionNumber].selected ===
 							answer_.slug
 								? 'selected'
@@ -55,17 +53,26 @@ class PreferentailAnswers extends Component {
 						}`}
 						key={index}
 					>
-						<h4 className="preferential-answer__percents">
-							{percentage}%
-						</h4>
-						<h4 className="progress-bar">voted: {voted}</h4>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+							}}
+						>
+							<h4>{percentage}%</h4>
+							<h4>voted: {voted}</h4>
+						</div>
+						<div className="progress-bar">
+							<div style={{ width: percentage + '%' }}></div>
+						</div>
+
 						<h4>{answer_.answer}</h4>
 					</div>
 				)
 			else if (answer)
 				return (
 					<label
-						className={`card card__body answer finished preferential-answer ${
+						className={`card card__body answer finished ${
 							answer === answer_.slug ? 'selected' : ''
 						}`}
 						key={index}
@@ -79,10 +86,19 @@ class PreferentailAnswers extends Component {
 							readOnly
 							disabled
 						/>
-						<h4 className="preferential-answer__percents">
-							{percentage}%
-						</h4>
-						<h4 className="progress-bar">voted: {voted}</h4>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+							}}
+						>
+							<h4>{percentage}%</h4>
+							<h4>voted: {voted}</h4>
+						</div>
+						<div className="progress-bar">
+							<div style={{ width: percentage + '%' }}></div>
+						</div>
+
 						<h4>{answer_.answer}</h4>
 					</label>
 				)
