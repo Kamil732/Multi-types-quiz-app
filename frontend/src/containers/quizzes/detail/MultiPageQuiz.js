@@ -4,6 +4,7 @@ import PreferentailAnswers from '../../../components/quizzes/detail/answers/Pref
 import PsychologyAnswers from '../../../components/quizzes/detail/answers/PsychologyAnswers'
 import UniversalAnswers from '../../../components/quizzes/detail/answers/UniversalAnswers'
 import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
+import { FaLiraSign } from 'react-icons/fa'
 
 class MultiPageQuiz extends Component {
 	static propTypes = {
@@ -16,10 +17,9 @@ class MultiPageQuiz extends Component {
 		super(props)
 		const { questions, section, finishedData } = this.props
 
-		this.answersRef = React.createRef()
-
 		this.state = {
 			questionNumber: 0,
+			answersRef: null,
 			answeredQuestions: [],
 		}
 
@@ -33,7 +33,7 @@ class MultiPageQuiz extends Component {
 						answers={question.answers}
 						questionId={question.id}
 						finishedData={finishedData}
-						ref={this.answersRef}
+						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)
 			else if (section === 'universal_quiz')
@@ -43,7 +43,7 @@ class MultiPageQuiz extends Component {
 						answers={question.answers}
 						questionId={question.id}
 						finishedData={finishedData}
-						ref={this.answersRef}
+						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)
 			else if (section === 'preferential_quiz')
@@ -53,7 +53,7 @@ class MultiPageQuiz extends Component {
 						answers={question.answers}
 						questionId={question.id}
 						finishedData={finishedData}
-						ref={this.answersRef}
+						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)
 			else if (section === 'psychology_quiz')
@@ -61,7 +61,7 @@ class MultiPageQuiz extends Component {
 					<PsychologyAnswers
 						answers={question.answers}
 						questionId={question.id}
-						ref={this.answersRef}
+						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)
 
@@ -111,7 +111,7 @@ class MultiPageQuiz extends Component {
 					key={this.state.questionNumber}
 					type="radio"
 					name={`answer-${e.target.getAttribute('data-id')}`}
-					value={this.answersRef.current.state.answer}
+					value={this.state.answersRef.state.answer}
 					checked
 					readOnly
 				/>,
@@ -120,7 +120,7 @@ class MultiPageQuiz extends Component {
 	}
 
 	render() {
-		const { questionNumber, answeredQuestions } = this.state
+		const { questionNumber, answeredQuestions, answersRef } = this.state
 
 		return (
 			<>
@@ -133,7 +133,7 @@ class MultiPageQuiz extends Component {
 							<button
 								type="submit"
 								className={`btn btn__submit ${
-									this.answersRef.current?.state.answer
+									answersRef?.state.answer.length > 0
 										? ''
 										: 'btn__disabled'
 								}`}
@@ -148,13 +148,11 @@ class MultiPageQuiz extends Component {
 							<button
 								type="button"
 								className={`btn btn__contrast btn__submit ${
-									this.answersRef.current?.state.answer
+									answersRef?.state.answer.length > 0
 										? ''
 										: 'btn__disabled'
 								}`}
-								data-id={
-									this.answersRef.current?.props.questionId
-								}
+								data-id={answersRef?.props.questionId}
 								onClick={this.nextQuestion}
 							>
 								Next Question
