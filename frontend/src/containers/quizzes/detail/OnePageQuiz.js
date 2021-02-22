@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import KnowledgeAnswers from './answers/KnowledgeAnswers'
-import PsychologyAnswers from './answers/PsychologyAnswers'
-import PreferentailAnswers from './answers/PreferentailAnswers'
-import UniversalAnswers from './answers/UniversalAnswers'
+import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
+import PsychologyAnswers from '../../../components/quizzes/detail/answers/PsychologyAnswers'
+import PreferentailAnswers from '../../../components/quizzes/detail/answers/PreferentailAnswers'
+import UniversalAnswers from '../../../components/quizzes/detail/answers/UniversalAnswers'
 
 class OnePageQuiz extends Component {
 	static propTypes = {

@@ -4,31 +4,46 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import NotFound from '../containers/errors/NotFound'
 
 import Home from '../containers/quizzes/Home'
-import { default as QuizDetailRoutes } from '../containers/quizzes/detail/Routes'
+import { default as QuizDetailRoutes } from '../components/quizzes/detail/Routes'
 
-import Auth from '../containers/accounts/Auth';
-import Profile from '../containers/accounts/Profile';
+import Auth from '../containers/accounts/Auth'
+import Profile from '../containers/accounts/Profile'
 import PrivateRoute from '../common/PrivateRoute'
 import Panel from '../components/quizzes/panel/Panel'
 
 function Routes() {
-    return (
-        <section>
+	return (
+		<section>
 			<Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/quizzes/:author_slug/:quiz_slug" component={QuizDetailRoutes} />
+				<Route exact path="/" component={Home} />
+				<Route
+					path="/quizzes/:author_slug/:quiz_slug"
+					component={QuizDetailRoutes}
+				/>
 
-                <Route exact path="/login" component={() => <Auth type="login" />} />
-                <Route exact path="/register" component={() => <Auth type="register" />} />
-                <Route exact path="/profile/:profile_slug" component={Profile} />
+				<Route
+					exact
+					path="/login"
+					component={() => <Auth type="login" />}
+				/>
+				<Route
+					exact
+					path="/register"
+					component={() => <Auth type="register" />}
+				/>
+				<Route
+					exact
+					path="/profile/:profile_slug"
+					component={Profile}
+				/>
 
-                <PrivateRoute path="/panel/" component={Panel} />
+				<PrivateRoute path="/panel/" component={Panel} />
 
-                <Route path="/not-found" component={NotFound} />
-                <Redirect to="/not-found" />
-            </Switch>
+				<Route path="/not-found" component={NotFound} />
+				<Redirect to="/not-found" />
+			</Switch>
 		</section>
-    )
+	)
 }
 
 export default Routes

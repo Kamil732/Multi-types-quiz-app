@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import CircleLoader from '../../../components/loaders/CircleLoader'
+import CircleLoader from '../../loaders/CircleLoader'
 import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
 
 import { getQuiz } from '../../../redux/actions/quizzes'
 
-import Start from './Start'
-import Detail from './Detail'
-import AboutUser from '../../../components/accounts/profile/AboutUser'
+import Start from '../../../containers/quizzes/detail/Start'
+import Detail from '../../../containers/quizzes/detail/Detail'
+import AboutUser from '../../accounts/profile/AboutUser'
 
 class Routes extends Component {
 	static propTypes = {

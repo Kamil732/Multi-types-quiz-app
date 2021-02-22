@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import PreferentailAnswers from './answers/PreferentailAnswers'
-import PsychologyAnswers from './answers/PsychologyAnswers'
-import UniversalAnswers from './answers/UniversalAnswers'
-import KnowledgeAnswers from './answers/KnowledgeAnswers'
+import PreferentailAnswers from '../../../components/quizzes/detail/answers/PreferentailAnswers'
+import PsychologyAnswers from '../../../components/quizzes/detail/answers/PsychologyAnswers'
+import UniversalAnswers from '../../../components/quizzes/detail/answers/UniversalAnswers'
+import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
 
 class MultiPageQuiz extends Component {
 	static propTypes = {
