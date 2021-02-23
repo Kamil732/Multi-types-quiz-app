@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class UniversalAnswers extends Component {
+class PsychologyAndUniversalAnswers extends Component {
 	static propTypes = {
 		questionNumber: PropTypes.number.isRequired,
 		answers: PropTypes.array,
@@ -66,4 +66,4 @@ class UniversalAnswers extends Component {
 	}
 }
 
-export default UniversalAnswers
+export default PsychologyAndUniversalAnswers

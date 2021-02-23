@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+
 import PreferentailAnswers from '../../../components/quizzes/detail/answers/PreferentailAnswers'
-import PsychologyAnswers from '../../../components/quizzes/detail/answers/PsychologyAnswers'
-import UniversalAnswers from '../../../components/quizzes/detail/answers/UniversalAnswers'
+import PsychologyAndUniversalAnswers from '../../../components/quizzes/detail/answers/PsychologyAndUniversalAnswers'
 import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
-import { FaLiraSign } from 'react-icons/fa'
 
 class MultiPageQuiz extends Component {
 	static propTypes = {
@@ -36,9 +35,12 @@ class MultiPageQuiz extends Component {
 						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)
-			else if (section === 'universal_quiz')
+			else if (
+				section === 'universal_quiz' ||
+				section === 'psychology_quiz'
+			)
 				answers = (
-					<UniversalAnswers
+					<PsychologyAndUniversalAnswers
 						questionNumber={index}
 						answers={question.answers}
 						questionId={question.id}
@@ -53,14 +55,6 @@ class MultiPageQuiz extends Component {
 						answers={question.answers}
 						questionId={question.id}
 						finishedData={finishedData}
-						ref={(ref) => this.setState({ answersRef: ref })}
-					/>
-				)
-			else if (section === 'psychology_quiz')
-				answers = (
-					<PsychologyAnswers
-						answers={question.answers}
-						questionId={question.id}
 						ref={(ref) => this.setState({ answersRef: ref })}
 					/>
 				)

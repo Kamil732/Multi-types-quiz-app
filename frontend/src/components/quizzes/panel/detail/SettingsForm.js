@@ -320,8 +320,7 @@ class SettingsForm extends Component {
 							</div>
 						</div>
 
-						{data.section.name === 'knowledge_quiz' ||
-						data.section.name === 'universal_quiz' ? (
+						{data.section.name !== 'preferential_quiz' ? (
 							<>
 								{errors.one_page_questions ? (
 									<div className="message-box error">

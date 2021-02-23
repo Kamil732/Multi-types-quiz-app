@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+
 import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
-import PsychologyAnswers from '../../../components/quizzes/detail/answers/PsychologyAnswers'
 import PreferentailAnswers from '../../../components/quizzes/detail/answers/PreferentailAnswers'
-import UniversalAnswers from '../../../components/quizzes/detail/answers/UniversalAnswers'
+import PsychologyAndUniversalAnswers from '../../../components/quizzes/detail/answers/PsychologyAndUniversalAnswers'
 
 class OnePageQuiz extends Component {
 	static propTypes = {
@@ -27,9 +27,12 @@ class OnePageQuiz extends Component {
 						finishedData={finishedData}
 					/>
 				)
-			else if (section === 'universal_quiz')
+			else if (
+				section === 'universal_quiz' ||
+				section === 'psychology_quiz'
+			)
 				answers = (
-					<UniversalAnswers
+					<PsychologyAndUniversalAnswers
 						questionNumber={index}
 						answers={question.answers}
 						questionId={question.id}
@@ -43,13 +46,6 @@ class OnePageQuiz extends Component {
 						answers={question.answers}
 						questionId={question.id}
 						finishedData={finishedData}
-					/>
-				)
-			else if (section === 'psychology_quiz')
-				answers = (
-					<PsychologyAnswers
-						answers={question.answers}
-						questionId={question.id}
 					/>
 				)
 
