@@ -7,6 +7,7 @@ from .models import (
     Question,
     Category,
     Section,
+    PsychologyResults,
     Answer
 )
 
@@ -24,6 +25,7 @@ class QuizAdmin(admin.ModelAdmin):
 admin.site.register(Quiz, QuizAdmin)
 admin.site.register(QuizFeedback)
 admin.site.register(QuizPunctation)
+admin.site.register(PsychologyResults)
 admin.site.register(Category)
 admin.site.register(Section)
 
