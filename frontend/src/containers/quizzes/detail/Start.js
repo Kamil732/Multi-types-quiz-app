@@ -203,7 +203,8 @@ class Start extends Component {
 													</span>
 												</span>
 											</p>
-											<p>{finished_data.summery}</p>
+											<h3>{finished_data.summery[0]}</h3>
+											<p>{finished_data.summery[1]}</p>
 										</>
 									)}
 								</div>

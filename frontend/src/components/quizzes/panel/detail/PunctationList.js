@@ -71,7 +71,8 @@ class PunctationList extends Component {
 			// Update data
 			for (let i = 0; i < this.dataRefs.length; i++)
 				this.data[i] = {
-					summery: this.dataRefs[i].summery.value(), // .value() is function because summery is component
+					result: this.dataRefs[i].result.value,
+					description: this.dataRefs[i].description.value(), // .value() is function because summery is component
 					from_score: sectionKnowledgeOrUniversal
 						? parseInt(this.dataRefs[i].from_score.value)
 						: 0,
@@ -195,13 +196,34 @@ class PunctationList extends Component {
 						</div>
 					) : null}
 					<div className="form-control">
-						<label className="form-control__label">Summery:</label>
-						<Textarea
-							id={`summery-${index}`}
+						<label className="form-control__label">Result:</label>
+						<input
+							type="text"
+							id={`result-${index}`}
 							data-id={index}
 							onChange={this.hasChanged}
-							name="summery"
-							defaultValue={punctation.summery}
+							name="result"
+							className="form-control__input"
+							ref={(ref) =>
+								(this.dataRefs[index] = {
+									...this.dataRefs[index],
+									result: ref,
+								})
+							}
+							defaultValue={punctation.result}
+							required
+						/>
+					</div>
+					<div className="form-control">
+						<label className="form-control__label">
+							Description:
+						</label>
+						<Textarea
+							id={`description-${index}`}
+							data-id={index}
+							onChange={this.hasChanged}
+							name="description"
+							defaultValue={punctation.description}
 							className="form-control__input form-control__textarea"
 							placeholder="Pass the description..."
 							rows="3"
@@ -209,7 +231,7 @@ class PunctationList extends Component {
 							ref={(ref) =>
 								(this.dataRefs[index] = {
 									...this.dataRefs[index],
-									summery: ref,
+									description: ref,
 								})
 							}
 						/>

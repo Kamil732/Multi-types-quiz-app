@@ -75,7 +75,8 @@ class Punctation extends Component {
 				punctations: [
 					...punctations,
 					{
-						summery: '',
+						result: '',
+						description: '',
 						from_score: this.props.data.max_score,
 						to_score: this.props.data.max_score,
 					},
@@ -101,7 +102,8 @@ class Punctation extends Component {
 		for (let i = 0; i < this.state.punctations.length; i++) {
 			const { section, max_score } = this.props.data
 			const sectionKnowledgeOrUniversal =
-				section === 'knowledge_quiz' || section === 'universal_quiz'
+				section.name === 'knowledge_quiz' ||
+				section.name === 'universal_quiz'
 
 			data.push({
 				from_score: sectionKnowledgeOrUniversal
@@ -110,7 +112,8 @@ class Punctation extends Component {
 				to_score: sectionKnowledgeOrUniversal
 					? parseInt(document.getElementById(`to-score-${i}`).value)
 					: max_score,
-				summery: document.getElementById(`summery-${i}`).value,
+				result: document.getElementById(`result-${i}`).value,
+				description: document.getElementById(`description-${i}`).value,
 			})
 		}
 
