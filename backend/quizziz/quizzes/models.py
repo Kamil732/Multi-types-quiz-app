@@ -69,7 +69,8 @@ class Quiz(models.Model):
 
 class QuizPunctation(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='punctations')
-    summery = models.TextField()
+    result = models.CharField(max_length=100)
+    description = models.TextField()
 
     # Universal and knowledge quiz
     from_score = models.PositiveIntegerField()
@@ -109,7 +110,7 @@ class Question(models.Model):
 
 
 class PsychologyResults(models.Model):
-    result = models.CharField(max_length=50)
+    result = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     image_url = models.URLField(blank=True)
 

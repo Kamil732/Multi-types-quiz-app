@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 
-from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Section, Category, Question, Answer
+from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Section, Category, Question, PsychologyResults, Answer
 
 from . import serializers, permissions, mixins
 
@@ -97,6 +97,9 @@ class QuizFinishAPIView(views.APIView):
         quiz_slug = self.kwargs.get('quiz_slug')
         section = request.data.get('section')
 
+        # Psychology
+        results = []
+
         retrieveData = {
             'summery': '',
             'points': 0,
@@ -122,23 +125,21 @@ class QuizFinishAPIView(views.APIView):
                     _('You have not answered all the questions'))
 
             if section == 'knowledge_quiz':
-                # Get all the correct answers from question
                 correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
                     question__id=question_id, is_correct=True).values('slug')]
 
                 # Add 1 to points if it is correct answer
                 retrieveData['points'] += 1 if answer_slug in correct_answers else 0
                 retrieveData['data'].append({
+                    'correct_answers': correct_answers,
                     'questionId': question_id,
                     'selected': answer_slug,
-                    'correct_answers': correct_answers,
                 })
 
             elif section == 'universal_quiz':
                 points = int(Answer.objects.filter(question__id=question_id,
                                                    slug=answer_slug).values_list('points', flat=True).first())
 
-                # Add 1 to points if it is correct answer
                 retrieveData['points'] += points
                 retrieveData['data'].append({
                     'questionId': question_id,
@@ -149,22 +150,37 @@ class QuizFinishAPIView(views.APIView):
                 answer.answered_times += 1
                 answer.save()
 
-                # Add 1 to points if it is correct answer
                 retrieveData['data'].append({
                     'questionId': question_id,
                     'selected': answer_slug,
                 })
+
             elif section == 'psychology_quiz':
-                pass
+                answer = Answer.objects.get(question__id=question_id, slug=answer_slug)
+                results.append(answer.results.values_list('id', flat=True))
+
+                retrieveData['data'].append({
+                    'questionId': question_id,
+                    'selected': answer_slug,
+                })
 
         if section == 'knowledge_quiz' or section == 'universal_quiz':
             quiz.answers_data.append(retrieveData['points'])
             quiz.save()
 
             summery = QuizPunctation.objects.filter(
-                quiz=quiz, from_score__lte=retrieveData['points'], to_score__gte=retrieveData['points']).values_list('summery', flat=True).first()
-        else:
-            summery = QuizPunctation.objects.filter(quiz=quiz).values_list('summery', flat=True).first()
+                quiz=quiz, from_score__lte=retrieveData['points'], to_score__gte=retrieveData['points']).values_list('result', 'description').first()
+
+        elif section == 'preferential_quiz':
+            summery = QuizPunctation.objects.filter(quiz=quiz).values_list('result', 'description').first()
+
+        elif section == 'psychology_quiz':
+            results = [x for result in results for x in result]
+            most_occur_result_id = max(results, key=results.count)
+
+            summery = PsychologyResults.objects.filter(
+                id=most_occur_result_id).values_list('result', 'description').first()
+
         retrieveData['summery'] = summery
 
         return Response(retrieveData, status=status.HTTP_200_OK)
@@ -183,13 +199,13 @@ class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateA
         quiz_slug = self.kwargs.get('quiz_slug')
 
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
-        new_models = [QuizPunctation(quiz=quiz, summery=model['summery'], from_score=model['from_score'],
+        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'],
                                      to_score=model['to_score']) for model in request.data]
 
         bulk_sync(
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
-            fields=['summery', 'from_score', 'to_score'],
+            fields=['result', 'description', 'from_score', 'to_score'],
             key_fields=('id',)
         )
 

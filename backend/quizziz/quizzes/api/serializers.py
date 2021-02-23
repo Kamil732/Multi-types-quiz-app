@@ -179,8 +179,9 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
 
     def create(self, data):
         quiz = Quiz.objects.create(**data)
-        QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0,
-                                      summery="That's the end of hard questions :)")
+        if not(data['section'].name == 'psychology_quiz'):
+            QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0,
+                                          summery="That's the end of hard questions :)")
 
         return quiz
 
