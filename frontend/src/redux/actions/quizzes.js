@@ -156,7 +156,8 @@ export const updatePunctations = (data, author_slug, quiz_slug) => async (
 			await dispatch(refreshToken())
 			if (getState().auth.token)
 				await dispatch(updatePunctations(data, author_slug, quiz_slug))
-		}
+		} else if (err.response)
+			dispatch(addError(err.response.data, err.response.status))
 	}
 }
 

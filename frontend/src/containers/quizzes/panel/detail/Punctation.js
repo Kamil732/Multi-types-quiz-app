@@ -63,6 +63,7 @@ class Punctation extends Component {
 	resetForm = () => {
 		const { punctations } = this.props
 
+		this.props.clearErrors()
 		this.setState({
 			punctations,
 			hasChanged: false,
@@ -112,7 +113,7 @@ class Punctation extends Component {
 			})
 	}
 
-	onSubmit = (e) => {
+	onSubmit = async (e) => {
 		e.preventDefault()
 
 		let data = []
@@ -147,13 +148,15 @@ class Punctation extends Component {
 				})
 		}
 
-		this.props.updatePunctations(
+		await this.props.clearErrors()
+		await this.props.updatePunctations(
 			data,
 			this.props.data.author_slug,
 			this.props.data.slug
 		)
 
-		this.setState({ hasChanged: false })
+		if (Object.keys(this.props.errors).length === 0)
+			this.setState({ hasChanged: false })
 	}
 
 	componentDidMount = () => this.getPunctations()
@@ -183,13 +186,6 @@ class Punctation extends Component {
 						</div>
 					) : (
 						<form onSubmit={this.onSubmit}>
-							{errors.detail ? (
-								<div className="message-box error">
-									<p className="message-box__text">
-										{errors.detail}
-									</p>
-								</div>
-							) : null}
 							<PunctationList
 								punctations={punctations}
 								section_name={section_name}
@@ -234,6 +230,13 @@ class Punctation extends Component {
 									</>
 								) : null}
 
+								{errors.detail ? (
+									<div className="message-box error">
+										<p className="message-box__text">
+											{errors.detail}
+										</p>
+									</div>
+								) : null}
 								<div className="inline-btns f-w">
 									<button
 										type="reset"
