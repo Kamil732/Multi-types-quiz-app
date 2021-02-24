@@ -25,10 +25,12 @@ class PunctationList extends Component {
 	}
 
 	recalculateRatings() {
-		const { max_score } = this.props
+		const { max_score, section_name } = this.props
 
 		const shown = this.dataRefs.length
 		let expectedFrom = 0
+
+		if (section_name === 'psychology_quiz') return
 
 		for (let i = 0; i < shown; i++) {
 			const { from_score, to_score } = this.dataRefs[i]
@@ -68,18 +70,26 @@ class PunctationList extends Component {
 			const sectionKnowledgeOrUniversal =
 				section_name === 'knowledge_quiz' ||
 				section_name === 'universal_quiz'
+
 			// Update data
-			for (let i = 0; i < this.dataRefs.length; i++)
-				this.data[i] = {
-					result: this.dataRefs[i].result.value,
-					description: this.dataRefs[i].description.value(), // .value() is function because summery is component
-					from_score: sectionKnowledgeOrUniversal
-						? parseInt(this.dataRefs[i].from_score.value)
-						: 0,
-					to_score: sectionKnowledgeOrUniversal
-						? parseInt(this.dataRefs[i].to_score.value)
-						: max_score,
-				}
+			for (let i = 0; i < this.dataRefs.length; i++) {
+				if (section_name === 'psychology_quiz')
+					this.data[i] = {
+						result: this.dataRefs[i].result.value,
+						description: this.dataRefs[i].description.value(), // .value() is function because summery is component
+					}
+				else
+					this.data[i] = {
+						result: this.dataRefs[i].result.value,
+						description: this.dataRefs[i].description.value(), // .value() is function because summery is component
+						from_score: sectionKnowledgeOrUniversal
+							? parseInt(this.dataRefs[i].from_score.value)
+							: 0,
+						to_score: sectionKnowledgeOrUniversal
+							? parseInt(this.dataRefs[i].to_score.value)
+							: max_score,
+					}
+			}
 
 			// array of booleans, true if object has change otherwise false
 			const hasChangedArray = this.data.map(
@@ -195,6 +205,7 @@ class PunctationList extends Component {
 							</div>
 						</div>
 					) : null}
+
 					<div className="form-control">
 						<label className="form-control__label">Result:</label>
 						<input
@@ -214,6 +225,7 @@ class PunctationList extends Component {
 							required
 						/>
 					</div>
+
 					<div className="form-control">
 						<label className="form-control__label">
 							Description:

@@ -7,6 +7,7 @@ import {
 	getQuizPunctations,
 	updatePunctations,
 } from '../../../../redux/actions/quizzes'
+import { clearErrors } from '../../../../redux/actions/errors'
 
 import Title from '../../../../common/Title'
 import CircleLoader from '../../../../components/loaders/CircleLoader'
@@ -16,8 +17,10 @@ class Punctation extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		punctations: PropTypes.array,
+		errors: PropTypes.object,
 		getQuizPunctations: PropTypes.func.isRequired,
 		updatePunctations: PropTypes.func.isRequired,
+		clearErrors: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -67,9 +70,13 @@ class Punctation extends Component {
 	}
 
 	addGrade = () => {
+		const section_name = this.props.data.section.name
 		const { punctations } = this.state
 
-		if (punctations.length - 1 < this.props.data.max_score)
+		if (
+			section_name !== 'psychology_quiz' &&
+			punctations.length - 1 < this.props.data.max_score
+		)
 			this.setState({
 				hasChanged: true,
 				punctations: [
@@ -79,6 +86,17 @@ class Punctation extends Component {
 						description: '',
 						from_score: this.props.data.max_score,
 						to_score: this.props.data.max_score,
+					},
+				],
+			})
+		else
+			this.setState({
+				hasChanged: true,
+				punctations: [
+					...punctations,
+					{
+						result: '',
+						description: '',
 					},
 				],
 			})
@@ -105,16 +123,28 @@ class Punctation extends Component {
 				section.name === 'knowledge_quiz' ||
 				section.name === 'universal_quiz'
 
-			data.push({
-				from_score: sectionKnowledgeOrUniversal
-					? parseInt(document.getElementById(`from-score-${i}`).value)
-					: 0,
-				to_score: sectionKnowledgeOrUniversal
-					? parseInt(document.getElementById(`to-score-${i}`).value)
-					: max_score,
-				result: document.getElementById(`result-${i}`).value,
-				description: document.getElementById(`description-${i}`).value,
-			})
+			if (section === 'psychology_quiz')
+				data.push({
+					result: document.getElementById(`result-${i}`).value,
+					description: document.getElementById(`description-${i}`)
+						.value,
+				})
+			else
+				data.push({
+					from_score: sectionKnowledgeOrUniversal
+						? parseInt(
+								document.getElementById(`from-score-${i}`).value
+						  )
+						: 0,
+					to_score: sectionKnowledgeOrUniversal
+						? parseInt(
+								document.getElementById(`to-score-${i}`).value
+						  )
+						: max_score,
+					result: document.getElementById(`result-${i}`).value,
+					description: document.getElementById(`description-${i}`)
+						.value,
+				})
 		}
 
 		this.props.updatePunctations(
@@ -132,9 +162,12 @@ class Punctation extends Component {
 		if (prevProps.data !== this.props.data) this.getPunctations()
 	}
 
+	componentWillUnmount = () => this.props.clearErrors()
+
 	render() {
 		const { loading, hasChanged, punctations } = this.state
-		const { data } = this.props
+		const { data, errors } = this.props
+		const section_name = data.section.name
 
 		if (!loading && Object.keys(data).length === 0)
 			return <Redirect to="/not-found" />
@@ -150,9 +183,16 @@ class Punctation extends Component {
 						</div>
 					) : (
 						<form onSubmit={this.onSubmit}>
+							{errors.detail ? (
+								<div className="message-box error">
+									<p className="message-box__text">
+										{errors.detail}
+									</p>
+								</div>
+							) : null}
 							<PunctationList
 								punctations={punctations}
-								section_name={data.section.name}
+								section_name={section_name}
 								max_score={data.max_score}
 								hasChanged={(state) =>
 									this.setState({ hasChanged: state })
@@ -160,15 +200,17 @@ class Punctation extends Component {
 							/>
 
 							<div className="card__body">
-								{data.section.name === 'knowledge_quiz' ||
-								data.section.name === 'universal_quiz' ? (
+								{data.section.name !== 'preferential_quiz' ? (
 									<>
 										<div className="inline-btns">
 											<button
 												type="button"
 												className={`btn ${
+													section_name !==
+														'psychology_quiz' &&
 													punctations.length - 1 >=
-													this.props.data.max_score
+														this.props.data
+															.max_score
 														? 'btn__disabled'
 														: ''
 												}`}
@@ -222,11 +264,13 @@ class Punctation extends Component {
 
 const mapStateToProps = (state) => ({
 	punctations: state.quizzes.quizzes.item.punctations,
+	errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
 	getQuizPunctations,
 	updatePunctations,
+	clearErrors,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Punctation)
