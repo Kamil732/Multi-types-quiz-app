@@ -233,7 +233,7 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         # Check if result is unique
         for model in new_models:
             if ([x.result for x in new_models].count(model.result) > 1):
-                raise ValidationError(_('There cannot be more than 1 result with the same text'))
+                raise ValidationError({'detail': _('There cannot be more than 1 result with the same text')})
 
         fields = ['result', 'description', 'from_score', 'to_score'] if not(
             section == 'psychology_quiz') else ['result', 'description']

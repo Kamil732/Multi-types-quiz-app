@@ -221,13 +221,13 @@ class QuizPunctationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = QuizPunctation
-        exclude = ('id', 'quiz',)
+        exclude = ('id', 'quiz', 'slug',)
 
 
 class PsychologyResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = PsychologyResults
-        exclude = ('id', 'quiz',)
+        exclude = ('id', 'quiz', 'slug',)
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):
