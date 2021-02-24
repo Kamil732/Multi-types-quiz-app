@@ -20,17 +20,6 @@ class QuizListMixin(object):
     }
 
 
-class QuizPunctationMixin(object):
-    serializer_class = serializers.QuizPunctationSerializer
-    permission_classes = (IsOwnerEverything,)
-
-    def get_queryset(self):
-        author_slug = self.kwargs.get('author_slug')
-        quiz_slug = self.kwargs.get('quiz_slug')
-
-        return QuizPunctation.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
-
-
 class QuestionMixin(object):
     permission_classes = (IsOwner,)
     serializer_class = serializers.QuestionSerializer

@@ -186,7 +186,31 @@ class QuizFinishAPIView(views.APIView):
         return Response(retrieveData, status=status.HTTP_200_OK)
 
 
-class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateAPIView, generics.UpdateAPIView):
+class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIView):
+    permission_classes = (permissions.IsOwnerEverything,)
+
+    def get_serializer_class(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+
+        section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
+            'section__name', flat=True).first()
+
+        if not(section == 'psychology_quiz'):
+            return serializers.QuizPunctationSerializer
+        return serializers.PsychologyResultSerializer
+
+    def get_queryset(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+
+        section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
+            'section__name', flat=True).first()
+
+        if not(section == 'psychology_quiz'):
+            return QuizPunctation.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug).order_by('id')
+        return PsychologyResults.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug).order_by('id')
+
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
@@ -198,15 +222,27 @@ class QuizPunctationListAPIView(mixins.QuizPunctationMixin, generics.ListCreateA
         author_slug = self.kwargs.get('author_slug')
         quiz_slug = self.kwargs.get('quiz_slug')
 
+        section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
+            'section__name', flat=True).first()
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+
         new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'],
-                                     to_score=model['to_score']) for model in request.data]
+                                     to_score=model['to_score']) for model in request.data] if not(section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'],
+                                                                                                                                                         description=model['description']) for model in request.data]
+
+        # Check if result is unique
+        for model in new_models:
+            if ([x.result for x in new_models].count(model.result) > 1):
+                raise ValidationError(_('There cannot be more than 1 result with the same text'))
+
+        fields = ['result', 'description', 'from_score', 'to_score'] if not(
+            section == 'psychology_quiz') else ['result', 'description']
 
         bulk_sync(
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
-            fields=['result', 'description', 'from_score', 'to_score'],
-            key_fields=('id',)
+            fields=fields,
+            key_fields=('result',)
         )
 
         return Response(request.data, status=status.HTTP_200_OK)

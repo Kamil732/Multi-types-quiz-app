@@ -20,6 +20,7 @@ class QuestionAdminInline(admin.StackedInline):
 class QuizAdmin(admin.ModelAdmin):
     model = Quiz
     inlines = [QuestionAdminInline]
+    readonly_fields = ('id',)
 
 
 admin.site.register(Quiz, QuizAdmin)

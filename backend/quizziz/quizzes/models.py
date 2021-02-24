@@ -71,6 +71,8 @@ class QuizPunctation(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='punctations')
     result = models.CharField(max_length=100)
     description = models.TextField()
+    slug = AutoSlugField(populate_from='result',
+                         unique_with=['quiz'], max_length=120)
 
     # Universal and knowledge quiz
     from_score = models.PositiveIntegerField()
@@ -110,9 +112,11 @@ class Question(models.Model):
 
 
 class PsychologyResults(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='results')
     result = models.CharField(max_length=100)
     description = models.TextField(blank=True)
-    image_url = models.URLField(blank=True)
+    slug = AutoSlugField(populate_from='result',
+                         unique_with=['quiz'], max_length=120)
 
     def __str__(self):
         return self.result
@@ -143,7 +147,7 @@ class Answer(models.Model):
     is_correct = models.BooleanField(default=False)
 
     # Psychology
-    results = models.ManyToManyField(PsychologyResults, blank=True)
+    results = models.ManyToManyField(PsychologyResults, blank=True, related_name='answers')
 
     # Preferentail
     answered_times = models.PositiveIntegerField(default=0)
