@@ -45,17 +45,15 @@ class Detail extends Component {
 							title={data.title}
 						/>
 					</div>
-					{isOwner ? (
-						<div className="card__footer">
-							<Link to={`/panel/dashboard/${data.slug}/summery`}>
-								<button className="btn btn__submit">
-									Edit as an admin
-								</button>
-							</Link>
-						</div>
-					) : null}
 				</div>
-				<div className="card__footer">
+				<div className="card__footer inline-btns f-w">
+					{isOwner ? (
+						<Link to={`/panel/dashboard/${data.slug}/summery`}>
+							<button className="btn btn__submit">
+								Edit as an admin
+							</button>
+						</Link>
+					) : null}
 					<Link to={`/quizzes/${author_slug}/${data.slug}/start`}>
 						<button className="btn btn__submit btn__contrast">
 							START

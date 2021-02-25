@@ -96,7 +96,8 @@
 	&.f-w {
 		flex-wrap: nowrap;
 
-		& > button {
+		& > button,
+		& > * {
 			width: 100%;
 		}
 	}
