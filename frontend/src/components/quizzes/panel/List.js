@@ -38,14 +38,13 @@ class List extends Component {
 			confirmButtonText: 'delete',
 		}).then((res) => {
 			if (res.isConfirmed) {
-				this.props.deleteQuiz(author_slug, quiz_slug)
-
 				Swal.fire(
 					'Deleted!',
 					'Your quiz has been deleted',
 					'success'
 				).then((res) => {
-					this.props.history.push('/refresh')
+					this.props.deleteQuiz(author_slug, quiz_slug)
+					this.props.history.push('/')
 					this.props.history.replace('/panel/dashboard')
 				})
 			}
