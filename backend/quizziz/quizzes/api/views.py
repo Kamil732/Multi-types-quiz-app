@@ -227,8 +227,8 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
         new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'],
-                                     to_score=model['to_score']) for model in request.data] if not(section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'],
-                                                                                                                                                         description=model['description']) for model in request.data]
+                                     to_score=model['to_score'], slug=str(index)) for (index, model) in enumerate(request.data)] if not(section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'],
+                                                                                                                                                                                              description=model['description'], slug=str(index)) for (index, model) in enumerate(request.data)]
 
         # Check if result is unique
         for model in new_models:
@@ -242,7 +242,7 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
             fields=fields,
-            key_fields=('result',)
+            key_fields=('slug',)  # slug is index from enumerate
         )
 
         return Response(request.data, status=status.HTTP_200_OK)
