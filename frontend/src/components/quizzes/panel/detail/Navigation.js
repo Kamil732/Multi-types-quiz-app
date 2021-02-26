@@ -8,7 +8,7 @@ import { ImHome } from 'react-icons/im'
 import { BsDisplayFill } from 'react-icons/bs'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { MdWidgets } from 'react-icons/md'
-import { FaCheckCircle, FaEdit } from 'react-icons/fa'
+import { FaEdit } from 'react-icons/fa'
 import { GiPadlock } from 'react-icons/gi'
 
 function Navigation(props) {
@@ -57,16 +57,10 @@ function Navigation(props) {
 				</span>
 			</ActiveTag>
 			<ActiveTag
-				to={[`/panel/dashboard/${props.quiz_slug}/punctation`]}
-				className="horizontal-menu__item"
-			>
-				<span className="icon-text">
-					<FaCheckCircle className="icon-text__icon" />
-					Punctation
-				</span>
-			</ActiveTag>
-			<ActiveTag
-				to={[`/panel/dashboard/${props.quiz_slug}/edit/questions`]}
+				to={[
+					`/panel/dashboard/${props.quiz_slug}/edit/punctation`,
+					`/panel/dashboard/${props.quiz_slug}/edit/questions`,
+				]}
 				className="horizontal-menu__item"
 			>
 				<span className="icon-text">

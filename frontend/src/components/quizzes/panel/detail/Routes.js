@@ -2,7 +2,6 @@ import React from 'react'
 import { Redirect, Switch } from 'react-router-dom'
 import PrivateRoute from '../../../../common/PrivateRoute'
 import Privacy from '../../../../containers/quizzes/panel/detail/Privacy'
-import Punctation from '../../../../containers/quizzes/panel/detail/Punctation'
 import Settings from '../../../../containers/quizzes/panel/detail/Settings'
 import Summery from '../../../../containers/quizzes/panel/detail/Summery'
 import Widget from '../../../../containers/quizzes/panel/detail/Widget'
@@ -30,11 +29,6 @@ function Routes(props) {
 				exact
 				path="/panel/dashboard/:quiz_slug/privacy"
 				component={() => <Privacy {...props} />}
-			/>
-			<PrivateRoute
-				exact
-				path="/panel/dashboard/:quiz_slug/punctation"
-				component={() => <Punctation {...props} />}
 			/>
 			<PrivateRoute
 				path="/panel/dashboard/:quiz_slug/edit"

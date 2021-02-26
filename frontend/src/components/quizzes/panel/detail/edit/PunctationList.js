@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Textarea from '../../../Textarea'
+import Textarea from '../../../../Textarea'
 
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io'
 
-import objectsEquals from '../../../../helpers/objectsEquals'
+import objectsEquals from '../../../../../helpers/objectsEquals'
+
 class PunctationList extends Component {
 	static propTypes = {
 		max_score: PropTypes.number.isRequired,

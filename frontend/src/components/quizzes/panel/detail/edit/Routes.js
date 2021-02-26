@@ -4,7 +4,8 @@ import PropTypes from 'prop-types'
 import PrivateRoute from '../../../../../common/PrivateRoute'
 
 import Navigation from './Navigation'
-import EditQuestions from '../../../../../containers/quizzes/panel/detail/edit/EditQuestions'
+import Questions from '../../../../../containers/quizzes/panel/detail/edit/Questions'
+import Punctation from '../../../../../containers/quizzes/panel/detail/edit/Punctation'
 
 class Routes extends Component {
 	static propTypes = {
@@ -20,8 +21,13 @@ class Routes extends Component {
 				<Switch>
 					<PrivateRoute
 						exact
+						path="/panel/dashboard/:quiz_slug/edit/punctation"
+						component={() => <Punctation {...this.props} />}
+					/>
+					<PrivateRoute
+						exact
 						path="/panel/dashboard/:quiz_slug/edit/questions"
-						component={() => <EditQuestions {...this.props} />}
+						component={() => <Questions {...this.props} />}
 					/>
 
 					<Redirect to="/not-found" />

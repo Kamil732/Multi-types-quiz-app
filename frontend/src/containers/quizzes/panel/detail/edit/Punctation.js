@@ -6,12 +6,12 @@ import { Redirect } from 'react-router-dom'
 import {
 	getQuizPunctations,
 	updatePunctations,
-} from '../../../../redux/actions/quizzes'
-import { clearErrors } from '../../../../redux/actions/errors'
+} from '../../../../../redux/actions/quizzes'
+import { clearErrors } from '../../../../../redux/actions/errors'
 
-import Title from '../../../../common/Title'
-import CircleLoader from '../../../../components/loaders/CircleLoader'
-import PunctationList from '../../../../components/quizzes/panel/detail/PunctationList'
+import Title from '../../../../../common/Title'
+import CircleLoader from '../../../../../components/loaders/CircleLoader'
+import PunctationList from '../../../../../components/quizzes/panel/detail/edit/PunctationList'
 
 class Punctation extends Component {
 	static propTypes = {
