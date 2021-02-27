@@ -72,32 +72,33 @@ class ImageUrlPreview extends Component {
 		if (success === false) image_url = defaultImage
 
 		return (
-			<div className="img-preview">
+			<>
 				<h3>Current Image:</h3>
+				<div className="img-preview">
+					{loading === true ? (
+						<SpinLoader />
+					) : (
+						<>
+							<img
+								src={image_url}
+								alt=""
+								className="img-preview__img"
+							/>
 
-				{loading === true ? (
-					<SpinLoader />
-				) : (
-					<>
-						<img
-							src={image_url}
-							alt=""
-							className="img-preview__img"
-						/>
-
-						{success === false ? (
-							<div className="message-box error">
-								<p className="message-box__text">
-									The URL you entered either doesn't exist or
-									is invalid
-								</p>
-							</div>
-						) : (
-							''
-						)}
-					</>
-				)}
-			</div>
+							{success === false ? (
+								<div className="message-box error">
+									<p className="message-box__text">
+										The URL you entered either doesn't exist
+										or is invalid
+									</p>
+								</div>
+							) : (
+								''
+							)}
+						</>
+					)}
+				</div>
+			</>
 		)
 	}
 }

@@ -3,11 +3,17 @@
 	text-align: center;
 }
 
-.img-preview__img {
-	max-width: 100%;
-	height: auto;
+.img-preview {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
 	border: 1px solid grey;
-	vertical-align: middle;
+
+	&__img {
+		max-width: 100%;
+		height: auto;
+	}
 }
 
 .quiz-detail {
