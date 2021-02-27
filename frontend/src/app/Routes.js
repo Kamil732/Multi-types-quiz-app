@@ -13,8 +13,8 @@ import Panel from '../components/quizzes/panel/Panel'
 
 function Routes() {
 	return (
-		<section>
-			<Switch>
+		<Switch>
+			<section className="content-wrap container-mobile">
 				<Route exact path="/" component={Home} />
 				<Route
 					path="/quizzes/:author_slug/:quiz_slug"
@@ -40,9 +40,10 @@ function Routes() {
 				<PrivateRoute path="/panel/" component={Panel} />
 
 				<Route path="/not-found" component={NotFound} />
-				<Redirect to="/not-found" />
-			</Switch>
-		</section>
+			</section>
+
+			<Redirect to="/not-found" />
+		</Switch>
 	)
 }
 

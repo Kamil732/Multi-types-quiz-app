@@ -7,16 +7,23 @@ import Dashboard from '../../../containers/quizzes/panel/Dashboard'
 import Detail from './detail/Detail'
 
 function Routes() {
-    return (
-        <Switch>
-            <PrivateRoute exact path="/panel/dashboard" component={Dashboard} />
-            <PrivateRoute exact path="/panel/account-settings" component={AccountSettings} />
-            <PrivateRoute exact path="/panel/create-quiz" component={Create} />
-            <PrivateRoute path="/panel/dashboard/:quiz_slug" component={Detail} />
+	return (
+		<Switch>
+			<PrivateRoute exact path="/panel/dashboard" component={Dashboard} />
+			<PrivateRoute
+				exact
+				path="/panel/account-settings"
+				component={AccountSettings}
+			/>
+			<PrivateRoute exact path="/panel/create-quiz" component={Create} />
+			<PrivateRoute
+				path="/panel/dashboard/:quiz_slug"
+				component={Detail}
+			/>
 
-            <Redirect to="/not-found" />
-        </Switch>
-    )
+			<Redirect to="/not-found" />
+		</Switch>
+	)
 }
 
 export default Routes

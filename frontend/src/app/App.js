@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import '../assets/css/main.css'
 import { BrowserRouter as Router } from 'react-router-dom'
 
@@ -24,9 +24,7 @@ class App extends Component {
 				<Router>
 					<Header />
 
-					<section className="content-wrap container-mobile">
-						<Routes />
-					</section>
+					<Routes />
 
 					<Footer />
 				</Router>
@@ -35,4 +33,4 @@ class App extends Component {
 	}
 }
 
-export default App;
+export default App

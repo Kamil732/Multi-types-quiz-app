@@ -11,117 +11,122 @@ import { clearErrors } from '../../../redux/actions/errors'
 import Title from '../../../common/Title'
 
 class LoginForm extends Component {
-    static propTypes = {
-        errors: PropTypes.object,
-        clearErrors: PropTypes.func.isRequired,
-        login: PropTypes.func.isRequired,
-    }
+	static propTypes = {
+		errors: PropTypes.object,
+		clearErrors: PropTypes.func.isRequired,
+		login: PropTypes.func.isRequired,
+	}
 
-    state = {
-        email: '',
-        password: '',
-    }
+	state = {
+		email: '',
+		password: '',
+	}
 
-    componentWillUnmount = () => this.props.clearErrors()
+	componentWillUnmount = () => this.props.clearErrors()
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value })
+	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
-    onSubmit = e => {
-        e.preventDefault()
+	onSubmit = (e) => {
+		e.preventDefault()
 
-        this.props.login(this.state.email, this.state.password)
-    }
+		this.props.login(this.state.email, this.state.password)
+	}
 
-    render() {
-        const { email, password } = this.state
+	render() {
+		const { errors } = this.props
+		const { email, password } = this.state
 
-        return (
-            <>
-                <Title title="Login" />
-                <img className="card-inline__img" src={login_img} alt="login" />
+		return (
+			<>
+				<Title title="Login" />
+				<img className="card-inline__img" src={login_img} alt="login" />
 
-                <div className="card-inline__body auth-form">
-                    <form onSubmit={this.onSubmit}>
-                        {
-                            this.props.errors.detail ? (
-                                <div className="message-box error">
-                                    <p className="message-box__text">{this.props.errors.detail}</p>
-                                </div>
-                            ) : ''
-                        }
+				<div className="card-inline__body auth-form">
+					<form onSubmit={this.onSubmit}>
+						{errors.detail ? (
+							<div className="message-box error">
+								<p className="message-box__text">
+									{errors.detail}
+								</p>
+							</div>
+						) : null}
 
-                        {
-                            this.props.errors.email ? (
-                                <div className="message-box error">
-                                    {
-                                        this.props.errors.email.map((error, index) => (
-                                            <p className="message-box__text" key={index}>{error}</p>
-                                        ))
-                                    }
-                                </div>
-                            ) : ''
-                        }
-                        <div className="form-control">
-                            <div className="icon-form">
-                                <span className="icon">
-                                    <MdEmail />
-                                </span>
+						{errors.email ? (
+							<div className="message-box error">
+								{errors.email.map((error, index) => (
+									<p
+										className="message-box__text"
+										key={index}
+									>
+										{error}
+									</p>
+								))}
+							</div>
+						) : null}
+						<div className="form-control">
+							<div className="icon-form">
+								<span className="icon">
+									<MdEmail />
+								</span>
 
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={email}
-                                    onChange={this.onChange}
-                                    className="form-control__input"
-                                    placeholder="Email..."
-                                    required
-                                />
-                            </div>
-                        </div>
+								<input
+									type="email"
+									name="email"
+									value={email}
+									onChange={this.onChange}
+									className="form-control__input"
+									placeholder="Email..."
+									required
+								/>
+							</div>
+						</div>
 
-                        {
-                            this.props.errors.password ? (
-                                <div className="message-box error">
-                                    {
-                                        this.props.errors.password.map((error, index) => (
-                                            <p className="message-box__text" key={index}>{error}</p>
-                                        ))
-                                    }
-                                </div>
-                            ) : ''
-                        }
-                        <div className="form-control">
-                            <div className="icon-form">
-                                <span className="icon">
-                                    <BsFillLockFill />
-                                </span>
-                                <input
-                                    type="password"
-                                    name="password"
-                                    value={password}
-                                    onChange={this.onChange}
-                                    className="form-control__input"
-                                    placeholder="Password..."
-                                    required
-                                />
-                            </div>
-                        </div>
+						{errors.password ? (
+							<div className="message-box error">
+								{errors.password.map((error, index) => (
+									<p
+										className="message-box__text"
+										key={index}
+									>
+										{error}
+									</p>
+								))}
+							</div>
+						) : null}
+						<div className="form-control">
+							<div className="icon-form">
+								<span className="icon">
+									<BsFillLockFill />
+								</span>
+								<input
+									type="password"
+									name="password"
+									value={password}
+									onChange={this.onChange}
+									className="form-control__input"
+									placeholder="Password..."
+									required
+								/>
+							</div>
+						</div>
 
-                        <button type="submit" className="btn btn__submit">Sign In</button>
-                    </form>
-                </div>
-            </>
-        )
-    }
+						<button type="submit" className="btn btn__submit">
+							Sign In
+						</button>
+					</form>
+				</div>
+			</>
+		)
+	}
 }
 
-const mapStateToProps = state => ({
-    errors: state.errors.messages,
+const mapStateToProps = (state) => ({
+	errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
-    login,
-    clearErrors,
+	login,
+	clearErrors,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm)
