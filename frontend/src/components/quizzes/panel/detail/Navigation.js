@@ -7,7 +7,6 @@ import ActiveTag from '../../../navigation/ActiveTag'
 import { ImHome } from 'react-icons/im'
 import { BsDisplayFill } from 'react-icons/bs'
 import { IoSettingsSharp } from 'react-icons/io5'
-import { MdWidgets } from 'react-icons/md'
 import { FaEdit } from 'react-icons/fa'
 import { GiPadlock } from 'react-icons/gi'
 
@@ -36,15 +35,6 @@ function Navigation(props) {
 				<span className="icon-text">
 					<IoSettingsSharp className="icon-text__icon" />
 					Settings
-				</span>
-			</ActiveTag>
-			<ActiveTag
-				to={[`/panel/dashboard/${props.quiz_slug}/widget`]}
-				className="horizontal-menu__item"
-			>
-				<span className="icon-text">
-					<MdWidgets className="icon-text__icon" />
-					Widget
 				</span>
 			</ActiveTag>
 			<ActiveTag
