@@ -9,36 +9,45 @@ import { GrUserSettings } from 'react-icons/gr'
 import { FaPlusCircle } from 'react-icons/fa'
 
 function Panel() {
-    return (
-        <div className="row">
-            <div className="col col-sm-3">
-                <nav className="vertical-menu card">
-                    <ActiveTag to={['/panel/dashboard']} className="vertical-menu__item">
-                        <span className="icon-text">
-                            <RiDashboardFill className="icon-text__icon" />
-                            Dashboard
-                        </span>
-                    </ActiveTag>
-                    <ActiveTag to={['/panel/account-settings']} className="vertical-menu__item">
-                        <span className="icon-text">
-                            <GrUserSettings className="icon-text__icon" />
-                            Account Settings
-                        </span>
-                    </ActiveTag>
-                    <ActiveTag to={['/panel/create-quiz']} className="vertical-menu__item">
-                        <span className="icon-text">
-                            <FaPlusCircle className="icon-text__icon" />
-                            Create Quiz
-                        </span>
-                    </ActiveTag>
-                </nav>
-                <Ad />
-            </div>
-            <div className="col col-sm-9">
-                <Routes />
-            </div>
-        </div>
-    )
+	return (
+		<div className="row">
+			<div className="col col-sm-3">
+				<nav className="vertical-menu card">
+					<ActiveTag
+						to={['/panel/dashboard']}
+						className="vertical-menu__item"
+					>
+						<span className="icon-text">
+							<RiDashboardFill className="icon-text__icon" />
+							Dashboard
+						</span>
+					</ActiveTag>
+					<ActiveTag
+						to={['/panel/account-settings']}
+						className="vertical-menu__item"
+					>
+						<span className="icon-text">
+							<GrUserSettings className="icon-text__icon" />
+							Account Settings
+						</span>
+					</ActiveTag>
+					<ActiveTag
+						to={['/panel/create-quiz']}
+						className="vertical-menu__item"
+					>
+						<span className="icon-text">
+							<FaPlusCircle className="icon-text__icon" />
+							Create Quiz
+						</span>
+					</ActiveTag>
+				</nav>
+				<Ad />
+			</div>
+			<div className="col col-sm-9">
+				<Routes />
+			</div>
+		</div>
+	)
 }
 
 export default Panel

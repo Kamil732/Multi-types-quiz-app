@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import {
 	getQuizPunctations,
@@ -196,7 +196,7 @@ class Punctation extends Component {
 							/>
 
 							<div className="card__body">
-								{data.section.name !== 'preferential_quiz' ? (
+								{section_name !== 'preferential_quiz' ? (
 									<>
 										<div className="inline-btns">
 											<button
