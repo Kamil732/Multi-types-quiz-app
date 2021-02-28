@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import objectsEquals from '../../../../../helpers/objectsEquals'
 import Textarea from '../../../../Textarea'
@@ -8,62 +7,57 @@ import ImageUrlPreview from '../../../ImageUrlPreview'
 
 import { RiImageEditFill, RiQuestionnaireFill } from 'react-icons/ri'
 
-export class QuestionList extends Component {
+class QuestionList extends Component {
 	static propTypes = {
 		questions: PropTypes.array,
-		section_name: PropTypes.string.isRequired,
 		removeQuestion: PropTypes.func.isRequired,
 		hasChanged: PropTypes.func.isRequired,
+		setQuestions: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
 		super(props)
 
-		this.data = Object.values(this.props.questions)
-		this.dataRefs = []
+		this.questions = this.props.questions.map((question) => ({
+			question: question.question,
+			image_url: question.image_url,
+			summery: question.summery,
+		}))
 
-		this.hasChanged = this.hasChanged.bind(this)
+		this.onChange = this.onChange.bind(this)
 	}
 
-	hasChanged = () => {
-		const { hasChanged, questions } = this.props
+	onChange = (e) => {
+		const { hasChanged, setQuestions } = this.props
 
-		// Update data
-		for (let i = 0; i < this.dataRefs.length; i++) {
-			this.data[i] = {
-				question: this.dataRefs[i].question.value,
-				image_url: this.dataRefs[i].image_url.value,
-				summery: this.dataRefs[i].summery.value(), // .value() is function because summery is component
-			}
-		}
+		// Update questions
+		let questions = this.props.questions
+		questions[e.target.getAttribute('data-id')][e.target.name] =
+			e.target.value
 
-		// array of booleans, true if object has change otherwise false
-		const hasChangedArray = this.data.map(
-			(_, index) => !objectsEquals(questions[index], this.data[index])
-		)
+		setQuestions(questions)
 
-		// If true in array than the form has changed
-		hasChanged(hasChangedArray.some((hasChanged) => hasChanged === true))
-	}
+		if (hasChanged) {
+			// array of booleans, true if object has change otherwise false
+			const hasChangedArray = this.props.questions.map(
+				(_, index) =>
+					!objectsEquals(
+						this.questions[index],
+						this.props.questions[index]
+					)
+			)
 
-	componentDidUpdate(prevProps, _) {
-		if (prevProps.questions.length > this.props.questions.length) {
-			// Delete unnecessary data
-			for (
-				let i = 0;
-				i < prevProps.questions.length - this.props.questions.length;
-				i++
-			) {
-				this.dataRefs.pop()
-				this.data.pop()
-			}
+			// If true in array than the form has changed
+			hasChanged(
+				hasChangedArray.some((hasChanged) => hasChanged === true)
+			)
 		}
 	}
 
 	render() {
-		const { questions, removeQuestion } = this.props
+		const { removeQuestion } = this.props
 
-		const questionList = questions.map((question, index) => (
+		const questionList = this.props.questions.map((question, index) => (
 			<div className="card" key={index}>
 				<div className="card__body">
 					<div className="row">
@@ -81,18 +75,14 @@ export class QuestionList extends Component {
 										type="text"
 										id={`question-${index}`}
 										data-id={index}
-										onChange={this.hasChanged}
+										onChange={this.onChange}
 										name="question"
-										defaultValue={question.question}
+										value={
+											this.props.questions[index].question
+										}
 										className="form-control__input form-control__textarea"
 										placeholder="Pass the question..."
 										rows="3"
-										ref={(ref) =>
-											(this.dataRefs[index] = {
-												...this.dataRefs[index],
-												question: ref,
-											})
-										}
 									/>
 								</div>
 							</div>
@@ -103,18 +93,12 @@ export class QuestionList extends Component {
 								<Textarea
 									id={`summery-${index}`}
 									data-id={index}
-									onChange={this.hasChanged}
+									onChange={this.onChange}
 									name="summery"
-									defaultValue={question.summery}
+									value={this.props.questions[index].summery}
 									className="form-control__input form-control__textarea"
 									placeholder="Pass the summery..."
 									rows="3"
-									ref={(ref) =>
-										(this.dataRefs[index] = {
-											...this.dataRefs[index],
-											summery: ref,
-										})
-									}
 								/>
 							</div>
 						</div>
@@ -132,28 +116,24 @@ export class QuestionList extends Component {
 										type="text"
 										id={`image-url-${index}`}
 										data-id={index}
-										onChange={this.hasChanged}
+										onChange={this.onChange}
 										name="image_url"
-										defaultValue={question.image_url}
+										value={
+											this.props.questions[index]
+												.image_url
+										}
 										className="form-control__input form-control__textarea"
 										placeholder="Pass the image url..."
 										rows="3"
-										ref={(ref) =>
-											(this.dataRefs[index] = {
-												...this.dataRefs[index],
-												image_url: ref,
-											})
-										}
 									/>
 								</div>
 							</div>
 							<ImageUrlPreview
 								image_url={
-									!this.dataRefs[index] ||
-									this.dataRefs[index].image_url.value
-										.length === 0
-										? 'https://static.thenounproject.com/png/2999524-200.png'
-										: this.dataRefs[index].image_url.value
+									this.props.questions[index].image_url
+										.length > 0
+										? this.props.questions[index].image_url
+										: 'https://static.thenounproject.com/png/2999524-200.png'
 								}
 								defaultImage="https://static.thenounproject.com/png/2999524-200.png"
 							/>
@@ -175,8 +155,4 @@ export class QuestionList extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = {}
-
-export default connect(mapStateToProps, mapDispatchToProps)(QuestionList)
+export default QuestionList

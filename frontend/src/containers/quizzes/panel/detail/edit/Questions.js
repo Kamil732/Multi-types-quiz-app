@@ -6,7 +6,7 @@ import Title from '../../../../../common/Title'
 import { clearErrors } from '../../../../../redux/actions/errors'
 import axios from 'axios'
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
-import { QuestionList } from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
+import QuestionList from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
 class Questions extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
@@ -16,8 +16,6 @@ class Questions extends Component {
 
 	constructor(props) {
 		super(props)
-
-		this.initialQuestions = []
 
 		this.state = {
 			loading: true,
@@ -35,6 +33,7 @@ class Questions extends Component {
 	resetForm = () => {
 		this.props.clearErrors()
 
+		console.log(this.initialQuestions)
 		this.setState({
 			questions: this.initialQuestions,
 			hasChanged: false,
@@ -49,6 +48,7 @@ class Questions extends Component {
 			questions: [
 				...questions,
 				{
+					answers: [],
 					question: '',
 					image_url: '',
 					summery: '',
@@ -60,13 +60,11 @@ class Questions extends Component {
 	removeQuestion = (index) => {
 		if (index >= 0 && this.state.questions.length > 1) {
 			const questions = Array.from(this.state.questions)
-			console.log(this.state.questions)
 			questions.splice(index, 1)
-			console.log(questions)
 
 			this.setState({
 				hasChanged: true,
-				questions: questions,
+				questions,
 			})
 		}
 	}
@@ -78,12 +76,12 @@ class Questions extends Component {
 		axios
 			.get(data.questions)
 			.then((res) => {
-				this.initialQuestions = res.data
-
 				this.setState({
 					loading: false,
 					questions: res.data,
 				})
+
+				this.initialQuestions = res.data
 			})
 			.catch((err) =>
 				this.setState({
@@ -101,13 +99,12 @@ class Questions extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
+		console.log(this.state.questions[0].question)
 	}
 
 	render() {
-		const { data, errors } = this.props
+		const { errors } = this.props
 		const { loading, questions, hasChanged } = this.state
-
-		const section_name = data.section.name
 
 		return (
 			<>
@@ -124,12 +121,14 @@ class Questions extends Component {
 								<div className="card__body">
 									<QuestionList
 										questions={questions}
-										section_name={section_name}
 										removeQuestion={(index) =>
 											this.removeQuestion(index)
 										}
 										hasChanged={(state) =>
 											this.setState({ hasChanged: state })
+										}
+										setQuestions={(state) =>
+											this.setState({ questions: state })
 										}
 									/>
 								</div>
