@@ -80,12 +80,10 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = (
-            'id',
             'question',
             'image_url',
             'summery',
-            'slug',
-            'answers'
+            'answers',
         )
         read_only_fields = ('slug',)
 
