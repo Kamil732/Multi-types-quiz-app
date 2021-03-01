@@ -40,7 +40,10 @@ class QuestionList extends Component {
 
 	componentDidUpdate(prevProps, _) {
 		// Check if form has changed
-		if (prevProps.questions !== this.props.questions) {
+		if (
+			prevProps.questions !== this.props.questions &&
+			this.props.initialQuestions.length === this.props.questions.length
+		) {
 			const { hasChanged, initialQuestions, questions } = this.props
 
 			if (
