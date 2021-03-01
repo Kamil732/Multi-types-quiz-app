@@ -18,31 +18,31 @@ class QuestionList extends Component {
 	constructor(props) {
 		super(props)
 
-		this.questions = this.props.questions.map((question) => ({
-			question: question.question,
-			image_url: question.image_url,
-			summery: question.summery,
-		}))
-
 		this.onChange = this.onChange.bind(this)
 	}
 
 	onChange = (e) => {
 		const { hasChanged, setQuestions } = this.props
 
-		// Update questions
 		let questions = this.props.questions
-		questions[e.target.getAttribute('data-id')][e.target.name] =
-			e.target.value
-
+		questions = questions.map((question, index) => {
+			if (index === parseInt(e.target.getAttribute('data-id'))) {
+				console.log('xd')
+				return {
+					...question,
+					[e.target.name]: e.target.value,
+				}
+			}
+			return question
+		})
 		setQuestions(questions)
 
-		if (hasChanged) {
+		if (hasChanged && questions.length > 0) {
 			// array of booleans, true if object has change otherwise false
 			const hasChangedArray = this.props.questions.map(
 				(_, index) =>
 					!objectsEquals(
-						this.questions[index],
+						questions[index],
 						this.props.questions[index]
 					)
 			)
@@ -55,9 +55,9 @@ class QuestionList extends Component {
 	}
 
 	render() {
-		const { removeQuestion } = this.props
+		const { questions, removeQuestion } = this.props
 
-		const questionList = this.props.questions.map((question, index) => (
+		const questionList = questions.map((question, index) => (
 			<div className="card" key={index}>
 				<div className="card__body">
 					<div className="row">

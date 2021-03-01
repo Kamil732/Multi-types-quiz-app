@@ -17,6 +17,8 @@ class Questions extends Component {
 	constructor(props) {
 		super(props)
 
+		this.initialQuestions = []
+
 		this.state = {
 			loading: true,
 			questions: [],
@@ -33,7 +35,6 @@ class Questions extends Component {
 	resetForm = () => {
 		this.props.clearErrors()
 
-		console.log(this.initialQuestions)
 		this.setState({
 			questions: this.initialQuestions,
 			hasChanged: false,
