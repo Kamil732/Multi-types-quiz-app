@@ -121,6 +121,7 @@ class Questions extends Component {
 							<form onSubmit={this.onSubmit}>
 								<div className="card__body">
 									<QuestionList
+										initialQuestions={this.initialQuestions}
 										questions={questions}
 										removeQuestion={(index) =>
 											this.removeQuestion(index)

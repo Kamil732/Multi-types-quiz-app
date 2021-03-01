@@ -9,6 +9,7 @@ import { RiImageEditFill, RiQuestionnaireFill } from 'react-icons/ri'
 
 class QuestionList extends Component {
 	static propTypes = {
+		initialQuestions: PropTypes.array,
 		questions: PropTypes.array,
 		removeQuestion: PropTypes.func.isRequired,
 		hasChanged: PropTypes.func.isRequired,
@@ -22,12 +23,11 @@ class QuestionList extends Component {
 	}
 
 	onChange = (e) => {
-		const { hasChanged, setQuestions } = this.props
+		const { setQuestions } = this.props
 
 		let questions = this.props.questions
 		questions = questions.map((question, index) => {
 			if (index === parseInt(e.target.getAttribute('data-id'))) {
-				console.log('xd')
 				return {
 					...question,
 					[e.target.name]: e.target.value,
@@ -36,21 +36,32 @@ class QuestionList extends Component {
 			return question
 		})
 		setQuestions(questions)
+	}
 
-		if (hasChanged && questions.length > 0) {
-			// array of booleans, true if object has change otherwise false
-			const hasChangedArray = this.props.questions.map(
-				(_, index) =>
-					!objectsEquals(
-						questions[index],
-						this.props.questions[index]
-					)
-			)
+	componentDidUpdate(prevProps, _) {
+		// Check if form has changed
+		if (prevProps.questions !== this.props.questions) {
+			const { hasChanged, initialQuestions, questions } = this.props
 
-			// If true in array than the form has changed
-			hasChanged(
-				hasChangedArray.some((hasChanged) => hasChanged === true)
-			)
+			if (
+				hasChanged &&
+				initialQuestions.length > 0 &&
+				questions.length > 0
+			) {
+				// array of booleans, true if object has change and false if not
+				const hasChangedArray = questions.map(
+					(_, index) =>
+						!objectsEquals(
+							initialQuestions[index],
+							questions[index]
+						)
+				)
+
+				// If true in array than the form has changed
+				hasChanged(
+					hasChangedArray.some((hasChanged) => hasChanged === true)
+				)
+			}
 		}
 	}
 
