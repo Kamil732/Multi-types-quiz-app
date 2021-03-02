@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class PreferentailAnswers extends Component {
+class PreferentialAnswers extends Component {
 	static propTypes = {
 		questionNumber: PropTypes.number.isRequired,
 		answers: PropTypes.array,
@@ -128,4 +128,4 @@ class PreferentailAnswers extends Component {
 	}
 }
 
-export default PreferentailAnswers
+export default PreferentialAnswers

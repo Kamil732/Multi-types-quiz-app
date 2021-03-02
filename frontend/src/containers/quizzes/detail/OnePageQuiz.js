@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 import KnowledgeAnswers from '../../../components/quizzes/detail/answers/KnowledgeAnswers'
-import PreferentailAnswers from '../../../components/quizzes/detail/answers/PreferentailAnswers'
+import PreferentialAnswers from '../../../components/quizzes/detail/answers/PreferentialAnswers'
 import PsychologyAndUniversalAnswers from '../../../components/quizzes/detail/answers/PsychologyAndUniversalAnswers'
 
 class OnePageQuiz extends Component {
@@ -41,7 +41,7 @@ class OnePageQuiz extends Component {
 				)
 			else if (section === 'preferential_quiz')
 				answers = (
-					<PreferentailAnswers
+					<PreferentialAnswers
 						questionNumber={index}
 						answers={question.answers}
 						questionId={question.id}
