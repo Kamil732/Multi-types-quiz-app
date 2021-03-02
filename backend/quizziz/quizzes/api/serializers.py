@@ -80,6 +80,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = (
+            'id',
             'question',
             'image_url',
             'summery',

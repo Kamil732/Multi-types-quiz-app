@@ -125,7 +125,7 @@ class QuizFinishAPIView(views.APIView):
                     _('You have not answered all the questions'))
 
             if section == 'knowledge_quiz':
-                correct_answers = [answer.get('slug') for answer in Answer.objects.filter(
+                correct_answers = [answer_.get('slug') for answer_ in Answer.objects.filter(
                     question__id=question_id, is_correct=True).values('slug')]
 
                 # Add 1 to points if it is correct answer
