@@ -104,7 +104,7 @@ class Questions extends Component {
 	}
 
 	render() {
-		const { errors } = this.props
+		const { data, errors } = this.props
 		const { loading, questions, hasChanged } = this.state
 
 		return (
@@ -123,6 +123,7 @@ class Questions extends Component {
 									<QuestionList
 										initialQuestions={this.initialQuestions}
 										questions={questions}
+										section_name={data.section.name}
 										removeQuestion={(index) =>
 											this.removeQuestion(index)
 										}

@@ -6,11 +6,15 @@ import Textarea from '../../../../Textarea'
 import ImageUrlPreview from '../../../ImageUrlPreview'
 
 import { RiImageEditFill, RiQuestionnaireFill } from 'react-icons/ri'
+import KnowledgeAnswers from './answers/KnowledgeAnswers'
+import PsychologyAndUniversalAnswers from './answers/PsychologyAndUniversalAnswers'
+import PreferentialAnswers from './answers/PreferentialAnswers'
 
 class QuestionList extends Component {
 	static propTypes = {
 		initialQuestions: PropTypes.array,
 		questions: PropTypes.array,
+		section_name: PropTypes.string.isRequired,
 		removeQuestion: PropTypes.func.isRequired,
 		hasChanged: PropTypes.func.isRequired,
 		setQuestions: PropTypes.func.isRequired,
@@ -69,101 +73,137 @@ class QuestionList extends Component {
 	}
 
 	render() {
-		const { questions, removeQuestion } = this.props
+		const { questions, removeQuestion, section_name } = this.props
 
-		const questionList = questions.map((question, index) => (
-			<div className="card" key={index}>
-				<div className="card__body">
-					<div className="row">
-						<div className="col-sm-7">
-							<div className="form-control">
-								<label className="form-control__label">
-									Question:
-								</label>
-								<div className="icon-form">
-									<span className="icon">
-										<RiQuestionnaireFill />
-									</span>
+		const questionList = questions.map((question, index) => {
+			let answers
 
-									<input
-										type="text"
-										id={`question-${index}`}
+			if (section_name === 'knowledge_quiz')
+				answers = (
+					<KnowledgeAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
+			else if (
+				section_name === 'universal_quiz' ||
+				section_name === 'psychology_quiz'
+			)
+				answers = (
+					<PsychologyAndUniversalAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
+			else if (section_name === 'preferential_quiz')
+				answers = (
+					<PreferentialAnswers
+						answers={question.answers}
+						questionId={question.id}
+					/>
+				)
+
+			return (
+				<div className="card" key={index}>
+					<div className="card__body">
+						<div className="row">
+							<div className="col-sm-7">
+								<div className="form-control">
+									<label className="form-control__label">
+										Question:
+									</label>
+									<div className="icon-form">
+										<span className="icon">
+											<RiQuestionnaireFill />
+										</span>
+
+										<input
+											type="text"
+											id={`question-${index}`}
+											data-id={index}
+											onChange={this.onChange}
+											name="question"
+											value={
+												this.props.questions[index]
+													.question
+											}
+											className="form-control__input form-control__textarea"
+											placeholder="Pass the question..."
+											rows="3"
+										/>
+									</div>
+								</div>
+
+								{answers}
+
+								<div className="form-control">
+									<label className="form-control__label">
+										Summery:
+									</label>
+									<Textarea
+										id={`summery-${index}`}
 										data-id={index}
 										onChange={this.onChange}
-										name="question"
+										name="summery"
 										value={
-											this.props.questions[index].question
+											this.props.questions[index].summery
 										}
 										className="form-control__input form-control__textarea"
-										placeholder="Pass the question..."
+										placeholder="Pass the summery..."
 										rows="3"
 									/>
 								</div>
 							</div>
-							<div className="form-control">
-								<label className="form-control__label">
-									Summery:
-								</label>
-								<Textarea
-									id={`summery-${index}`}
-									data-id={index}
-									onChange={this.onChange}
-									name="summery"
-									value={this.props.questions[index].summery}
-									className="form-control__input form-control__textarea"
-									placeholder="Pass the summery..."
-									rows="3"
+							<div className="col-sm-5">
+								<div className="form-control">
+									<label className="form-control__label">
+										Image Url:
+									</label>
+									<div className="icon-form">
+										<span className="icon">
+											<RiImageEditFill />
+										</span>
+
+										<input
+											type="text"
+											id={`image-url-${index}`}
+											data-id={index}
+											onChange={this.onChange}
+											name="image_url"
+											value={
+												this.props.questions[index]
+													.image_url
+											}
+											className="form-control__input form-control__textarea"
+											placeholder="Pass the image url..."
+											rows="3"
+										/>
+									</div>
+								</div>
+								<ImageUrlPreview
+									image_url={
+										this.props.questions[index].image_url
+											.length > 0
+											? this.props.questions[index]
+													.image_url
+											: 'https://static.thenounproject.com/png/2999524-200.png'
+									}
+									defaultImage="https://static.thenounproject.com/png/2999524-200.png"
 								/>
 							</div>
 						</div>
-						<div className="col-sm-5">
-							<div className="form-control">
-								<label className="form-control__label">
-									Image Url:
-								</label>
-								<div className="icon-form">
-									<span className="icon">
-										<RiImageEditFill />
-									</span>
 
-									<input
-										type="text"
-										id={`image-url-${index}`}
-										data-id={index}
-										onChange={this.onChange}
-										name="image_url"
-										value={
-											this.props.questions[index]
-												.image_url
-										}
-										className="form-control__input form-control__textarea"
-										placeholder="Pass the image url..."
-										rows="3"
-									/>
-								</div>
-							</div>
-							<ImageUrlPreview
-								image_url={
-									this.props.questions[index].image_url
-										.length > 0
-										? this.props.questions[index].image_url
-										: 'https://static.thenounproject.com/png/2999524-200.png'
-								}
-								defaultImage="https://static.thenounproject.com/png/2999524-200.png"
-							/>
-						</div>
+						<button
+							className="btn btn__danger"
+							style={{ float: 'right', marginTop: '15px' }}
+							onClick={() => removeQuestion(index)}
+						>
+							Delete
+						</button>
 					</div>
-
-					<button
-						className="btn btn__danger"
-						style={{ float: 'right', marginTop: '15px' }}
-						onClick={() => removeQuestion(index)}
-					>
-						Delete
-					</button>
 				</div>
-			</div>
-		))
+			)
+		})
 
 		return questionList
 	}
