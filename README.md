@@ -1,5 +1,5 @@
 # Quizzer-DRF
-Quizzer is a web application by which you can create and solve quizzes
+Quizzer is a web application where you can create and solve quizzes
 
 ## Requirements
 * Python 3.8
