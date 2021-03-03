@@ -1,4 +1,4 @@
-# Quizzer-DRF
+# What is Quizzer
 Quizzer is a web application where you can create and solve quizzes
 
 ## Requirements
