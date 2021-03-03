@@ -49,7 +49,16 @@ class Questions extends Component {
 			questions: [
 				...questions,
 				{
-					answers: [],
+					answers: [
+						{
+							answer: '',
+							image_url: '',
+						},
+						{
+							answer: '',
+							image_url: '',
+						},
+					],
 					question: '',
 					image_url: '',
 					summery: '',
