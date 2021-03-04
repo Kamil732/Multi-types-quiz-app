@@ -214,54 +214,48 @@ class KnowledgeAnswers extends Component {
 		return (
 			<div className="card">
 				<div className="card__body">
-					<form onSubmit={this.onSubmit}>
-						{answers}
+					{answers}
 
-						<hr />
-						<div className="card__body">
-							<div className="inline-btns">
-								<button
-									type="button"
-									className={`btn ${
-										answers.length >= 8
-											? 'btn__disabled'
-											: ''
-									}`}
-									onClick={this.addAnswer}
-								>
-									Add Answer
-								</button>
-								<button
-									type="button"
-									className={`btn btn__danger ${
-										answers.length <= 2
-											? 'btn__disabled'
-											: ''
-									}`}
-									onClick={this.removeAnswer}
-								>
-									Remove Answer
-								</button>
-							</div>
-							<br /> <br />
-							{errors.detail ? (
-								<div className="message-box error">
-									<p className="message-box__text">
-										{errors.detail}
-									</p>
-								</div>
-							) : null}
+					<hr />
+					<div className="card__body">
+						<div className="inline-btns">
 							<button
-								type="reset"
-								onClick={this.resetForm}
+								type="button"
 								className={`btn ${
-									!hasChanged ? 'btn__disabled' : ''
+									answers.length >= 8 ? 'btn__disabled' : ''
 								}`}
+								onClick={this.addAnswer}
 							>
-								Cancel
+								Add Answer
+							</button>
+							<button
+								type="button"
+								className={`btn btn__danger ${
+									answers.length <= 2 ? 'btn__disabled' : ''
+								}`}
+								onClick={this.removeAnswer}
+							>
+								Remove Answer
 							</button>
 						</div>
-					</form>
+						<br /> <br />
+						{errors.detail ? (
+							<div className="message-box error">
+								<p className="message-box__text">
+									{errors.detail}
+								</p>
+							</div>
+						) : null}
+						<button
+							type="reset"
+							onClick={this.resetForm}
+							className={`btn ${
+								!hasChanged ? 'btn__disabled' : ''
+							}`}
+						>
+							Cancel
+						</button>
+					</div>
 				</div>
 			</div>
 		)
