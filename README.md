@@ -9,6 +9,8 @@ Quizzer is a web application where you can create and solve quizzes
 ## Configuration and Installation
 * Clone the repository git clone `https://github.com/Kamil732/Quizzer-DRF`
 
+If you don't have `pipenv` then install that using `pip install pipenv`
+
 Open terminal and go to the **frontend/** and start frontend using `yarn start`.  
 To start backend server you need to go to the **backend/** and start virtual envirement using `pipenv shell`, then you need to install all requirements using `pipenv install`.  
 After that you need to go to the **backend/quizziz/** and run `python manage.py runserver`.
