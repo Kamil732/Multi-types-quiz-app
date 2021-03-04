@@ -10,8 +10,11 @@ import objectsEquals from '../../../../../../helpers/objectsEquals'
 class KnowledgeAnswers extends Component {
 	static propTypes = {
 		answers: PropTypes.array,
+		questions: PropTypes.array,
 		questionId: PropTypes.number.isRequired,
 		errors: PropTypes.object,
+		hasChanged: PropTypes.func.isRequired,
+		setQuestions: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -23,7 +26,6 @@ class KnowledgeAnswers extends Component {
 		}))
 
 		this.state = {
-			answers: this.initialAnswers,
 			hasChanged: false,
 		}
 
@@ -34,85 +36,144 @@ class KnowledgeAnswers extends Component {
 		this.onSubmit = this.onSubmit.bind(this)
 	}
 
-	resetForm = () =>
+	resetForm = () => {
+		// Reset answers
+		this.props.setQuestions(
+			this.props.questions.map((question) => {
+				if (question.id === this.props.questionId)
+					return {
+						...question,
+						answers: this.initialAnswers,
+					}
+
+				return question
+			})
+		)
+
+		this.props.hasChanged(true)
 		this.setState({
-			answers: this.initialAnswers,
 			hasChanged: false,
 		})
+	}
 
 	addAnswer = () => {
-		if (this.state.answers.length < 8) {
+		if (this.props.answers.length < 8) {
+			this.props.setQuestions(
+				this.props.questions.map((question) => {
+					// if this is the question where our answers are
+					if (question.id === this.props.questionId)
+						// then return question with changed answers
+						return {
+							...question,
+							answers: [
+								...question.answers,
+								// Add answer
+								{
+									answer: '',
+									image_url: '',
+								},
+							],
+						}
+
+					return question
+				})
+			)
+
+			this.props.hasChanged(true)
 			this.setState({
 				hasChanged: true,
-				answers: [
-					...this.state.answers,
-					{
-						answer: '',
-						image_url: '',
-					},
-				],
 			})
 		}
 	}
 
 	removeAnswer = () => {
-		if (this.state.answers.length > 2)
+		if (this.props.answers.length > 2) {
+			this.props.setQuestions(
+				this.props.questions.map((question) => {
+					// if this is the question where our answers are
+					if (question.id === this.props.questionId)
+						// then return question with changed answers
+						return {
+							...question,
+							answers: this.props.answers.slice(0, -1),
+						}
+
+					return question
+				})
+			)
+			this.props.hasChanged(true)
 			this.setState({
 				hasChanged: true,
-				answers: this.state.answers.slice(0, -1),
 			})
+		}
 	}
 
 	onChange = (e) => {
-		let answers = this.state.answers
+		let answers = this.props.answers
 
+		// Change answers
 		answers = answers.map((answer, index) => {
-			if (index === parseInt(e.target.getAttribute('data-id'))) {
+			if (index === parseInt(e.target.getAttribute('data-id')))
 				return {
 					...answer,
 					[e.target.name]: e.target.value,
 				}
-			}
 
 			return answer
 		})
 
-		this.setState({ answers })
+		// Change questions with answers
+		this.props.setQuestions(
+			this.props.questions.map((question) => {
+				// if this is the question where our answers are
+				if (question.id === this.props.questionId)
+					// then return question with changed answers
+					return {
+						...question,
+						answers,
+					}
+
+				return question
+			})
+		)
 	}
 
 	componentDidUpdate(prevProps, prevState) {
 		// Update answers when questions changes
-		if (prevProps.answers !== this.props.answers) {
+		if (prevProps.questionId !== this.props.questionId) {
 			this.initialAnswers = this.props.answers.map((answer) => ({
 				answer: answer.answer,
 				image_url: answer.image_url,
 			}))
-
-			this.setState({
-				answers: this.initialAnswers,
-				hasChanged: false,
-			})
+			this.setState({ hasChanged: false })
 		}
-		// Check if form has changed
-		if (
-			prevState.answers !== this.state.answers &&
-			this.initialAnswers.length === this.state.answers.length
-		) {
-			// array of booleans, true if object has change and false if not
-			const hasChangedArray = this.state.answers.map(
-				(_, index) =>
-					!objectsEquals(
-						this.initialAnswers[index],
-						this.state.answers[index]
-					)
-			)
 
-			// If true in array than the form has changed
-			this.setState({
-				hasChanged: hasChangedArray.some(
-					(hasChanged) => hasChanged === true
-				),
-			})
+		if (prevProps.answers !== this.props.answers) {
+			// Set hasChanged to false when forms are reseted
+			this.props.hasChanged(false)
+			this.setState({ hasChanged: false })
+
+			// Check if form has changed
+			if (this.initialAnswers.length === this.props.answers.length) {
+				// array of booleans, true if object has change and false if not
+				const hasChangedArray = this.props.answers.map(
+					(_, index) =>
+						!objectsEquals(
+							this.initialAnswers[index],
+							this.props.answers[index]
+						)
+				)
+
+				// If true in array than the form has changed
+				this.props.hasChanged(
+					hasChangedArray.some((hasChanged) => hasChanged === true)
+				)
+				this.setState({
+					hasChanged: hasChangedArray.some(
+						(hasChanged) => hasChanged === true
+					),
+				})
+			}
 		}
 	}
 
@@ -125,7 +186,7 @@ class KnowledgeAnswers extends Component {
 		const { questionId, errors } = this.props
 		const { hasChanged } = this.state
 
-		const answers = this.state.answers.map((answer, index) => (
+		const answers = this.props.answers.map((answer, index) => (
 			<div className="form-control" key={index}>
 				<label className="form-control__label">
 					Answer {index + 1}:
@@ -141,7 +202,7 @@ class KnowledgeAnswers extends Component {
 						data-id={index}
 						onChange={this.onChange}
 						name="answer"
-						value={this.state.answers[index].answer}
+						value={this.props.answers[index].answer}
 						className="form-control__input form-control__textarea"
 						placeholder={`Pass the ${index + 1} answer...`}
 						required

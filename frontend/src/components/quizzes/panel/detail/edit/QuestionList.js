@@ -28,8 +28,8 @@ class QuestionList extends Component {
 
 	onChange = (e) => {
 		const { setQuestions } = this.props
-
 		let questions = this.props.questions
+
 		questions = questions.map((question, index) => {
 			if (index === parseInt(e.target.getAttribute('data-id'))) {
 				return {
@@ -39,6 +39,7 @@ class QuestionList extends Component {
 			}
 			return question
 		})
+
 		setQuestions(questions)
 	}
 
@@ -73,7 +74,13 @@ class QuestionList extends Component {
 	}
 
 	render() {
-		const { questions, removeQuestion, section_name } = this.props
+		const {
+			questions,
+			removeQuestion,
+			hasChanged,
+			setQuestions,
+			section_name,
+		} = this.props
 
 		const questionList = questions.map((question, index) => {
 			let answers
@@ -82,7 +89,10 @@ class QuestionList extends Component {
 				answers = (
 					<KnowledgeAnswers
 						answers={question.answers}
+						questions={questions}
 						questionId={question.id}
+						hasChanged={hasChanged}
+						setQuestions={setQuestions}
 					/>
 				)
 			else if (

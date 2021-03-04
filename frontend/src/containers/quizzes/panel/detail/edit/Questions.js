@@ -109,7 +109,7 @@ class Questions extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
-		console.log(this.state.questions[0].question)
+		console.log(this.state.questions[0].answers[0])
 	}
 
 	render() {
