@@ -20,10 +20,7 @@ class KnowledgeAnswers extends Component {
 	constructor(props) {
 		super(props)
 
-		this.initialAnswers = props.answers.map((answer) => ({
-			answer: answer.answer,
-			image_url: answer.image_url,
-		}))
+		this.initialAnswers = props.answers
 
 		this.state = {
 			hasChanged: false,
@@ -141,10 +138,7 @@ class KnowledgeAnswers extends Component {
 	componentDidUpdate(prevProps, prevState) {
 		// Update answers when questions changes
 		if (prevProps.questionId !== this.props.questionId) {
-			this.initialAnswers = this.props.answers.map((answer) => ({
-				answer: answer.answer,
-				image_url: answer.image_url,
-			}))
+			this.initialAnswers = this.props.answers
 			this.setState({ hasChanged: false })
 		}
 
@@ -173,6 +167,10 @@ class KnowledgeAnswers extends Component {
 						(hasChanged) => hasChanged === true
 					),
 				})
+			} else {
+				// If lengths of two arrays are diffrent then of course form has changed
+				this.props.hasChanged(true)
+				this.setState({ hasChanged: true })
 			}
 		}
 	}
