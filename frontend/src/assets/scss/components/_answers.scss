@@ -56,3 +56,9 @@
 		color: set-text-color($error-color);
 	}
 }
+
+.correct-answer {
+	padding: 6px;
+	background-color: $secondary-color;
+	border-radius: 8px;
+}

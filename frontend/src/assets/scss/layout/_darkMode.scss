@@ -147,6 +147,10 @@ body.dark-mode {
 		}
 	}
 
+	.correct-answer {
+		background-color: $secondary-color-dark-mode;
+	}
+
 	.btn {
 		background: $secondary-variant-color-dark-mode;
 		color: set-text-color($secondary-variant-color-dark-mode);

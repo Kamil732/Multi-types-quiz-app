@@ -185,9 +185,14 @@ class KnowledgeAnswers extends Component {
 		const { hasChanged } = this.state
 
 		const answers = this.props.answers.map((answer, index) => (
-			<div className="form-control" key={index}>
+			<div
+				className={`form-control ${
+					index === 0 ? 'correct-answer' : ''
+				}`}
+				key={index}
+			>
 				<label className="form-control__label">
-					Answer {index + 1}:
+					{index === 0 ? 'Correct Answer' : `Answer ${index + 1}`}:
 				</label>
 				<div className="icon-form">
 					<span className="icon">
@@ -202,7 +207,9 @@ class KnowledgeAnswers extends Component {
 						name="answer"
 						value={this.props.answers[index].answer}
 						className="form-control__input form-control__textarea"
-						placeholder={`Pass the ${index + 1} answer...`}
+						placeholder={`Pass the ${
+							index === 0 ? 'correct' : index + 1
+						} answer...`}
 						required
 					/>
 				</div>
