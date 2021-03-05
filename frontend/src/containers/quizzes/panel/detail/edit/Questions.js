@@ -4,7 +4,9 @@ import PropTypes from 'prop-types'
 import Title from '../../../../../common/Title'
 
 import { clearErrors } from '../../../../../redux/actions/errors'
+import { updateQuizQuestions } from '../../../../../redux/actions/quizzes'
 import axios from 'axios'
+
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
 import QuestionList from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
 class Questions extends Component {
@@ -109,7 +111,12 @@ class Questions extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
-		console.log(this.state.questions[0].answers[0])
+
+		this.props.updateQuizQuestions(
+			this.props.data.author_slug,
+			this.props.data.slug,
+			this.state.questions
+		)
 	}
 
 	render() {
@@ -202,6 +209,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = {
 	clearErrors,
+	updateQuizQuestions,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions)

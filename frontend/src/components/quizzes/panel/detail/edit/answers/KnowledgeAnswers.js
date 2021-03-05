@@ -30,7 +30,6 @@ class KnowledgeAnswers extends Component {
 		this.removeAnswer = this.removeAnswer.bind(this)
 		this.resetForm = this.resetForm.bind(this)
 		this.onChange = this.onChange.bind(this)
-		this.onSubmit = this.onSubmit.bind(this)
 	}
 
 	resetForm = () => {
@@ -173,11 +172,6 @@ class KnowledgeAnswers extends Component {
 				this.setState({ hasChanged: true })
 			}
 		}
-	}
-
-	onSubmit = (e) => {
-		e.preventDefault()
-		console.log('submitted')
 	}
 
 	render() {
