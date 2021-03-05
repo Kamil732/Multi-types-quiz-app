@@ -211,6 +211,10 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
         read_only_fields = ('questions', 'author',)
 
 
+class QuizUpdateSerializer(serializers.Serializer):
+    pass
+
+
 class QuizPunctationSerializer(serializers.ModelSerializer):
     def vaildate(self, data):
         if (data['from_score'] > data['to_score']):

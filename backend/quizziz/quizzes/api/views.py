@@ -91,6 +91,20 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
+class QuizUpdateAPIView(generics.UpdateAPIView):
+    queryset = Quiz.objects.order_by(
+        '-pub_date', '-solved_times')
+    serializer_class = serializers.QuizUpdateSerializer
+    permission_classes = (permissions.IsOwner,)
+
+    def update(self, request, *args, **kwargs):
+        print('-' * 20)
+        print(request.data)
+        print('-' * 20)
+
+        return Response({'message': 'success'})
+
+
 class QuizFinishAPIView(views.APIView):
     def post(self, request, fromat=False, *args, **kwargs):
         author_slug = self.kwargs.get('author_slug')

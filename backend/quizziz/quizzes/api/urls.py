@@ -5,6 +5,7 @@ from quizzes.api.views import (
     ImageValidatorAPIView,
     QuizListAPIView,
     QuizDetailAPIView,
+    QuizUpdateAPIView,
     QuizPunctationListAPIView,
     QuizFinishAPIView,
     QuizFeedbackAPIView,
@@ -32,6 +33,7 @@ urlpatterns = [
             path('punctation/', QuizPunctationListAPIView.as_view(), name='quiz-punctation-list'),
             path('questions/', include([
                 path('', QuestionListAPIView.as_view(), name='quiz-question-list'),
+                path('update/', QuizUpdateAPIView.as_view(), name='quiz-questions-update'),
                 path('<slug:question_slug>/', include([
                     path('', QuestionDetailAPIView.as_view(), name='quiz-question-detail'),
                     path('answers/', include([
