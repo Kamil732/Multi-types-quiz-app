@@ -94,15 +94,69 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
 class QuizUpdateAPIView(generics.UpdateAPIView):
     queryset = Quiz.objects.order_by(
         '-pub_date', '-solved_times')
-    serializer_class = serializers.QuizUpdateSerializer
     permission_classes = (permissions.IsOwner,)
 
     def update(self, request, *args, **kwargs):
-        print('-' * 20)
-        print(request.data)
-        print('-' * 20)
+        questions = request.data
 
-        return Response({'message': 'success'})
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+        quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+
+        new_models = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
+                               image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
+
+        # Check if result is unique
+        for model in new_models:
+            if ([x.question for x in new_models].count(model.question) > 1):
+                raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
+
+        ret = bulk_sync(
+            new_models=new_models,
+            filters=Q(quiz_id=quiz.id),
+            fields=['question', 'summery', 'image_url'],
+            key_fields=('slug',)  # slug is index from enumerate
+        )
+
+        print("Results of bulk_sync: "
+              "{created} created, {updated} updated, {deleted} deleted."
+              .format(**ret['stats']))
+
+        if quiz.section.name == 'knowledge_quiz':
+            max_score = Question.objects.filter(quiz=quiz).count()
+            punctations = list(QuizPunctation.objects.filter(quiz=quiz).order_by('id'))
+            expectedFrom = 0
+
+            for punctation in punctations:
+                punctation.from_score = expectedFrom
+                expectedTo = punctation.to_score
+
+                if expectedTo < expectedFrom:
+                    expectedTo = expectedFrom
+                    punctation.to_score = expectedTo
+
+                expectedFrom = expectedTo + 1
+                if expectedFrom > max_score:
+                    expectedFrom = max_score
+
+            for punctation in punctations:
+                punctation.save()
+
+            expectedTo = max_score
+            for punctation in punctations[::-1]:
+                punctation.to_score = expectedTo
+                expectedFrom = punctation.from_score
+
+                if expectedFrom > expectedTo:
+                    expectedFrom = expectedTo
+                    punctation.from_score = expectedFrom
+
+                expectedTo = expectedFrom - 1 if expectedFrom - 1 >= 0 else 0
+
+            for punctation in punctations:
+                punctation.save()
+
+        return Response({'message': 'Successfully updated'})
 
 
 class QuizFinishAPIView(views.APIView):
