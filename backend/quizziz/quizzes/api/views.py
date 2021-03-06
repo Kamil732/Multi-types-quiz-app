@@ -106,24 +106,34 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         new_models = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
                                image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
 
-        # Check if result is unique
+        # Check if question is unique
         for model in new_models:
             if ([x.question for x in new_models].count(model.question) > 1):
                 raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
 
-        ret = bulk_sync(
+        bulk_sync(
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
             fields=['question', 'summery', 'image_url'],
             key_fields=('slug',)  # slug is index from enumerate
         )
 
-        print("Results of bulk_sync: "
-              "{created} created, {updated} updated, {deleted} deleted."
-              .format(**ret['stats']))
+        #### Set punctations ####
+        if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
+            if quiz.section.name == 'knowledge_quiz':
+                max_score = Question.objects.filter(quiz=quiz).count()
+            else:
+                questions = Question.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
 
-        if quiz.section.name == 'knowledge_quiz':
-            max_score = Question.objects.filter(quiz=quiz).count()
+                max_scores = []
+                for question in questions:
+                    question_points = list(map(int, Answer.objects.filter(
+                        question=question).values_list('points', flat=True)))
+
+                    max_scores.append(max(question_points))
+
+                max_score = sum(max_scores)
+
             punctations = list(QuizPunctation.objects.filter(quiz=quiz).order_by('id'))
             expectedFrom = 0
 
@@ -155,6 +165,40 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
 
             for punctation in punctations:
                 punctation.save()
+
+        #### Save answers ####
+        if quiz.section.name == 'knowledge_quiz':
+            for question in questions:
+                if not(question['answers']):
+                    raise ValidationError({'detail': _('Every question should have at least 2 answers')})
+
+                question_model = Question.objects.get(quiz=quiz, question=question['question'])
+
+                new_models = [
+                    Answer(
+                        question=question_model,
+                        answer=answer['answer'],
+                        image_url=answer['image_url'],
+                        is_correct=index == 0,
+                        slug=str(index))
+                    for (index, answer) in enumerate(question['answers'])
+                ]
+
+                # Check if answer is unique
+                for model in new_models:
+                    if ([x.answer for x in new_models].count(model.answer) > 1):
+                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
+
+                ret = bulk_sync(
+                    new_models=new_models,
+                    filters=Q(question_id=question_model.id),
+                    fields=['answer', 'image_url', 'is_correct'],
+                    key_fields=('slug',)  # slug is index from enumerate
+                )
+
+                print("Results of bulk_sync: "
+                      "{created} created, {updated} updated, {deleted} deleted."
+                      .format(**ret['stats']))
 
         return Response({'message': 'Successfully updated'})
 

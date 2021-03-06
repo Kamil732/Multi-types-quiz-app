@@ -110,6 +110,9 @@ class Question(models.Model):
     def __str__(self):
         return self.question
 
+    class Meta:
+        ordering = ['id']
+
 
 class PsychologyResults(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='results')
@@ -158,3 +161,6 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.answer
+
+    class Meta:
+        ordering = ['id']
