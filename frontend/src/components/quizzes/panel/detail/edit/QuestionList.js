@@ -204,6 +204,7 @@ class QuestionList extends Component {
 						</div>
 
 						<button
+							type="button"
 							className="btn btn__danger"
 							style={{ float: 'right', marginTop: '15px' }}
 							onClick={() => removeQuestion(index)}

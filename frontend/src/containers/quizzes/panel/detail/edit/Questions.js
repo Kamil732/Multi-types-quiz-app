@@ -4,7 +4,10 @@ import PropTypes from 'prop-types'
 import Title from '../../../../../common/Title'
 
 import { clearErrors } from '../../../../../redux/actions/errors'
-import { updateQuizQuestions } from '../../../../../redux/actions/quizzes'
+import {
+	updateQuizQuestions,
+	getQuiz,
+} from '../../../../../redux/actions/quizzes'
 import axios from 'axios'
 
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
@@ -14,6 +17,8 @@ class Questions extends Component {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
 		clearErrors: PropTypes.func.isRequired,
+		updateQuizQuestions: PropTypes.func.isRequired,
+		getQuiz: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -109,14 +114,25 @@ class Questions extends Component {
 		if (prevProps.data !== this.props.data) this.getQuestions()
 	}
 
-	onSubmit = (e) => {
+	onSubmit = async (e) => {
 		e.preventDefault()
 
-		this.props.updateQuizQuestions(
+		await this.props.clearErrors()
+		await this.props.updateQuizQuestions(
 			this.props.data.author_slug,
 			this.props.data.slug,
 			this.state.questions
 		)
+		// Refresh max_score
+		await this.props.getQuiz(
+			this.props.data.author_slug,
+			this.props.data.slug
+		)
+
+		if (Object.keys(this.props.errors).length === 0) {
+			this.setState({ hasChanged: false })
+			this.initialQuestions = this.state.questions
+		}
 	}
 
 	render() {
@@ -210,6 +226,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	clearErrors,
 	updateQuizQuestions,
+	getQuiz,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions)

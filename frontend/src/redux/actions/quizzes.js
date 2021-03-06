@@ -15,7 +15,6 @@ import {
 	UPDATE_QUIZ,
 	DELETE_QUIZ,
 	UPDATE_QUIZ_PUNCTATIONS,
-	UPDATE_QUIZ_QUESTIONS,
 } from './types'
 
 import { addError } from './errors'
@@ -253,21 +252,18 @@ export const updateQuizQuestions = (author_slug, quiz_slug, data) => async (
 
 		const config = getAccessToken(getState)
 
-		const res = await axios.put(
+		await axios.put(
 			`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/questions/update/`,
 			body,
 			config
 		)
-
-		dispatch({
-			type: UPDATE_QUIZ_QUESTIONS,
-			// payload: res.data,
-		})
 	} catch (err) {
 		if (err.response.status === 401) {
 			await dispatch(refreshToken())
 			if (getState().auth.token)
-				await dispatch(updateQuizData(author_slug, quiz_slug, data))
+				await dispatch(
+					updateQuizQuestions(author_slug, quiz_slug, data)
+				)
 		} else if (err.response)
 			dispatch(addError(err.response.data, err.response.status))
 	}
