@@ -139,7 +139,7 @@ class QuestionList extends Component {
 											}
 											className="form-control__input form-control__textarea"
 											placeholder="Pass the question..."
-											rows="3"
+											maxLength="100"
 										/>
 									</div>
 								</div>

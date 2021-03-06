@@ -111,6 +111,7 @@ class FeedbackForm extends Component {
 								className="form-inline__input"
 								onChange={this.onChange}
 								value={name}
+								maxLength="25"
 								required
 							/>
 						</div>
@@ -146,6 +147,7 @@ class FeedbackForm extends Component {
 								className="form-inline__input"
 								onChange={this.onChange}
 								value={email}
+								maxLength="80"
 								required
 							/>
 						</div>

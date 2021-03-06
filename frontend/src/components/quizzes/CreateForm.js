@@ -134,6 +134,7 @@ class CreateForm extends Component {
 									onChange={this.onChange}
 									className="form-control__input"
 									placeholder="Pass the title..."
+									maxLength="100"
 									required
 								/>
 							</div>

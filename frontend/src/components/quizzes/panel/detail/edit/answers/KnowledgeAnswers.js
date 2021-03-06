@@ -204,6 +204,7 @@ class KnowledgeAnswers extends Component {
 						placeholder={`Pass the ${
 							index === 0 ? 'correct' : index + 1
 						} answer...`}
+						maxLength="100"
 						required
 					/>
 				</div>

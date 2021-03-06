@@ -223,6 +223,7 @@ class PunctationList extends Component {
 								})
 							}
 							defaultValue={punctation.result}
+							maxLength="100"
 							required
 						/>
 					</div>
