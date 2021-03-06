@@ -7,8 +7,9 @@ import ImageUrlPreview from '../../../ImageUrlPreview'
 
 import { RiImageEditFill, RiQuestionnaireFill } from 'react-icons/ri'
 import KnowledgeAnswers from './answers/KnowledgeAnswers'
-import PsychologyAndUniversalAnswers from './answers/PsychologyAndUniversalAnswers'
+import PsychologyAnswers from './answers/PsychologyAnswers'
 import PreferentialAnswers from './answers/PreferentialAnswers'
+import UniversalAnswers from './answers/UniversalAnswers'
 
 class QuestionList extends Component {
 	static propTypes = {
@@ -95,12 +96,19 @@ class QuestionList extends Component {
 						setQuestions={setQuestions}
 					/>
 				)
-			else if (
-				section_name === 'universal_quiz' ||
-				section_name === 'psychology_quiz'
-			)
+			else if (section_name === 'universal_quiz')
 				answers = (
-					<PsychologyAndUniversalAnswers
+					<UniversalAnswers
+						answers={question.answers}
+						questions={questions}
+						questionId={question.id}
+						hasChanged={hasChanged}
+						setQuestions={setQuestions}
+					/>
+				)
+			else if (section_name === 'psychology_quiz')
+				answers = (
+					<PsychologyAnswers
 						answers={question.answers}
 						questionId={question.id}
 					/>

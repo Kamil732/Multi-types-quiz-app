@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-export class PsychologyAndUniversalAnswers extends Component {
+export class PsychologyAnswers extends Component {
 	static propTypes = {
 		prop: PropTypes,
 	}
 
 	render() {
-		return <div>Psychology or Universal</div>
+		return <div>Psychology answer</div>
 	}
 }
 
@@ -16,7 +16,4 @@ const mapStateToProps = (state) => ({})
 
 const mapDispatchToProps = {}
 
-export default connect(
-	mapStateToProps,
-	mapDispatchToProps
-)(PsychologyAndUniversalAnswers)
+export default connect(mapStateToProps, mapDispatchToProps)(PsychologyAnswers)
