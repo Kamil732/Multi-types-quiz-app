@@ -4,6 +4,7 @@ from rest_framework.routers import DefaultRouter
 from quizzes.api.views import (
     ImageValidatorAPIView,
     QuizListAPIView,
+    QuestionUpdateListAPIView,
     QuizDetailAPIView,
     QuizUpdateAPIView,
     QuizPunctationListAPIView,
@@ -33,6 +34,7 @@ urlpatterns = [
             path('punctation/', QuizPunctationListAPIView.as_view(), name='quiz-punctation-list'),
             path('questions/', include([
                 path('', QuestionListAPIView.as_view(), name='quiz-question-list'),
+                path('update-list/', QuestionUpdateListAPIView.as_view(), name='quiz-question-update-list'),
                 path('update/', QuizUpdateAPIView.as_view(), name='quiz-questions-update'),
                 path('<slug:question_slug>/', include([
                     path('', QuestionDetailAPIView.as_view(), name='quiz-question-detail'),

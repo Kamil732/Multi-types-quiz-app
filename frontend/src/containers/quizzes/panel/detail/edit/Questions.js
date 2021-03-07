@@ -91,7 +91,9 @@ class Questions extends Component {
 		const { data } = this.props
 
 		axios
-			.get(data.questions)
+			.get(
+				`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/questions/update-list/`
+			)
 			.then((res) => {
 				this.setState({
 					loading: false,

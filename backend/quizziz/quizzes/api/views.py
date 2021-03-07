@@ -45,6 +45,22 @@ class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
         serializer.save(quiz_id=quiz_id)
 
 
+class QuestionUpdateListAPIView(QuestionListAPIView):
+    serializer_class = serializers.QuestionUpdateSerializer
+
+    # def get_queryset(self, *args, **kwargs):
+    #     author_slug = self.kwargs.get('author_slug')
+    #     quiz_slug = self.kwargs.get('quiz_slug')
+
+    #     try:
+    #         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+    #     except ObjectDoesNotExist:
+    #         raise NotFound(
+    #             _('The quiz you are looking for does not exist'))
+
+    #     return Question.objects.filter(quiz=quiz)
+
+
 class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'question_slug'
@@ -169,8 +185,10 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         #### Save answers ####
         if quiz.section.name == 'knowledge_quiz':
             for question in questions:
-                if not(question['answers']):
+                if not(question['answers']) or len(question['answers']) < 2:
                     raise ValidationError({'detail': _('Every question should have at least 2 answers')})
+                elif len(question['answers']) > 8:
+                    raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
 
                 question_model = Question.objects.get(quiz=quiz, question=question['question'])
 

@@ -1,3 +1,5 @@
+import random
+
 from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.reverse import reverse
@@ -67,15 +69,27 @@ class AnswerSerializer(serializers.ModelSerializer):
         )
 
 
+class AnswerUpdateSerializer(AnswerSerializer):
+    class Meta(AnswerSerializer.Meta):
+        fields = (
+            'answer',
+            'image_url',
+        )
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     image_url = serializers.CharField(allow_blank=True)
-    answers = AnswerSerializer(many=True, read_only=True)
+    answers = serializers.SerializerMethodField('get_answers')
 
     def validate_image_url(self, value):
         if not(valid_url_extension(value)):
             return ''
 
         return value
+
+    def get_answers(self, obj):
+        answers = sorted(obj.answers.all(), key=lambda x: random.random())
+        return AnswerSerializer(answers, many=True).data
 
     class Meta:
         model = Question
@@ -87,6 +101,12 @@ class QuestionSerializer(serializers.ModelSerializer):
             'answers',
         )
         read_only_fields = ('slug',)
+
+
+class QuestionUpdateSerializer(QuestionSerializer):
+    def get_answers(self, obj):
+        answers = obj.answers.order_by('id')
+        return AnswerUpdateSerializer(answers, many=True).data
 
 
 class QuizSerializer(serializers.Serializer):
