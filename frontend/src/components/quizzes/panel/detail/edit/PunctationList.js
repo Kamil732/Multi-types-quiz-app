@@ -92,16 +92,18 @@ class PunctationList extends Component {
 					}
 			}
 
-			// array of booleans, true if object has change otherwise false
-			const hasChangedArray = this.data.map(
-				(_, index) =>
-					!objectsEquals(punctations[index], this.data[index])
-			)
+			if (this.data.length === punctations.length) {
+				// array of booleans, true if object has change otherwise false
+				const hasChangedArray = this.data.map(
+					(_, index) =>
+						!objectsEquals(punctations[index], this.data[index])
+				)
 
-			// If true in array than the form has changed
-			hasChanged(
-				hasChangedArray.some((hasChanged) => hasChanged === true)
-			)
+				// If true in array than the form has changed
+				hasChanged(
+					hasChangedArray.some((hasChanged) => hasChanged === true)
+				)
+			} else hasChanged(true)
 		}
 	}
 

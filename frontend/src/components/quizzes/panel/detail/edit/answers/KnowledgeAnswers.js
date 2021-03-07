@@ -11,9 +11,8 @@ class KnowledgeAnswers extends Component {
 	static propTypes = {
 		answers: PropTypes.array,
 		questions: PropTypes.array,
-		questionId: PropTypes.number.isRequired,
+		questionId: PropTypes.number,
 		errors: PropTypes.object,
-		hasChanged: PropTypes.func.isRequired,
 		setQuestions: PropTypes.func.isRequired,
 	}
 
@@ -46,7 +45,6 @@ class KnowledgeAnswers extends Component {
 			})
 		)
 
-		this.props.hasChanged(true)
 		this.setState({
 			hasChanged: false,
 		})
@@ -75,7 +73,6 @@ class KnowledgeAnswers extends Component {
 				})
 			)
 
-			this.props.hasChanged(true)
 			this.setState({
 				hasChanged: true,
 			})
@@ -97,7 +94,7 @@ class KnowledgeAnswers extends Component {
 					return question
 				})
 			)
-			this.props.hasChanged(true)
+
 			this.setState({
 				hasChanged: true,
 			})
@@ -141,11 +138,10 @@ class KnowledgeAnswers extends Component {
 			this.setState({ hasChanged: false })
 		}
 
-		if (prevProps.answers !== this.props.answers) {
-			// Set hasChanged to false when forms are reseted
-			this.props.hasChanged(false)
-			this.setState({ hasChanged: false })
-
+		if (
+			JSON.stringify(prevProps.answers) !==
+			JSON.stringify(this.props.answers)
+		) {
 			// Check if form has changed
 			if (this.initialAnswers.length === this.props.answers.length) {
 				// array of booleans, true if object has change and false if not
@@ -158,19 +154,14 @@ class KnowledgeAnswers extends Component {
 				)
 
 				// If true in array than the form has changed
-				this.props.hasChanged(
-					hasChangedArray.some((hasChanged) => hasChanged === true)
-				)
 				this.setState({
 					hasChanged: hasChangedArray.some(
 						(hasChanged) => hasChanged === true
 					),
 				})
-			} else {
-				// If lengths of two arrays are diffrent then of course form has changed
-				this.props.hasChanged(true)
-				this.setState({ hasChanged: true })
 			}
+			// If lengths of two arrays are diffrent then of course form has changed
+			else this.setState({ hasChanged: true })
 		}
 	}
 

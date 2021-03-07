@@ -62,18 +62,48 @@ class QuestionList extends Component {
 				initialQuestions.length > 0 &&
 				questions.length > 0
 			) {
+				// Check if questions has changed
+				const questions1 = initialQuestions.map((question) => ({
+					question: question.question,
+					summery: question.summery,
+					image_url: question.image_url,
+				}))
+
+				const questions2 = questions.map((question) => ({
+					question: question.question,
+					summery: question.summery,
+					image_url: question.image_url,
+				}))
+
 				// array of booleans, true if object has change and false if not
-				const hasChangedArray = questions.map(
+				const hasChangedArray1 = questions.map(
 					(_, index) =>
-						!objectsEquals(
-							initialQuestions[index],
-							questions[index]
-						)
+						!objectsEquals(questions1[index], questions2[index])
+				)
+
+				// Check if answers has changed
+				const answers1 = initialQuestions.map((question) => ({
+					...question.answers,
+				}))
+
+				const answers2 = questions.map((question) => ({
+					...question.answers,
+				}))
+
+				// array of booleans, true if object has change and false if not
+				const hasChangedArray2 = questions.map(
+					(_, index) =>
+						!objectsEquals(answers1[index], answers2[index])
 				)
 
 				// If true in array than the form has changed
 				hasChanged(
-					hasChangedArray.some((hasChanged) => hasChanged === true)
+					hasChangedArray1.some(
+						(hasChanged) => hasChanged === true
+					) ||
+						hasChangedArray2.some(
+							(hasChanged) => hasChanged === true
+						)
 				)
 			}
 		}
