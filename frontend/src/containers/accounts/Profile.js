@@ -128,7 +128,7 @@ class Profile extends Component {
 				</div>
 				<Quizzes
 					title="The List of Quizzes"
-					searchUrl={`${process.env.REACT_APP_API_URL}/api/accounts/account/${data.slug}/quizzes/`}
+					searchUrl={`${process.env.REACT_APP_API_URL}/accounts/account/${data.slug}/quizzes/`}
 					getQuizzes={this.props.getQuizzes}
 					loading={this.props.quizzes.loading}
 					quizzes={this.props.quizzes.data}
