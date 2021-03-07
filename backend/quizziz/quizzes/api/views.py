@@ -1,3 +1,5 @@
+import random
+
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
@@ -35,6 +37,10 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'name'
 
 
+class QuestionUpdateListAPIView(mixins.QuestionMixin, generics.ListAPIView):
+    serializer_class = serializers.QuestionUpdateSerializer
+
+
 class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
     def perform_create(self, serializer):
         author_slug = self.kwargs.get('author_slug')
@@ -44,21 +50,19 @@ class QuestionListAPIView(mixins.QuestionMixin, generics.ListCreateAPIView):
 
         serializer.save(quiz_id=quiz_id)
 
+    def get_queryset(self, *args, **kwargs):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
 
-class QuestionUpdateListAPIView(QuestionListAPIView):
-    serializer_class = serializers.QuestionUpdateSerializer
+        try:
+            quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
+        except ObjectDoesNotExist:
+            raise NotFound(
+                _('The quiz you are looking for does not exist'))
 
-    # def get_queryset(self, *args, **kwargs):
-    #     author_slug = self.kwargs.get('author_slug')
-    #     quiz_slug = self.kwargs.get('quiz_slug')
-
-    #     try:
-    #         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
-    #     except ObjectDoesNotExist:
-    #         raise NotFound(
-    #             _('The quiz you are looking for does not exist'))
-
-    #     return Question.objects.filter(quiz=quiz)
+        if quiz.random_question_order:
+            return sorted(Question.objects.filter(quiz=quiz), key=lambda x: random.random())
+        return Question.objects.filter(quiz=quiz)
 
 
 class QuestionDetailAPIView(mixins.QuestionMixin, generics.RetrieveUpdateDestroyAPIView):
