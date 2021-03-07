@@ -131,7 +131,48 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
             if ([x.question for x in new_questions].count(model.question) > 1):
                 raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
 
-        #### Set punctations ####
+        #### Save answers ####
+        if quiz.section.name == 'knowledge_quiz':
+            for (index, question) in enumerate(questions):
+                if not(question['answers']) or len(question['answers']) < 2:
+                    raise ValidationError({'detail': _('Every question should have at least 2 answers')})
+                elif len(question['answers']) > 8:
+                    raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
+
+                question_model = Question.objects.get(quiz=quiz, question=question['question'])
+
+                new_answers = [
+                    Answer(
+                        question=question_model,
+                        answer=answer['answer'],
+                        image_url=answer['image_url'],
+                        is_correct=index_ == 0,
+                        slug=str(index_))
+                    for (index_, answer) in enumerate(question['answers'])
+                ]
+
+                # Check if answer is unique
+                for model in new_answers:
+                    if ([x.answer for x in new_answers].count(model.answer) > 1):
+                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
+
+                # If there is no error than save questions
+                if index == 0:
+                    bulk_sync(
+                        new_models=new_questions,
+                        filters=Q(quiz_id=quiz.id),
+                        fields=['question', 'summery', 'image_url'],
+                        key_fields=('slug',)  # slug is index from enumerate
+                    )
+
+                bulk_sync(
+                    new_models=new_answers,
+                    filters=Q(question_id=question_model.id),
+                    fields=['answer', 'image_url', 'is_correct'],
+                    key_fields=('slug',)  # slug is index from enumerate
+                )
+
+         #### Set punctations ####
         if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
             if quiz.section.name == 'knowledge_quiz':
                 max_score = Question.objects.filter(quiz=quiz).count()
@@ -178,46 +219,6 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
 
             for punctation in punctations:
                 punctation.save()
-
-        #### Save answers ####
-        if quiz.section.name == 'knowledge_quiz':
-            for question in questions:
-                if not(question['answers']) or len(question['answers']) < 2:
-                    raise ValidationError({'detail': _('Every question should have at least 2 answers')})
-                elif len(question['answers']) > 8:
-                    raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
-
-                question_model = Question.objects.get(quiz=quiz, question=question['question'])
-
-                new_answers = [
-                    Answer(
-                        question=question_model,
-                        answer=answer['answer'],
-                        image_url=answer['image_url'],
-                        is_correct=index == 0,
-                        slug=str(index))
-                    for (index, answer) in enumerate(question['answers'])
-                ]
-
-                # Check if answer is unique
-                for model in new_answers:
-                    if ([x.answer for x in new_answers].count(model.answer) > 1):
-                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
-
-                bulk_sync(
-                    new_models=new_answers,
-                    filters=Q(question_id=question_model.id),
-                    fields=['answer', 'image_url', 'is_correct'],
-                    key_fields=('slug',)  # slug is index from enumerate
-                )
-
-        # If there is no error than save questions
-        bulk_sync(
-            new_models=new_questions,
-            filters=Q(quiz_id=quiz.id),
-            fields=['question', 'summery', 'image_url'],
-            key_fields=('slug',)  # slug is index from enumerate
-        )
 
         return Response({'message': 'Successfully updated'})
 

@@ -186,7 +186,6 @@ class KnowledgeAnswers extends Component {
 
 					<input
 						type="text"
-						id={`answer-${index}-${questionId}`}
 						data-id={index}
 						onChange={this.onChange}
 						name="answer"

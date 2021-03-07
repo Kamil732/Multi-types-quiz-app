@@ -6,19 +6,20 @@ import Title from '../../../../../common/Title'
 import { clearErrors } from '../../../../../redux/actions/errors'
 import {
 	updateQuizQuestions,
-	getQuiz,
+	updateQuizData,
 } from '../../../../../redux/actions/quizzes'
 import axios from 'axios'
 
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
 import QuestionList from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
+import { max } from 'lodash'
 class Questions extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
 		clearErrors: PropTypes.func.isRequired,
 		updateQuizQuestions: PropTypes.func.isRequired,
-		getQuiz: PropTypes.func.isRequired,
+		updateQuizData: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -125,10 +126,18 @@ class Questions extends Component {
 			this.props.data.slug,
 			this.state.questions
 		)
-		// Refresh max_score
-		await this.props.getQuiz(
+		// Refresh quiz data
+		let max_score
+		if (this.props.data.section.name === 'knowledge_quiz')
+			max_score = this.state.questions.length
+
+		await this.props.updateQuizData(
 			this.props.data.author_slug,
-			this.props.data.slug
+			this.props.data.slug,
+			{
+				max_score,
+				question_amount: this.state.questions.length,
+			}
 		)
 
 		if (Object.keys(this.props.errors).length === 0) {
@@ -228,7 +237,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
 	clearErrors,
 	updateQuizQuestions,
-	getQuiz,
+	updateQuizData,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions)
