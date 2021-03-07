@@ -119,20 +119,13 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        new_models = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
-                               image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
+        new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
+                                  image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
 
         # Check if question is unique
-        for model in new_models:
-            if ([x.question for x in new_models].count(model.question) > 1):
+        for model in new_questions:
+            if ([x.question for x in new_questions].count(model.question) > 1):
                 raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
-
-        bulk_sync(
-            new_models=new_models,
-            filters=Q(quiz_id=quiz.id),
-            fields=['question', 'summery', 'image_url'],
-            key_fields=('slug',)  # slug is index from enumerate
-        )
 
         #### Set punctations ####
         if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
@@ -192,7 +185,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
 
                 question_model = Question.objects.get(quiz=quiz, question=question['question'])
 
-                new_models = [
+                new_answers = [
                     Answer(
                         question=question_model,
                         answer=answer['answer'],
@@ -203,20 +196,24 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                 ]
 
                 # Check if answer is unique
-                for model in new_models:
-                    if ([x.answer for x in new_models].count(model.answer) > 1):
+                for model in new_answers:
+                    if ([x.answer for x in new_answers].count(model.answer) > 1):
                         raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
 
-                ret = bulk_sync(
-                    new_models=new_models,
+                bulk_sync(
+                    new_models=new_answers,
                     filters=Q(question_id=question_model.id),
                     fields=['answer', 'image_url', 'is_correct'],
                     key_fields=('slug',)  # slug is index from enumerate
                 )
 
-                print("Results of bulk_sync: "
-                      "{created} created, {updated} updated, {deleted} deleted."
-                      .format(**ret['stats']))
+        # If there is no error than save questions
+        bulk_sync(
+            new_models=new_questions,
+            filters=Q(quiz_id=quiz.id),
+            fields=['question', 'summery', 'image_url'],
+            key_fields=('slug',)  # slug is index from enumerate
+        )
 
         return Response({'message': 'Successfully updated'})
 
