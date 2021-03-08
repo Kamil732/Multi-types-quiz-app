@@ -172,7 +172,6 @@ class QuestionList extends Component {
 
 										<input
 											type="text"
-											id={`question-${index}`}
 											data-id={index}
 											onChange={this.onChange}
 											name="question"
@@ -194,7 +193,6 @@ class QuestionList extends Component {
 										Summery:
 									</label>
 									<Textarea
-										id={`summery-${index}`}
 										data-id={index}
 										onChange={this.onChange}
 										name="summery"
@@ -219,7 +217,6 @@ class QuestionList extends Component {
 
 										<input
 											type="text"
-											id={`image-url-${index}`}
 											data-id={index}
 											onChange={this.onChange}
 											name="image_url"

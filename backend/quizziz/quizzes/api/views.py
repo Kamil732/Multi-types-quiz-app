@@ -139,6 +139,20 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                 elif len(question['answers']) > 8:
                     raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
 
+                # Check if answer is unique
+                for answer in question['answers']:
+                    if ([answer_['answer'] for answer_ in question['answers']].count(answer['answer']) > 1):
+                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
+
+                # If there is no error than save questions
+                if index == 0:
+                    bulk_sync(
+                        new_models=new_questions,
+                        filters=Q(quiz_id=quiz.id),
+                        fields=['question', 'summery', 'image_url'],
+                        key_fields=('slug',)  # slug is index from enumerate
+                    )
+
                 question_model = Question.objects.get(quiz=quiz, question=question['question'])
 
                 new_answers = [
@@ -150,20 +164,6 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                         slug=str(index_))
                     for (index_, answer) in enumerate(question['answers'])
                 ]
-
-                # Check if answer is unique
-                for model in new_answers:
-                    if ([x.answer for x in new_answers].count(model.answer) > 1):
-                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
-
-                # If there is no error than save questions
-                if index == 0:
-                    bulk_sync(
-                        new_models=new_questions,
-                        filters=Q(quiz_id=quiz.id),
-                        fields=['question', 'summery', 'image_url'],
-                        key_fields=('slug',)  # slug is index from enumerate
-                    )
 
                 bulk_sync(
                     new_models=new_answers,
