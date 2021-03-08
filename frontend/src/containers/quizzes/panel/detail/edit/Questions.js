@@ -12,7 +12,6 @@ import axios from 'axios'
 
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
 import QuestionList from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
-import { max } from 'lodash'
 class Questions extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,

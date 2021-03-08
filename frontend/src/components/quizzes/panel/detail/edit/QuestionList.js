@@ -126,7 +126,7 @@ class QuestionList extends Component {
 					<KnowledgeAnswers
 						answers={question.answers}
 						questions={questions}
-						questionId={question.id}
+						questionIndex={index}
 						hasChanged={hasChanged}
 						setQuestions={setQuestions}
 					/>
@@ -136,7 +136,7 @@ class QuestionList extends Component {
 					<UniversalAnswers
 						answers={question.answers}
 						questions={questions}
-						questionId={question.id}
+						questionIndex={index}
 						hasChanged={hasChanged}
 						setQuestions={setQuestions}
 					/>
@@ -145,14 +145,14 @@ class QuestionList extends Component {
 				answers = (
 					<PsychologyAnswers
 						answers={question.answers}
-						questionId={question.id}
+						questionIndex={index}
 					/>
 				)
 			else if (section_name === 'preferential_quiz')
 				answers = (
 					<PreferentialAnswers
 						answers={question.answers}
-						questionId={question.id}
+						questionIndex={index}
 					/>
 				)
 

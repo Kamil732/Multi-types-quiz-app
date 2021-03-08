@@ -11,7 +11,7 @@ class KnowledgeAnswers extends Component {
 	static propTypes = {
 		answers: PropTypes.array,
 		questions: PropTypes.array,
-		questionId: PropTypes.number,
+		questionIndex: PropTypes.number,
 		errors: PropTypes.object,
 		setQuestions: PropTypes.func.isRequired,
 	}
@@ -34,8 +34,8 @@ class KnowledgeAnswers extends Component {
 	resetForm = () => {
 		// Reset answers
 		this.props.setQuestions(
-			this.props.questions.map((question) => {
-				if (question.id === this.props.questionId)
+			this.props.questions.map((question, index) => {
+				if (index === this.props.questionIndex)
 					return {
 						...question,
 						answers: this.initialAnswers,
@@ -53,9 +53,9 @@ class KnowledgeAnswers extends Component {
 	addAnswer = () => {
 		if (this.props.answers.length < 8) {
 			this.props.setQuestions(
-				this.props.questions.map((question) => {
+				this.props.questions.map((question, index) => {
 					// if this is the question where our answers are
-					if (question.id === this.props.questionId)
+					if (index === this.props.questionIndex)
 						// then return question with changed answers
 						return {
 							...question,
@@ -82,9 +82,9 @@ class KnowledgeAnswers extends Component {
 	removeAnswer = () => {
 		if (this.props.answers.length > 2) {
 			this.props.setQuestions(
-				this.props.questions.map((question) => {
+				this.props.questions.map((question, index) => {
 					// if this is the question where our answers are
-					if (question.id === this.props.questionId)
+					if (index === this.props.questionIndex)
 						// then return question with changed answers
 						return {
 							...question,
@@ -117,9 +117,9 @@ class KnowledgeAnswers extends Component {
 
 		// Change questions with answers
 		this.props.setQuestions(
-			this.props.questions.map((question) => {
+			this.props.questions.map((question, index) => {
 				// if this is the question where our answers are
-				if (question.id === this.props.questionId)
+				if (index === this.props.questionIndex)
 					// then return question with changed answers
 					return {
 						...question,
@@ -133,7 +133,7 @@ class KnowledgeAnswers extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		// Update answers when questions changes
-		if (prevProps.questionId !== this.props.questionId) {
+		if (prevProps.questionIndex !== this.props.questionIndex) {
 			this.initialAnswers = this.props.answers
 			this.setState({ hasChanged: false })
 		}
@@ -166,7 +166,7 @@ class KnowledgeAnswers extends Component {
 	}
 
 	render() {
-		const { questionId, errors } = this.props
+		const { errors } = this.props
 		const { hasChanged } = this.state
 
 		const answers = this.props.answers.map((answer, index) => (
