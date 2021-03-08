@@ -44,7 +44,7 @@ class List extends Component {
 					'success'
 				).then((res) => {
 					this.props.deleteQuiz(author_slug, quiz_slug)
-					this.props.history.push('/')
+					this.props.history.push('/refresh')
 					this.props.history.replace('/panel/dashboard')
 				})
 			}
