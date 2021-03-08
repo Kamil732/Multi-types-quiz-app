@@ -190,7 +190,7 @@ class KnowledgeAnswers extends Component {
 						onChange={this.onChange}
 						name="answer"
 						value={this.props.answers[index].answer}
-						className="form-control__input form-control__textarea"
+						className="form-control__input"
 						placeholder={`Pass the ${
 							index === 0 ? 'correct' : index + 1
 						} answer...`}

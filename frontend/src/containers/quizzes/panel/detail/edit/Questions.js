@@ -32,7 +32,6 @@ class Questions extends Component {
 			hasChanged: false,
 		}
 
-		this.getQuestions = this.getQuestions.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.resetForm = this.resetForm.bind(this)
 		this.addQuestion = this.addQuestion.bind(this)
@@ -60,10 +59,12 @@ class Questions extends Component {
 						{
 							answer: '',
 							image_url: '',
+							points: 0,
 						},
 						{
 							answer: '',
 							image_url: '',
+							points: 0,
 						},
 					],
 					question: '',
@@ -86,7 +87,7 @@ class Questions extends Component {
 		}
 	}
 
-	getQuestions = () => {
+	componentDidMount = () => {
 		this.setState({ loading: true })
 		const { data } = this.props
 
@@ -108,12 +109,6 @@ class Questions extends Component {
 					questions: [],
 				})
 			)
-	}
-
-	componentDidMount = () => this.getQuestions()
-
-	componentDidUpdate(prevProps, _) {
-		if (prevProps.data !== this.props.data) this.getQuestions()
 	}
 
 	onSubmit = async (e) => {

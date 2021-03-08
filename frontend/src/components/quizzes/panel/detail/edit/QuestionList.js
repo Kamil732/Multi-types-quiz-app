@@ -160,7 +160,7 @@ class QuestionList extends Component {
 				<div className="card" key={index}>
 					<div className="card__body">
 						<div className="row">
-							<div className="col-sm-7">
+							<div className="col-md-7">
 								<div className="form-control">
 									<label className="form-control__label">
 										Question:
@@ -205,7 +205,7 @@ class QuestionList extends Component {
 									/>
 								</div>
 							</div>
-							<div className="col-sm-5">
+							<div className="col-md-5">
 								<div className="form-control">
 									<label className="form-control__label">
 										Image Url:
