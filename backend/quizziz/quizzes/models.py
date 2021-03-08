@@ -127,6 +127,7 @@ class PsychologyResults(models.Model):
 
 class Answer(models.Model):
     POINTS = (
+        ('0', 0),
         ('1', 1),
         ('2', 2),
         ('3', 3),
@@ -149,15 +150,14 @@ class Answer(models.Model):
     # Knowledge
     is_correct = models.BooleanField(default=False)
 
+    # Universal
+    points = models.CharField(max_length=2, choices=POINTS, default=POINTS[0][1])
+
     # Psychology
     results = models.ManyToManyField(PsychologyResults, blank=True, related_name='answers')
 
     # Preferentail
     answered_times = models.PositiveIntegerField(default=0)
-
-    # Universal
-    points = models.CharField(
-        max_length=2, choices=POINTS, blank=True)
 
     def __str__(self):
         return self.answer

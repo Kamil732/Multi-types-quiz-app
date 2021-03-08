@@ -74,6 +74,7 @@ class AnswerUpdateSerializer(AnswerSerializer):
         fields = (
             'answer',
             'image_url',
+            'points',
         )
 
 
