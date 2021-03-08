@@ -132,45 +132,45 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                 raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
 
         #### Save answers ####
-        if quiz.section.name == 'knowledge_quiz':
-            for (index, question) in enumerate(questions):
-                if not(question['answers']) or len(question['answers']) < 2:
-                    raise ValidationError({'detail': _('Every question should have at least 2 answers')})
-                elif len(question['answers']) > 8:
-                    raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
+        for (index, question) in enumerate(questions):
+            if not(question['answers']) or len(question['answers']) < 2:
+                raise ValidationError({'detail': _('Every question should have at least 2 answers')})
+            elif len(question['answers']) > 8:
+                raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
 
-                # Check if answer is unique
-                for answer in question['answers']:
-                    if ([answer_['answer'] for answer_ in question['answers']].count(answer['answer']) > 1):
-                        raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
+            # Check if answer is unique
+            for answer in question['answers']:
+                if ([answer_['answer'] for answer_ in question['answers']].count(answer['answer']) > 1):
+                    raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
 
-                # If there is no error than save questions
-                if index == 0:
-                    bulk_sync(
-                        new_models=new_questions,
-                        filters=Q(quiz_id=quiz.id),
-                        fields=['question', 'summery', 'image_url'],
-                        key_fields=('slug',)  # slug is index from enumerate
-                    )
-
-                question_model = Question.objects.get(quiz=quiz, question=question['question'])
-
-                new_answers = [
-                    Answer(
-                        question=question_model,
-                        answer=answer['answer'],
-                        image_url=answer['image_url'],
-                        is_correct=index_ == 0,
-                        slug=str(index_))
-                    for (index_, answer) in enumerate(question['answers'])
-                ]
-
+            # If there is no error than save questions
+            if index == 0:
                 bulk_sync(
-                    new_models=new_answers,
-                    filters=Q(question_id=question_model.id),
-                    fields=['answer', 'image_url', 'is_correct'],
+                    new_models=new_questions,
+                    filters=Q(quiz_id=quiz.id),
+                    fields=['question', 'summery', 'image_url'],
                     key_fields=('slug',)  # slug is index from enumerate
                 )
+
+            question_model = Question.objects.get(quiz=quiz, question=question['question'])
+
+            new_answers = [
+                Answer(
+                    question=question_model,
+                    answer=answer['answer'],
+                    image_url=answer['image_url'],
+                    is_correct=index_ == 0 if quiz.section.name == 'knowledge_quiz' else False,
+                    points=answer['points'],
+                    slug=str(index_))
+                for (index_, answer) in enumerate(question['answers'])
+            ]
+
+            bulk_sync(
+                new_models=new_answers,
+                filters=Q(question_id=question_model.id),
+                fields=['answer', 'image_url', 'is_correct', 'points'],
+                key_fields=('slug',)  # slug is index from enumerate
+            )
 
          #### Set punctations ####
         if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
