@@ -70,6 +70,11 @@ class AnswerSerializer(serializers.ModelSerializer):
 
 
 class AnswerUpdateSerializer(AnswerSerializer):
+    def validate_points(self, value):
+        if not(value):
+            return '0'
+        return value
+
     class Meta(AnswerSerializer.Meta):
         fields = (
             'answer',

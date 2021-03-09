@@ -151,7 +151,7 @@ class Answer(models.Model):
     is_correct = models.BooleanField(default=False)
 
     # Universal
-    points = models.CharField(max_length=2, choices=POINTS, default=POINTS[0][1])
+    points = models.CharField(max_length=2, choices=POINTS, default=POINTS[0][0])
 
     # Psychology
     results = models.ManyToManyField(PsychologyResults, blank=True, related_name='answers')
