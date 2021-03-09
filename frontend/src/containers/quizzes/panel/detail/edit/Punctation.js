@@ -105,8 +105,14 @@ class Punctation extends Component {
 
 	removeGrade = () => {
 		const { punctations } = this.state
+		const section_name = this.props.data.section.name
 
-		if (punctations.length > 1)
+		if (section_name === 'psychology_quiz' && punctations.length > 2)
+			this.setState({
+				hasChanged: true,
+				punctations: punctations.slice(0, -1),
+			})
+		else if (section_name !== 'psychology_quiz' && punctations.length > 1)
 			this.setState({
 				hasChanged: true,
 				punctations: punctations.slice(0, -1),
@@ -217,7 +223,14 @@ class Punctation extends Component {
 											<button
 												type="button"
 												className={`btn btn__danger ${
+													section_name !==
+														'psychology_quiz' &&
 													punctations.length <= 1
+														? 'btn__disabled'
+														: section_name ===
+																'psychology_quiz' &&
+														  punctations.length <=
+																2
 														? 'btn__disabled'
 														: ''
 												}`}

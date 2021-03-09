@@ -75,7 +75,9 @@ class CreateForm extends Component {
 
 		if (this.props.quiz.slug)
 			this.props.history.push(
-				`/panel/dashboard/${this.props.quiz.slug}/edit/questions`
+				section === 'psychology_quiz'
+					? `/panel/dashboard/${this.props.quiz.slug}/edit/punctation`
+					: `/panel/dashboard/${this.props.quiz.slug}/edit/questions`
 			)
 	}
 
