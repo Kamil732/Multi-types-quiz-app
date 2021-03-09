@@ -141,16 +141,19 @@ class QuestionList extends Component {
 						setQuestions={setQuestions}
 					/>
 				)
-			else if (section_name === 'psychology_quiz')
-				answers = (
-					<PsychologyAnswers
-						answers={question.answers}
-						questionIndex={index}
-					/>
-				)
 			else if (section_name === 'preferential_quiz')
 				answers = (
 					<PreferentialAnswers
+						answers={question.answers}
+						questions={questions}
+						questionIndex={index}
+						hasChanged={hasChanged}
+						setQuestions={setQuestions}
+					/>
+				)
+			else if (section_name === 'psychology_quiz')
+				answers = (
+					<PsychologyAnswers
 						answers={question.answers}
 						questionIndex={index}
 					/>
