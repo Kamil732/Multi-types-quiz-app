@@ -101,14 +101,9 @@ class PsychologyAnswers extends Answer {
 						<div
 							{...provided.droppableProps}
 							ref={provided.innerRef}
-							style={{
-								background: snapshot.isDraggingOver
-									? 'lightblue'
-									: 'lightgrey',
-								padding: 4,
-								width: 250,
-								minHeight: 200,
-							}}
+							className={`droppable ${
+								snapshot.isDraggingOver ? 'draggingOver' : ''
+							}`}
 						>
 							{answer.results?.map((result, index) => (
 								<Draggable
@@ -121,18 +116,11 @@ class PsychologyAnswers extends Answer {
 											ref={provided.innerRef}
 											{...provided.draggableProps}
 											{...provided.dragHandleProps}
-											style={{
-												userSelect: 'none',
-												padding: 16,
-												margin: '0 0 8px 0',
-												minHeight: '50px',
-												backgroundColor: snapshot.isDragging
-													? '#263B4A'
-													: '#456C86',
-												color: '#fff',
-												...provided.draggableProps
-													.style,
-											}}
+											className={`draggable ${
+												snapshot.isDragging
+													? 'dragging'
+													: ''
+											}`}
 										>
 											{result.result}
 										</div>
