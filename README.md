@@ -7,7 +7,7 @@ Quizzer is a web application where you can create and solve quizzes
 * Yarn 7.10.4
 
 ## Configuration and Installation
-* Clone the repository git clone `https://github.com/Kamil732/Quizzer-DRF`
+* Clone the repository git clone `https://github.com/Kamil732/Multi-types-quiz-app`
 
 If you don't have `pipenv` then install that using `pip install pipenv`
 
