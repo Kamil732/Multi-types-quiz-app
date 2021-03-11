@@ -1,6 +1,8 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import uuid from 'uuid/dist/v4'
+
 import objectsEquals from '../../../../../../helpers/objectsEquals'
 
 class Answer extends Component {
@@ -59,9 +61,11 @@ class Answer extends Component {
 								...question.answers,
 								// Add answer
 								{
+									id: uuid(),
 									answer: '',
 									image_url: '',
 									points: 0,
+									results: [],
 								},
 							],
 						}

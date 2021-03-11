@@ -3,10 +3,13 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Title from '../../../../../common/Title'
 
+import uuid from 'uuid/dist/v4'
+
 import { clearErrors } from '../../../../../redux/actions/errors'
 import {
 	updateQuizQuestions,
 	updateQuizData,
+	getQuizPunctations,
 } from '../../../../../redux/actions/quizzes'
 import axios from 'axios'
 
@@ -15,10 +18,12 @@ import QuestionList from '../../../../../components/quizzes/panel/detail/edit/Qu
 class Questions extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
+		punctations: PropTypes.array,
 		errors: PropTypes.object,
 		clearErrors: PropTypes.func.isRequired,
 		updateQuizQuestions: PropTypes.func.isRequired,
 		updateQuizData: PropTypes.func.isRequired,
+		getQuizPunctations: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
@@ -50,6 +55,12 @@ class Questions extends Component {
 	addQuestion = () => {
 		const { questions } = this.state
 
+		console.log(
+			this.props.punctations.map((result) => ({
+				result: result.result,
+			}))
+		)
+
 		this.setState({
 			hasChanged: true,
 			questions: [
@@ -57,14 +68,21 @@ class Questions extends Component {
 				{
 					answers: [
 						{
+							id: uuid(),
 							answer: '',
 							image_url: '',
 							points: 0,
+							results: this.props.punctations.map((result) => ({
+								id: result.id,
+								result: result.result,
+							})),
 						},
 						{
+							id: uuid(),
 							answer: '',
 							image_url: '',
 							points: 0,
+							results: [],
 						},
 					],
 					question: '',
@@ -87,28 +105,29 @@ class Questions extends Component {
 		}
 	}
 
-	componentDidMount = () => {
+	componentDidMount = async () => {
 		this.setState({ loading: true })
 		const { data } = this.props
 
-		axios
-			.get(
+		await this.props.getQuizPunctations(data.author_slug, data.slug)
+
+		try {
+			const res = await axios.get(
 				`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/questions/update-list/`
 			)
-			.then((res) => {
-				this.setState({
-					loading: false,
-					questions: res.data,
-				})
 
-				this.initialQuestions = res.data
+			this.setState({
+				loading: false,
+				questions: res.data,
 			})
-			.catch((err) =>
-				this.setState({
-					loading: false,
-					questions: [],
-				})
-			)
+
+			this.initialQuestions = res.data
+		} catch (err) {
+			this.setState({
+				loading: false,
+				questions: [],
+			})
+		}
 	}
 
 	onSubmit = async (e) => {
@@ -225,6 +244,7 @@ class Questions extends Component {
 }
 
 const mapStateToProps = (state) => ({
+	punctations: state.quizzes.quizzes.item.punctations,
 	errors: state.errors.messages,
 })
 
@@ -232,6 +252,7 @@ const mapDispatchToProps = {
 	clearErrors,
 	updateQuizQuestions,
 	updateQuizData,
+	getQuizPunctations,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Questions)

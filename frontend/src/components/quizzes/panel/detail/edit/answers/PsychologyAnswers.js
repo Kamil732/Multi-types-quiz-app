@@ -1,15 +1,73 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
 
 import { MdQuestionAnswer } from 'react-icons/md'
 
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd'
 import Answer from './Answer'
 
 class PsychologyAnswers extends Answer {
-	static propTypes = {
-		...Answer.propTypes,
-		punctations: PropTypes.array,
+	constructor(props) {
+		super(props)
+
+		this.onDragEnd = this.onDragEnd.bind(this)
+	}
+
+	onDragEnd = (result) => {
+		if (!result.destination) return
+
+		const { source, destination } = result
+
+		if (source.droppableId !== destination.droppableId) {
+			const sourceColumn = this.props.questions[
+				this.props.questionIndex
+			].answers.filter(
+				(answer) =>
+					answer.id.toString() === source.droppableId.toString()
+			)[0]
+			const destColumn = this.props.questions[
+				this.props.questionIndex
+			].answers.filter(
+				(answer) =>
+					answer.id.toString() === destination.droppableId.toString()
+			)[0]
+
+			const sourceItems = [...sourceColumn.results]
+			const destItems = [...destColumn.results]
+			const [removed] = sourceItems.splice(source.index, 1)
+			destItems.splice(destination.index, 0, removed)
+
+			this.props.setQuestions(
+				this.props.questions.map((question, index) => {
+					// if this is the question where our answers are
+					if (index === this.props.questionIndex)
+						return {
+							...question,
+							answers: question.answers.map((answer) => {
+								if (
+									answer.id.toString() ===
+									source.droppableId.toString()
+								)
+									return {
+										...answer,
+										results: sourceItems,
+									}
+								if (
+									answer.id.toString() ===
+									destination.droppableId.toString()
+								)
+									return {
+										...answer,
+										results: destItems,
+									}
+
+								return answer
+							}),
+						}
+
+					return question
+				})
+			)
+		}
 	}
 
 	render() {
@@ -37,13 +95,63 @@ class PsychologyAnswers extends Answer {
 						required
 					/>
 				</div>
+				<Droppable droppableId={answer.id.toString()}>
+					{(provided, snapshot) => (
+						<div
+							{...provided.droppableProps}
+							ref={provided.innerRef}
+							style={{
+								background: snapshot.isDraggingOver
+									? 'lightblue'
+									: 'lightgrey',
+								padding: 4,
+								width: 250,
+								minHeight: 200,
+							}}
+						>
+							{answer.results?.map((result, index) => (
+								<Draggable
+									key={index}
+									draggableId={result.id.toString()}
+									index={index}
+								>
+									{(provided, snapshot) => (
+										<div
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											style={{
+												userSelect: 'none',
+												padding: 16,
+												margin: '0 0 8px 0',
+												minHeight: '50px',
+												backgroundColor: snapshot.isDragging
+													? '#263B4A'
+													: '#456C86',
+												color: '#fff',
+												...provided.draggableProps
+													.style,
+											}}
+										>
+											{result.result}
+										</div>
+									)}
+								</Draggable>
+							))}
+						</div>
+					)}
+				</Droppable>
 			</div>
 		))
 
 		return (
 			<div className="card">
 				<div className="card__body">
-					{answers}
+					<DragDropContext
+						onDragEnd={(result) => this.onDragEnd(result)}
+					>
+						{answers}
+					</DragDropContext>
 
 					<hr />
 					<div className="card__body">
@@ -84,8 +192,4 @@ class PsychologyAnswers extends Answer {
 	}
 }
 
-const mapStateToProps = (state) => ({
-	punctations: state.quizzes.quizzes.item.punctations,
-})
-
-export default connect(mapStateToProps, null)(PsychologyAnswers)
+export default PsychologyAnswers

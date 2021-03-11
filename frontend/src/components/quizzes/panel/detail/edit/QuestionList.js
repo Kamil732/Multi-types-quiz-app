@@ -155,7 +155,10 @@ class QuestionList extends Component {
 				answers = (
 					<PsychologyAnswers
 						answers={question.answers}
+						questions={questions}
 						questionIndex={index}
+						hasChanged={hasChanged}
+						setQuestions={setQuestions}
 					/>
 				)
 
