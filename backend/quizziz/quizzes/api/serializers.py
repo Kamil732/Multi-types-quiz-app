@@ -53,11 +53,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('name', 'display_name')
 
 
-# class PsychologyResultsSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = PsychologyResults
-#         fields = '__all__'
-
 class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
@@ -263,7 +258,7 @@ class QuizPunctationSerializer(serializers.ModelSerializer):
 class PsychologyResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = PsychologyResults
-        exclude = ('id', 'quiz', 'slug',)
+        exclude = ('quiz', 'slug',)
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):
