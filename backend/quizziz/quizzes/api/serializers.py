@@ -69,7 +69,15 @@ class AnswerSerializer(serializers.ModelSerializer):
         )
 
 
+class PsychologyResultUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PsychologyResults
+        fields = ('id', 'result',)
+
+
 class AnswerUpdateSerializer(AnswerSerializer):
+    results = PsychologyResultUpdateSerializer(many=True, read_only=True)
+
     def validate_points(self, value):
         if not(value):
             return '0'
@@ -77,9 +85,11 @@ class AnswerUpdateSerializer(AnswerSerializer):
 
     class Meta(AnswerSerializer.Meta):
         fields = (
+            'id',
             'answer',
             'image_url',
             'points',
+            'results',
         )
 
 
