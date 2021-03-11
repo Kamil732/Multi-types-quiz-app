@@ -377,6 +377,38 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
             key_fields=('slug',)  # slug is index from enumerate
         )
 
+        if section == 'psychology_quiz':
+            questions = Question.objects.filter(quiz_id=quiz.id).prefetch_related('answers')
+
+            # Check if there are some new created punctations
+            # If there are then we need to add them to the first answer as default
+            for question in questions:
+                # Get the first answer
+                first_answer = question.answers.prefetch_related('results').first()
+
+                # The punctations from given data
+                punctations = [model['result'] for model in request.data]
+
+                # All the results from all answers
+                results = []
+
+                # Result that we need to add to the first answer
+                new_results = []
+
+                # Add all the results from all answers
+                for answer in question.answers.prefetch_related('results').all():
+                    for result in [result.result for result in answer.results.all()]:
+                        results.append(result)
+
+                # Add all the results that are new created to new_results
+                for punctation in punctations:
+                    if not(punctation in results):
+                        new_results.append(PsychologyResults.objects.get(quiz=quiz, result=punctation))
+
+                # Add all new_results to first answer
+                for result in new_results:
+                    first_answer.results.add(result)
+
         return Response(request.data, status=status.HTTP_200_OK)
 
 
