@@ -100,12 +100,34 @@ class Answer extends Component {
 			this.props.setQuestions(
 				this.props.questions.map((question, index) => {
 					// if this is the question where our answers are
-					if (index === this.props.questionIndex)
+					if (index === this.props.questionIndex) {
+						let answers = this.props.answers.slice(0, -1)
+
+						if (this.props.section_name === 'psychology_quiz') {
+							const removed_results = this.props.answers.slice(
+								-1
+							)[0].results
+
+							answers = answers.map((answer, index) => {
+								if (index === answers.length - 1)
+									return {
+										...answer,
+										results: [
+											...answer.results,
+											...removed_results,
+										],
+									}
+
+								return answer
+							})
+						}
+
 						// then return question with changed answers
 						return {
 							...question,
-							answers: this.props.answers.slice(0, -1),
+							answers,
 						}
+					}
 
 					return question
 				})
