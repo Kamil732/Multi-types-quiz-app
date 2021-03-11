@@ -55,12 +55,6 @@ class Questions extends Component {
 	addQuestion = () => {
 		const { questions } = this.state
 
-		console.log(
-			this.props.punctations.map((result) => ({
-				result: result.result,
-			}))
-		)
-
 		this.setState({
 			hasChanged: true,
 			questions: [

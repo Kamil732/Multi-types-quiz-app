@@ -10,6 +10,8 @@ class Answer extends Component {
 		answers: PropTypes.array,
 		questions: PropTypes.array,
 		questionIndex: PropTypes.number,
+		punctationLength: PropTypes.number,
+		section_name: PropTypes.string,
 		errors: PropTypes.object,
 		setQuestions: PropTypes.func.isRequired,
 	}
@@ -49,7 +51,20 @@ class Answer extends Component {
 	}
 
 	addAnswer = () => {
-		if (this.props.answers.length < 8) {
+		let shouldAdd = false
+
+		if (
+			this.props.answers.length < 8 &&
+			this.props.section_name !== 'psychology_quiz'
+		)
+			shouldAdd = true
+		else if (
+			this.props.answers.length < this.props.punctationLength &&
+			this.props.section_name === 'psychology_quiz'
+		)
+			shouldAdd = true
+
+		if (shouldAdd) {
 			this.props.setQuestions(
 				this.props.questions.map((question, index) => {
 					// if this is the question where our answers are

@@ -10,11 +10,13 @@ import KnowledgeAnswers from './answers/KnowledgeAnswers'
 import PsychologyAnswers from './answers/PsychologyAnswers'
 import PreferentialAnswers from './answers/PreferentialAnswers'
 import UniversalAnswers from './answers/UniversalAnswers'
+import { connect } from 'react-redux'
 
 class QuestionList extends Component {
 	static propTypes = {
 		initialQuestions: PropTypes.array,
 		questions: PropTypes.array,
+		punctations: PropTypes.array,
 		section_name: PropTypes.string.isRequired,
 		removeQuestion: PropTypes.func.isRequired,
 		hasChanged: PropTypes.func.isRequired,
@@ -116,6 +118,7 @@ class QuestionList extends Component {
 			hasChanged,
 			setQuestions,
 			section_name,
+			punctations,
 		} = this.props
 
 		const questionList = questions.map((question, index) => {
@@ -155,6 +158,8 @@ class QuestionList extends Component {
 				answers = (
 					<PsychologyAnswers
 						answers={question.answers}
+						punctationLength={punctations.length}
+						section_name={section_name}
 						questions={questions}
 						questionIndex={index}
 						hasChanged={hasChanged}
@@ -266,4 +271,8 @@ class QuestionList extends Component {
 	}
 }
 
-export default QuestionList
+const mapStateToProps = (state) => ({
+	punctations: state.quizzes.quizzes.item.punctations,
+})
+
+export default connect(mapStateToProps)(QuestionList)

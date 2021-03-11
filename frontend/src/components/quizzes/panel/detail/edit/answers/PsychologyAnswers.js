@@ -51,7 +51,7 @@ class PsychologyAnswers extends Answer {
 										...answer,
 										results: sourceItems,
 									}
-								if (
+								else if (
 									answer.id.toString() ===
 									destination.droppableId.toString()
 								)
@@ -72,6 +72,7 @@ class PsychologyAnswers extends Answer {
 
 	render() {
 		const { hasChanged } = this.state
+		const { section_name, punctationLength } = this.props
 
 		const answers = this.props.answers.map((answer, index) => (
 			<div className="form-control" key={index}>
@@ -111,7 +112,7 @@ class PsychologyAnswers extends Answer {
 						>
 							{answer.results?.map((result, index) => (
 								<Draggable
-									key={index}
+									key={result.id.toString()}
 									draggableId={result.id.toString()}
 									index={index}
 								>
@@ -138,6 +139,7 @@ class PsychologyAnswers extends Answer {
 									)}
 								</Draggable>
 							))}
+							{provided.placeholder}
 						</div>
 					)}
 				</Droppable>
@@ -155,27 +157,6 @@ class PsychologyAnswers extends Answer {
 
 					<hr />
 					<div className="card__body">
-						<div className="inline-btns">
-							<button
-								type="button"
-								className={`btn ${
-									answers.length >= 8 ? 'btn__disabled' : ''
-								}`}
-								onClick={this.addAnswer}
-							>
-								Add Answer
-							</button>
-							<button
-								type="button"
-								className={`btn btn__danger ${
-									answers.length <= 2 ? 'btn__disabled' : ''
-								}`}
-								onClick={this.removeAnswer}
-							>
-								Remove Answer
-							</button>
-						</div>
-						<br /> <br />
 						<button
 							type="reset"
 							onClick={this.resetForm}
