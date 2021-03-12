@@ -147,6 +147,7 @@ class TestSetUp(APITestCase):
             'email': email,
             'gender': self.fake.random.choice(['woman', 'man']),
             'opinion': description,
+            'score': 0,
         }
 
         self.client.post(register_url, register_data, format='json')
@@ -166,7 +167,7 @@ class TestSetUp(APITestCase):
             'quiz-question-list', args=[quiz.author.slug, quiz.slug])
         self.quiz_punctation_list_url = reverse('quiz-punctation-list', args=[quiz.author.slug, quiz.slug])
         self.finish_quiz_url = reverse('quiz-finish', args=[quiz.author.slug, quiz.slug])
-        self.feedback_quiz_url = reverse('quiz-feedback', args=[quiz.author.slug, quiz.slug])
+        self.feedback_quiz_url = reverse('quiz-feedbacks', args=[quiz.author.slug, quiz.slug])
 
         return super(TestSetUp, self).setUp()
 

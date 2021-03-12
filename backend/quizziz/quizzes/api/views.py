@@ -429,8 +429,9 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         return Response(request.data, status=status.HTTP_200_OK)
 
 
-class QuizFeedbackAPIView(generics.ListCreateAPIView):
+class QuizFeedbacksAPIView(generics.ListCreateAPIView):
     serializer_class = serializers.QuizFeedbackSerializer
+    permission_classes = (permissions.GetIsOwner,)
 
     def get_queryset(self):
         author_slug = self.kwargs.get('author_slug')

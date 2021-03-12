@@ -121,6 +121,22 @@ class TestViews(TestSetUp):
 
     ######## GET METHODS ########
 
+    def test_get_feedbacks_not_authenticated(self):
+        res = self.client.get(self.feedback_quiz_url)
+
+        self.assertEqual(res.status_code, 401)
+
+    def test_get_feedbacks_not_owner(self):
+        res = self.client.get(self.feedback_quiz_url, format='json',
+                              HTTP_AUTHORIZATION=f'Bearer {self.access_token_other}')
+
+        self.assertEqual(res.status_code, 403)
+
+    def test_get_feedbacks(self):
+        res = self.client.get(self.feedback_quiz_url, format='json', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+
+        self.assertEqual(res.status_code, 200)
+
     def test_get_quiz_punctations_not_authenticated(self):
         res = self.client.get(self.quiz_punctation_list_url, self.quiz_punctation_data, format='json')
 

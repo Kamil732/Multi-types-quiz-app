@@ -262,6 +262,11 @@ class PsychologyResultSerializer(serializers.ModelSerializer):
 
 
 class QuizFeedbackSerializer(serializers.ModelSerializer):
+    pub_date = serializers.SerializerMethodField('get_pub_date')
+
+    def get_pub_date(self, obj):
+        return f'{obj.pub_date.day}-{obj.pub_date.month}-{obj.pub_date.year}'
+
     def validate(self, data):
         quiz = self.context['quiz']
 

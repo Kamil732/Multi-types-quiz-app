@@ -89,10 +89,12 @@ class QuizFeedback(models.Model):
     )
 
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    pub_date = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=25, blank=True)
     email = models.EmailField(max_length=80, blank=True)
     gender = models.CharField(max_length=5, choices=GENDER, blank=True)
     opinion = models.TextField(blank=True)
+    score = models.PositiveIntegerField()
 
     def __str__(self):
         return str(self.quiz)
