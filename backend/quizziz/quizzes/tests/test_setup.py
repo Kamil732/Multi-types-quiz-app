@@ -122,28 +122,14 @@ class TestSetUp(APITestCase):
             'summery': '',
         }
 
-        self.quizzes_question_update_data = {
-            'question': self.fake.sentence(),
-            'image_url': 'https://cdn.pixabay.com/photo/2020/12/28/22/48/buddha-5868759_960_720.jpg',
-            'summery': description,
-        }
-
         from_score = self.fake.random_int(min=0, max=10)
         to_score = from_score + self.fake.random_int(min=0, max=10)
 
         self.quiz_punctation_data = {
             'from_score': from_score,
             'to_score': to_score,
-            'summery': self.fake.sentence()
-        }
-
-        QuizPunctation.objects.create(quiz=quiz, **self.quiz_punctation_data)
-
-        num = self.fake.random_int(min=0, max=10)
-        self.update_quiz_punctation_data = {
-            'from_score': from_score + num,
-            'to_score': to_score + num,
-            'summery': self.fake.sentence()
+            'result': self.fake.sentence(),
+            'description': self.fake.sentence(),
         }
 
         self.finish_knowledge_quiz_data = {
@@ -178,11 +164,7 @@ class TestSetUp(APITestCase):
             'quiz-detail', args=[quiz.author.slug, quiz.slug])
         self.quizzes_question_list_url = reverse(
             'quiz-question-list', args=[quiz.author.slug, quiz.slug])
-        self.quizzes_question_detail_url = reverse(
-            'quiz-question-detail', args=[quiz.author.slug, quiz.slug, quiz.questions.first().slug])
         self.quiz_punctation_list_url = reverse('quiz-punctation-list', args=[quiz.author.slug, quiz.slug])
-        self.quiz_punctation_detail_url = reverse(
-            'quiz-punctation-detail', args=[quiz.author.slug, quiz.slug, quiz.punctations.first().id])
         self.finish_quiz_url = reverse('quiz-finish', args=[quiz.author.slug, quiz.slug])
         self.feedback_quiz_url = reverse('quiz-feedback', args=[quiz.author.slug, quiz.slug])
 
