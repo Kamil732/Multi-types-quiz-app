@@ -170,6 +170,28 @@ body.dark-mode {
 		}
 	}
 
+	.droppable {
+		background-color: $primary-variant-color-dark-mode;
+		color: $primary-variant-color-dark-mode;
+
+		&.draggingOver {
+			background-color: darken($primary-variant-color-dark-mode, 10%);
+			color: set-text-color(
+				darken($primary-variant-color-dark-mode, 10%)
+			);
+		}
+
+		& > .draggable {
+			background-color: $primary-color-dark-mode;
+			color: set-text-color($primary-color-dark-mode);
+
+			&.dragging {
+				background-color: darken($primary-color-dark-mode, 15%);
+				color: set-text-color(darken($primary-color-dark-mode, 15%));
+			}
+		}
+	}
+
 	.table {
 		& tr:nth-of-type(even) {
 			background-color: #aaa;

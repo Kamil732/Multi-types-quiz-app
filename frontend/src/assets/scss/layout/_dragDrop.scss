@@ -1,5 +1,6 @@
 .droppable {
 	background-color: $primary-variant-color;
+	color: set-text-color($primary-variant-color);
 	min-height: 80px;
 	padding: 0.7em;
 	display: flex;
@@ -9,17 +10,20 @@
 
 	&.draggingOver {
 		background-color: darken($primary-variant-color, 10%);
+		color: set-text-color(darken($primary-variant-color, 10%));
 		border: 2px dashed grey;
 	}
 
 	& > .draggable {
 		user-select: none;
 		background-color: $primary-color;
+		color: set-text-color($primary-color);
 		padding: 10px 15px;
 		border: 1px solid grey;
 
 		&.dragging {
 			background-color: darken($primary-color, 15%);
+			color: set-text-color(darken($primary-color, 15%));
 		}
 	}
 }
