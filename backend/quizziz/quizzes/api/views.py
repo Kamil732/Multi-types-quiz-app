@@ -126,6 +126,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
                                   image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
 
+        # TODO: Questions should NOT be unique
         # Check if question is unique
         for model in new_questions:
             if ([x.question for x in new_questions].count(model.question) > 1):
@@ -171,6 +172,22 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                 fields=['answer', 'image_url', 'is_correct', 'points'],
                 key_fields=('slug',)  # slug is index from enumerate
             )
+
+            if quiz.section.name == 'psychology_quiz':
+                # Set results to each answer
+                for answer_data in question['answers']:
+                    # Get answer
+                    answer = Answer.objects.get(question=question_model, answer=answer_data['answer'])
+
+                    # Get results given to this answer in data
+                    results = [PsychologyResults.objects.get(quiz=quiz, id=result['id'])
+                               for result in answer_data['results']]
+
+                    if results:
+                        answer.results.set(results)
+                    else:
+                        # If there are no results than error should be thrown
+                        raise ValidationError({'detail': _('Every answer have to have result to it')})
 
          #### Set punctations ####
         if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
