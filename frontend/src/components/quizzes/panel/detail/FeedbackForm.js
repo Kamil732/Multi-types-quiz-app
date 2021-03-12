@@ -14,6 +14,7 @@ class FeedbackForm extends Component {
 		ask_email: PropTypes.bool,
 		ask_gender: PropTypes.bool,
 		ask_opinion: PropTypes.bool,
+		score: PropTypes.number.isRequired,
 		author_slug: PropTypes.string.isRequired,
 		quiz_slug: PropTypes.string.isRequired,
 		callback: PropTypes.func,
@@ -38,7 +39,7 @@ class FeedbackForm extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
-		const { author_slug, quiz_slug, callback } = this.props
+		const { score, author_slug, quiz_slug, callback } = this.props
 		const { name, email, gender, opinion } = this.state
 
 		const config = {
@@ -49,11 +50,11 @@ class FeedbackForm extends Component {
 			},
 		}
 
-		const body = JSON.stringify({ name, email, gender, opinion })
+		const body = JSON.stringify({ name, email, gender, opinion, score })
 
 		axios
 			.post(
-				`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/feedback/`,
+				`${process.env.REACT_APP_API_URL}/quizzes/${author_slug}/${quiz_slug}/feedbacks/`,
 				body,
 				config
 			)

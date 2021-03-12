@@ -1,6 +1,7 @@
 import React from 'react'
 import { Redirect, Switch } from 'react-router-dom'
 import PrivateRoute from '../../../../common/PrivateRoute'
+import Feedbacks from '../../../../containers/quizzes/panel/detail/Feedbacks'
 import Privacy from '../../../../containers/quizzes/panel/detail/Privacy'
 import Settings from '../../../../containers/quizzes/panel/detail/Settings'
 import Summery from '../../../../containers/quizzes/panel/detail/Summery'
@@ -13,6 +14,11 @@ function Routes(props) {
 				exact
 				path="/panel/dashboard/:quiz_slug/summery"
 				component={() => <Summery {...props} />}
+			/>
+			<PrivateRoute
+				exact
+				path="/panel/dashboard/:quiz_slug/feedbacks"
+				component={() => <Feedbacks {...props} />}
 			/>
 			<PrivateRoute
 				exact

@@ -151,6 +151,7 @@ class Start extends Component {
 													ask_opinion={
 														data.ask_opinion
 													}
+													score={finished_data.points}
 													author_slug={
 														data.author_slug
 													}

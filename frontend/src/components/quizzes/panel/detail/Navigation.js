@@ -6,6 +6,7 @@ import ActiveTag from '../../../navigation/ActiveTag'
 
 import { ImHome } from 'react-icons/im'
 import { BsDisplayFill } from 'react-icons/bs'
+import { MdFeedback } from 'react-icons/md'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { FaEdit } from 'react-icons/fa'
 import { GiPadlock } from 'react-icons/gi'
@@ -26,6 +27,15 @@ function Navigation(props) {
 				<span className="icon-text">
 					<BsDisplayFill className="icon-text__icon" />
 					Summery
+				</span>
+			</ActiveTag>
+			<ActiveTag
+				to={[`/panel/dashboard/${props.quiz_slug}/feedbacks`]}
+				className="horizontal-menu__item"
+			>
+				<span className="icon-text">
+					<MdFeedback className="icon-text__icon" />
+					Feedbacks
 				</span>
 			</ActiveTag>
 			<ActiveTag
