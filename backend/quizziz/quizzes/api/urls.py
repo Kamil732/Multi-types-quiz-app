@@ -10,6 +10,7 @@ from quizzes.api.views import (
     QuizPunctationListAPIView,
     QuizFinishAPIView,
     QuizFeedbacksAPIView,
+    DeleteQuizFeedbackAPIView,
     SectionViewSet,
     CategoryViewSet,
     QuestionListAPIView,
@@ -30,7 +31,10 @@ urlpatterns = [
         path('<slug:author_slug>/<slug:quiz_slug>/', include([
             path('', QuizDetailAPIView.as_view(), name='quiz-detail'),
             path('finish/', QuizFinishAPIView.as_view(), name='quiz-finish'),
-            path('feedbacks/', QuizFeedbacksAPIView.as_view(), name='quiz-feedbacks'),
+            path('feedbacks/', include([
+                path('', QuizFeedbacksAPIView.as_view(), name='quiz-feedbacks'),
+                path('<int:feedback_id>/', DeleteQuizFeedbackAPIView.as_view(), name='quiz-delete-feedback'),
+            ])),
             path('punctation/', QuizPunctationListAPIView.as_view(), name='quiz-punctation-list'),
             path('questions/', include([
                 path('', QuestionListAPIView.as_view(), name='quiz-question-list'),

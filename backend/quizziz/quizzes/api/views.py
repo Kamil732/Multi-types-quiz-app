@@ -462,3 +462,14 @@ class QuizFeedbacksAPIView(generics.ListCreateAPIView):
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
         serializer.save(quiz_id=quiz.id)
+
+
+class DeleteQuizFeedbackAPIView(generics.DestroyAPIView):
+    lookup_field = 'id'
+    lookup_url_kwarg = 'feedback_id'
+
+    def get_queryset(self):
+        author_slug = self.kwargs.get('author_slug')
+        quiz_slug = self.kwargs.get('quiz_slug')
+
+        return QuizFeedback.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
