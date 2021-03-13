@@ -156,13 +156,11 @@ class Punctation extends Component {
 	}
 
 	componentDidMount = async () => {
-		const { data, punctations } = this.props
+		const { data } = this.props
 		await this.props.clearErrors()
 
-		if (punctations.length === 0) {
-			this.setState({ loading: true })
-			await this.props.getQuizPunctations(data.author_slug, data.slug)
-		}
+		this.setState({ loading: true })
+		await this.props.getQuizPunctations(data.author_slug, data.slug)
 
 		this.setState({ loading: false })
 	}

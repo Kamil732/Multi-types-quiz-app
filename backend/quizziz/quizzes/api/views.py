@@ -4,6 +4,8 @@ from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
+from quizziz.utils import valid_url_extension
+
 from bulk_sync import bulk_sync
 from rest_framework import views, generics, viewsets, permissions
 from rest_framework import status
@@ -124,7 +126,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
         new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
-                                  image_url=question['image_url'], slug=str(index)) for (index, question) in enumerate(questions)]
+                                  image_url=question['image_url'] if valid_url_extension(question['image_url']) else '', slug=str(index)) for (index, question) in enumerate(questions)]
 
         # TODO: Questions should NOT be unique
         # Check if question is unique
@@ -237,7 +239,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
             for punctation in punctations:
                 punctation.save()
 
-        return Response({'message': 'Successfully updated'})
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class QuizFinishAPIView(views.APIView):
