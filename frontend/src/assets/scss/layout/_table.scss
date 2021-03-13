@@ -1,44 +1,46 @@
 .table {
-    width: 100%;
-    border-collapse: collapse;
+	width: 100%;
+	border-collapse: collapse;
 
-    & tr:nth-of-type(even) {
-        background-color: #eee;
-    }
+	& tr:nth-of-type(even) {
+		background-color: #eee;
+	}
 
-    & th {
-        background-color: #ccc;
-        color: set-text-color(#ccc);
-        font-weight: bold;
-    }
+	& th {
+		background-color: #ccc;
+		color: set-text-color(#ccc);
+		font-weight: bold;
+	}
 
-    & td, & th {
-        padding: 10px;
-        border: 1px solid #bbb;
-    }
+	& td,
+	& th {
+		padding: 10px;
+		border: 1px solid #bbb;
+	}
 
-    & td {
-        vertical-align: top;
+	& td {
+		vertical-align: top;
 
-        &.numbers, &.quiz-display {
-            text-align: center;
-        }
+		&.numbers,
+		&.quiz-display {
+			text-align: center;
+		}
 
-        &.quiz-display .quiz-display__img {
-            width: 165px;
-            border: 1px solid #bbb;
-        }
+		&.quiz-display .quiz-display__img {
+			width: 165px;
+			border: 1px solid #bbb;
+		}
 
-        &.info {
-            word-wrap: break-word;
-        }
+		&.info {
+			word-wrap: break-word;
+		}
 
-        & .actions {
-            margin-top: 20px;
-            display: flex;
-            gap: 12px;
-            justify-content: space-evenly;
-            align-items: center;
-        }
-    }
+		& .actions {
+			margin-top: 20px;
+			display: flex;
+			gap: 12px;
+			justify-content: space-evenly;
+			align-items: center;
+		}
+	}
 }
