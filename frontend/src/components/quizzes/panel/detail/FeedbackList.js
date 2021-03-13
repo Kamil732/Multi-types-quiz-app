@@ -5,14 +5,26 @@ class FeedbackList extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		feedbacks: PropTypes.array,
+		deleteFeedback: PropTypes.func.isRequired,
 	}
 
 	render() {
-		const { feedbacks } = this.props
+		const { feedbacks, deleteFeedback } = this.props
 
 		const feedbackList = feedbacks.map((feedback, index) => (
 			<tr key={index}>
-				<td className="numbers">{index + 1}</td>
+				<td className="numbers">
+					{index + 1}
+					<br /> <br />
+					<button
+						type="button"
+						className="btn btn__danger"
+						style={{ margin: '0 auto' }}
+						onClick={() => deleteFeedback(index, feedback.id)}
+					>
+						Delete
+					</button>
+				</td>
 				<td>
 					{feedback.name ? (
 						<>

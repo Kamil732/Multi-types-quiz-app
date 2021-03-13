@@ -6,6 +6,7 @@ import axios from 'axios'
 import { refreshToken } from '../../../../redux/actions/auth'
 import getAccessToken from '../../../../helpers/getAccessToken'
 
+import Swal from 'sweetalert2'
 import Title from '../../../../common/Title'
 import FeedbackList from '../../../../components/quizzes/panel/detail/FeedbackList'
 import CircleLoader from '../../../../components/loaders/CircleLoader'
@@ -24,6 +25,8 @@ class Feedbacks extends Component {
 			loading: true,
 			feedbacks: [],
 		}
+
+		this.deleteFeedback = this.deleteFeedback.bind(this)
 	}
 
 	componentDidMount = async () => {
@@ -54,6 +57,50 @@ class Feedbacks extends Component {
 		}
 	}
 
+	deleteFeedback = (index, feedbackId) => {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: 'Are you sure you want to delete this feedback?',
+			icon: 'warning',
+			showCancelButton: true,
+			customClass: {
+				confirmButton: 'btn btn__danger',
+				cancelButton: 'btn',
+			},
+			buttonsStyling: false,
+			confirmButtonText: 'delete',
+		}).then(async (res) => {
+			if (res.isConfirmed) {
+				const { data, token } = this.props
+
+				const config = getAccessToken(token, true)
+
+				try {
+					await axios.delete(
+						`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/feedbacks/${feedbackId}/`,
+						config
+					)
+
+					const feedbacks = Array.from(this.state.feedbacks)
+					feedbacks.splice(index, 1)
+
+					this.setState({ feedbacks })
+				} catch (err) {
+					if (err.response.status === 401) {
+						await this.props.deleteFeedback(index)
+
+						if (token) await this.componentDidMount()
+					} else
+						Swal.fire(
+							'The error has occurred',
+							'The error occurred while deleting the feedback, try again',
+							'error'
+						)
+				}
+			}
+		})
+	}
+
 	render() {
 		const { loading, feedbacks } = this.state
 
@@ -71,6 +118,7 @@ class Feedbacks extends Component {
 							<FeedbackList
 								data={this.props.data}
 								feedbacks={feedbacks}
+								deleteFeedback={this.deleteFeedback}
 							/>
 						)}
 					</div>
