@@ -67,18 +67,6 @@ class Start extends Component {
 			)
 	}
 
-	onChangePassword = (e) => this.setState({ password: e.target.value })
-
-	matchPasswords = (e) => {
-		e.preventDefault()
-
-		const password1 = this.props.data.password
-		const password2 = this.state.password
-
-		if (password1 === password2) this.setState({ correctPassword: true })
-		else this.setState({ passwordError: 'Incorrect password' })
-	}
-
 	onSubmit = (e) => {
 		e.preventDefault()
 		const { data } = this.props
@@ -130,10 +118,27 @@ class Start extends Component {
 			})
 	}
 
-	componentDidUpdate(_, prevState) {
+	onChangePassword = (e) => this.setState({ password: e.target.value })
+
+	matchPasswords = (e) => {
+		e.preventDefault()
+
+		const password1 = this.props.data.password
+		const password2 = this.state.password
+
+		if (password1 === password2) this.setState({ correctPassword: true })
+		else this.setState({ passwordError: 'Incorrect password' })
+	}
+
+	componentDidMount = () => {
+		if (!this.props.data.password) this.getQuestions()
+	}
+
+	componentDidUpdate(prevProps, prevState) {
 		if (
-			prevState.correctPassword !== this.state.correctPassword &&
-			this.state.correctPassword
+			(!this.props.data.password && prevProps.data !== this.props.data) ||
+			(prevState.correctPassword !== this.state.correctPassword &&
+				this.state.correctPassword)
 		)
 			this.getQuestions()
 	}
