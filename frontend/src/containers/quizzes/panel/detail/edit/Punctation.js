@@ -32,7 +32,6 @@ class Punctation extends Component {
 			hasChanged: false,
 		}
 
-		this.getPunctations = this.getPunctations.bind(this)
 		this.resetForm = this.resetForm.bind(this)
 		this.addGrade = this.addGrade.bind(this)
 		this.removeGrade = this.removeGrade.bind(this)
@@ -49,15 +48,6 @@ class Punctation extends Component {
 			}
 
 		return null
-	}
-
-	getPunctations = async () => {
-		const { data } = this.props
-		this.setState({ loading: true })
-
-		await this.props.getQuizPunctations(data.author_slug, data.slug)
-
-		this.setState({ loading: false })
 	}
 
 	resetForm = () => {
@@ -165,13 +155,17 @@ class Punctation extends Component {
 			this.setState({ hasChanged: false })
 	}
 
-	componentDidMount = () => this.getPunctations()
+	componentDidMount = async () => {
+		const { data, punctations } = this.props
+		await this.props.clearErrors()
 
-	componentDidUpdate(prevProps, _) {
-		if (prevProps.data !== this.props.data) this.getPunctations()
+		if (punctations.length === 0) {
+			this.setState({ loading: true })
+			await this.props.getQuizPunctations(data.author_slug, data.slug)
+		}
+
+		this.setState({ loading: false })
 	}
-
-	componentWillUnmount = () => this.props.clearErrors()
 
 	render() {
 		const { loading, hasChanged, punctations } = this.state

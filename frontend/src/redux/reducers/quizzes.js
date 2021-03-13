@@ -125,7 +125,10 @@ export default function (state = initialState, action) {
 					...state.quizzes,
 					item: {
 						...state.quizzes.item,
-						data: action.payload,
+						data: {
+							...state.quizzes.item.data,
+							...action.payload,
+						},
 					},
 				},
 			}

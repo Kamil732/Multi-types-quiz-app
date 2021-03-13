@@ -15,6 +15,7 @@ import axios from 'axios'
 
 import CircleLoader from '../../../../../components/loaders/CircleLoader'
 import QuestionList from '../../../../../components/quizzes/panel/detail/edit/QuestionList'
+
 class Questions extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
@@ -100,28 +101,30 @@ class Questions extends Component {
 	}
 
 	componentDidMount = async () => {
-		this.setState({ loading: true })
-		const { data } = this.props
+		const { data, punctations } = this.props
+		const { questions } = this.state
 
-		await this.props.getQuizPunctations(data.author_slug, data.slug)
+		if (punctations.length === 0)
+			await this.props.getQuizPunctations(data.author_slug, data.slug)
 
-		try {
-			const res = await axios.get(
-				`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/questions/update-list/`
-			)
+		if (questions.length === 0)
+			try {
+				const res = await axios.get(
+					`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/questions/update-list/`
+				)
 
-			this.setState({
-				loading: false,
-				questions: res.data,
-			})
+				this.setState({
+					loading: false,
+					questions: res.data,
+				})
 
-			this.initialQuestions = res.data
-		} catch (err) {
-			this.setState({
-				loading: false,
-				questions: [],
-			})
-		}
+				this.initialQuestions = res.data
+			} catch (err) {
+				this.setState({
+					loading: false,
+					questions: [],
+				})
+			}
 	}
 
 	onSubmit = async (e) => {
@@ -133,12 +136,20 @@ class Questions extends Component {
 			this.props.data.slug,
 			this.state.questions
 		)
+
+		if (Object.keys(this.props.errors).length === 0) {
+			this.setState({ hasChanged: false })
+			this.initialQuestions = this.state.questions
+		}
+	}
+
+	componentWillUnmount = async () => {
 		// Refresh quiz data
 		let max_score
 		if (this.props.data.section.name === 'knowledge_quiz')
 			max_score = this.state.questions.length
 
-		await this.props.updateQuizData(
+		this.props.updateQuizData(
 			this.props.data.author_slug,
 			this.props.data.slug,
 			{
@@ -146,11 +157,6 @@ class Questions extends Component {
 				question_amount: this.state.questions.length,
 			}
 		)
-
-		if (Object.keys(this.props.errors).length === 0) {
-			this.setState({ hasChanged: false })
-			this.initialQuestions = this.state.questions
-		}
 	}
 
 	render() {
@@ -167,69 +173,63 @@ class Questions extends Component {
 							<CircleLoader />
 						</div>
 					) : (
-						<>
-							<form onSubmit={this.onSubmit}>
-								<div className="card__body">
-									<QuestionList
-										initialQuestions={this.initialQuestions}
-										questions={questions}
-										section_name={data.section.name}
-										removeQuestion={(index) =>
-											this.removeQuestion(index)
-										}
-										hasChanged={(state) =>
-											this.setState({ hasChanged: state })
-										}
-										setQuestions={(state) =>
-											this.setState({ questions: state })
-										}
-									/>
-								</div>
+						<form onSubmit={this.onSubmit}>
+							<div className="card__body">
+								<QuestionList
+									initialQuestions={this.initialQuestions}
+									questions={questions}
+									section_name={data.section.name}
+									removeQuestion={(index) =>
+										this.removeQuestion(index)
+									}
+									hasChanged={(state) =>
+										this.setState({ hasChanged: state })
+									}
+									setQuestions={(state) =>
+										this.setState({ questions: state })
+									}
+								/>
+							</div>
 
-								<hr />
-								<div className="card__body">
-									<button
-										type="button"
-										className="btn"
-										onClick={this.addQuestion}
-									>
-										Add Question
-									</button>
-									<br />
+							<hr />
+							<div className="card__body">
+								<button
+									type="button"
+									className="btn"
+									onClick={this.addQuestion}
+								>
+									Add Question
+								</button>
+								<br />
 
-									{errors.detail ? (
-										<div className="message-box error">
-											<p className="message-box__text">
-												{errors.detail}
-											</p>
-										</div>
-									) : null}
-									<div className="inline-btns f-w">
-										<button
-											type="reset"
-											onClick={this.resetForm}
-											className={`btn ${
-												!hasChanged
-													? 'btn__disabled'
-													: ''
-											}`}
-										>
-											Cancel
-										</button>
-										<button
-											type="submit"
-											className={`btn btn__contrast ${
-												!hasChanged
-													? 'btn__disabled'
-													: ''
-											}`}
-										>
-											Save
-										</button>
+								{errors.detail ? (
+									<div className="message-box error">
+										<p className="message-box__text">
+											{errors.detail}
+										</p>
 									</div>
+								) : null}
+								<div className="inline-btns f-w">
+									<button
+										type="reset"
+										onClick={this.resetForm}
+										className={`btn ${
+											!hasChanged ? 'btn__disabled' : ''
+										}`}
+									>
+										Cancel
+									</button>
+									<button
+										type="submit"
+										className={`btn btn__contrast ${
+											!hasChanged ? 'btn__disabled' : ''
+										}`}
+									>
+										Save
+									</button>
 								</div>
-							</form>
-						</>
+							</div>
+						</form>
 					)}
 				</div>
 			</>
@@ -243,9 +243,9 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
+	updateQuizData,
 	clearErrors,
 	updateQuizQuestions,
-	updateQuizData,
 	getQuizPunctations,
 }
 
