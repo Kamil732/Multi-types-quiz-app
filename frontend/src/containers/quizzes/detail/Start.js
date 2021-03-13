@@ -19,7 +19,7 @@ class Start extends Component {
 	constructor(props) {
 		super(props)
 
-		const { ask_name, ask_email, ask_gender, ask_opinion } = this.props.data
+		const { ask_name, ask_email, ask_gender, ask_opinion } = props.data
 
 		this.state = {
 			loading: true,
@@ -28,9 +28,14 @@ class Start extends Component {
 			finished_data: {},
 			sentFeedback:
 				!ask_name && !ask_email && !ask_gender && !ask_opinion,
+
+			password: '',
+			correctPassword: false,
+			passwordError: '',
 		}
 
 		this.getQuestions = this.getQuestions.bind(this)
+		this.onChangePassword = this.onChangePassword.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 	}
 
@@ -62,10 +67,16 @@ class Start extends Component {
 			)
 	}
 
-	componentDidMount = () => this.getQuestions()
+	onChangePassword = (e) => this.setState({ password: e.target.value })
 
-	componentDidUpdate(prevProps, _) {
-		if (prevProps.data !== this.props.data) this.getQuestions()
+	matchPasswords = (e) => {
+		e.preventDefault()
+
+		const password1 = this.props.data.password
+		const password2 = this.state.password
+
+		if (password1 === password2) this.setState({ correctPassword: true })
+		else this.setState({ passwordError: 'Incorrect password' })
 	}
 
 	onSubmit = (e) => {
@@ -119,6 +130,14 @@ class Start extends Component {
 			})
 	}
 
+	componentDidUpdate(_, prevState) {
+		if (
+			prevState.correctPassword !== this.state.correctPassword &&
+			this.state.correctPassword
+		)
+			this.getQuestions()
+	}
+
 	render() {
 		const { data } = this.props
 		const {
@@ -127,9 +146,51 @@ class Start extends Component {
 			timer,
 			finished_data,
 			sentFeedback,
+			password,
+			correctPassword,
+			passwordError,
 		} = this.state
 
-		if (loading === true) return <CircleLoader />
+		if (data.password && !correctPassword)
+			return (
+				<div className="card">
+					<div className="card__body">
+						<form
+							onSubmit={this.matchPasswords}
+							className="auth-form"
+						>
+							{passwordError ? (
+								<div className="message-box error">
+									<p className="message-box__text">
+										{passwordError}
+									</p>
+								</div>
+							) : null}
+							<div className="form-inline">
+								<label className="form-inline__label">
+									Password:
+								</label>
+								<input
+									type="password"
+									value={password}
+									onChange={this.onChangePassword}
+									className="form-inline__input"
+									placeholder="Pass the password..."
+									maxLength="20"
+									required
+								/>
+							</div>
+
+							<button
+								type="submit"
+								className="btn btn__submit btn__contrast"
+							>
+								Submit
+							</button>
+						</form>
+					</div>
+				</div>
+			)
 
 		return (
 			<>
@@ -241,6 +302,10 @@ class Start extends Component {
 							</form>
 						)}
 					</>
+				) : loading ? (
+					<div className="card card__body auth-form">
+						<CircleLoader />
+					</div>
 				) : (
 					<div className="card card__body auth-form">
 						<h4>Quiz will start in</h4> <h2>{3 - timer}s</h2>
