@@ -239,6 +239,7 @@ class QuizDetailSerializer(QuizSerializer, serializers.ModelSerializer):
         model = Quiz
         exclude = (
             'id',
+            'answers_data',
         )
         read_only_fields = ('questions', 'author',)
 
