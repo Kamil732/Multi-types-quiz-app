@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
+import login_img from '../../assets/images/login_img.jpg'
+import register_img from '../../assets/images/register_img.jpg'
+
 import LoginForm from '../../components/accounts/auth/LoginForm'
 import RegisterForm from '../../components/accounts/auth/RegisterForm'
 import FacebookLogin from 'react-facebook-login'
@@ -13,6 +16,7 @@ import {
 	USER_LOADED,
 	USER_LOADING,
 } from '../../redux/actions/types'
+import Title from '../../common/Title'
 
 class Auth extends Component {
 	static propTypes = {
@@ -76,14 +80,39 @@ class Auth extends Component {
 
 		return (
 			<div className="card-inline">
-				{form}
+				{this.props.type === 'login' ? (
+					<>
+						<Title title="Login" />
+						<img
+							className="card-inline__img"
+							src={login_img}
+							alt="login"
+						/>
+					</>
+				) : (
+					<>
+						<Title title="Sign up" />
+						<img
+							className="card-inline__img"
+							src={register_img}
+							alt="register"
+						/>
+					</>
+				)}
 
-				<FacebookLogin
-					appId="309943713807869"
-					fields="name,first_name"
-					callback={this.responseFacebook}
-					icon="fa-facebook"
-				/>
+				<div className="card-inline__body auth-form">
+					{form}
+
+					<div className="separator">or</div>
+					<FacebookLogin
+						appId={process.env.REACT_APP_FACEBOOK_ID}
+						fields="email,first_name"
+						callback={this.responseFacebook}
+						icon="fa-facebook"
+						textButton="&nbsp;&nbsp;Log In with Facebook"
+						cssClass="btnFacebook"
+					/>
+				</div>
 			</div>
 		)
 	}
