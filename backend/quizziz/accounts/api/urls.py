@@ -2,6 +2,7 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from accounts.api.views import (
+    SocialLoginView,
     SignupAPIView,
     AccountAPIView,
     AccountQuizzesAPIView,
@@ -13,6 +14,7 @@ from accounts.api.views import (
 urlpatterns = [
     path('login/', include([
         path('', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+        path('facebook/', SocialLoginView.as_view(), name="facebook-login"),
         path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     ])),
     path('signup/', SignupAPIView.as_view(), name='signup'),

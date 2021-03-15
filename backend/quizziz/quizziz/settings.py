@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 from django.utils.translation import gettext_lazy as _
 from datetime import timedelta
 import os
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,7 +26,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%^aazb6ak75_$28m0kuz)*^tkr@$$)-w8g7qlor$9m0u2lq5r#'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +48,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'quizzes',
+
+    'social.apps.django_app.default',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -57,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'quizziz.urls'
@@ -86,9 +95,9 @@ WSGI_APPLICATION = 'quizziz.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'Quizziz',
-        'USER': 'postgres',
-        'PASSWORD': 'Kamilg5544',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
         'HOST': 'localhost',
         'PORT': '',
     }
@@ -99,6 +108,8 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
 AUTH_USER_MODEL = 'accounts.Account'
+
+SOCIAL_AUTH_USER_MODEL = 'accounts.Account'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -165,3 +176,39 @@ CORS_ORIGIN_WHITELIST = ['http://localhost:3000', 'http://192.168.1.31:3000']
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(seconds=60),
 }
+
+
+AUTHENTICATION_BACKENDS = [
+    # Social logins
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+
+    # Default django login
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
+SOCIAL_AUTH_FACEBOOK_KEY = env("FACEBOOK_APP_ID")
+SOCIAL_AUTH_FACEBOOK_SECRET = env("FACEBOOK_APP_SECRET_KEY")
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'first_name, email', }
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
+    ('first_name', 'first_name'),
+    ('email', 'email'),
+]
+
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+
+    'accounts.api.pipline.create_user',
+
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)

@@ -5,6 +5,11 @@ from accounts.models import Account
 from quizzes.models import Quiz
 
 
+class SocialSerializer(serializers.Serializer):
+    provider = serializers.CharField(max_length=255, required=True)
+    access_token = serializers.CharField(max_length=4096, required=True, trim_whitespace=True)
+
+
 class AccountSerializer(serializers.ModelSerializer):
     picture = serializers.ImageField(
         required=False, allow_null=True, default=Account.DEFAULT_PROFILE_PICTURE)

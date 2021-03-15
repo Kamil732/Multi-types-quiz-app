@@ -17,6 +17,11 @@ faker = "*"
 requests = "*"
 django-autoslug = "*"
 django-bulk-sync = "*"
+django-environ = "*"
+python-social-auth = "*"
+social-auth-app-django = "*"
+social-auth-core = "*"
+pyjwt = "*"
 
 [requires]
 python_version = "3.8"

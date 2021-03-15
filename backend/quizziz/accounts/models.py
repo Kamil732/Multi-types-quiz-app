@@ -8,7 +8,7 @@ class AccountManager(BaseUserManager):
         if not email:
             raise ValueError('Users must have an email')
         if not username:
-            raise ValueError('Users must have an username')
+            username = email.split('@')[0][:12]
 
         user = self.model(
             email=self.normalize_email(email),
