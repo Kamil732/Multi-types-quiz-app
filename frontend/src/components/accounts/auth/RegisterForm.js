@@ -40,9 +40,9 @@ class RegisterForm extends Component {
 
 		return (
 			<form onSubmit={this.onSubmit}>
-				{errors.detail ? (
+				{errors.error ? (
 					<div className="message-box error">
-						<p className="message-box__text">{errors.detail}</p>
+						<p className="message-box__text">{errors.error}</p>
 					</div>
 				) : null}
 

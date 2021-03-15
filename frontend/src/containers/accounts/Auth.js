@@ -11,6 +11,7 @@ import RegisterForm from '../../components/accounts/auth/RegisterForm'
 import FacebookLogin from 'react-facebook-login'
 import axios from 'axios'
 import {
+	ADD_ERROR,
 	LOGIN_FAIL,
 	LOGIN_SUCCESS,
 	USER_LOADED,
@@ -64,6 +65,15 @@ class Auth extends Component {
 				this.props.dispatch({
 					type: LOGIN_FAIL,
 				})
+
+				if (err.response)
+					this.props.dispatch({
+						type: ADD_ERROR,
+						payload: {
+							messages: err.response.data,
+							status: err.response.status,
+						},
+					})
 			})
 	}
 
