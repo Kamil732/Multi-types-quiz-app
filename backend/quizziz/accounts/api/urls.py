@@ -14,7 +14,7 @@ from accounts.api.views import (
 urlpatterns = [
     path('login/', include([
         path('', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-        path('facebook/', SocialLoginView.as_view(), name="facebook-login"),
+        path('social/', SocialLoginView.as_view(), name="social-login"),
         path('refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     ])),
     path('signup/', SignupAPIView.as_view(), name='signup'),

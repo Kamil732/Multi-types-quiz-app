@@ -51,6 +51,11 @@ class SocialLoginView(generics.GenericAPIView):
                 "error": "Invalid credentials",
                 "details": str(error)
             }, status=status.HTTP_400_BAD_REQUEST)
+        except:
+            if provider == 'facebook':
+                return Response({
+                    "error": "Please log in to your account with Google.",
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             authenticated_user = backend.do_auth(access_token, user=user)

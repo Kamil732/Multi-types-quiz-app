@@ -34,6 +34,15 @@ class Auth extends Component {
 		this.responseAuth = this.responseAuth.bind(this)
 	}
 
+	addError = (status, error) =>
+		this.props.dispatch({
+			type: ADD_ERROR,
+			payload: {
+				messages: error,
+				status: status,
+			},
+		})
+
 	responseAuth = (data, provider) => {
 		const config = {
 			headers: {
@@ -50,7 +59,7 @@ class Auth extends Component {
 
 		axios
 			.post(
-				`${process.env.REACT_APP_API_URL}/accounts/login/facebook/`,
+				`${process.env.REACT_APP_API_URL}/accounts/login/social/`,
 				body,
 				config
 			)
@@ -75,13 +84,7 @@ class Auth extends Component {
 				})
 
 				if (err.response)
-					this.props.dispatch({
-						type: ADD_ERROR,
-						payload: {
-							messages: err.response.data,
-							status: err.response.status,
-						},
-					})
+					this.addError(err.response.status, err.response.data)
 			})
 	}
 
@@ -136,7 +139,12 @@ class Auth extends Component {
 						onSuccess={(data) =>
 							this.responseAuth(data, 'google-oauth2')
 						}
-						onFailure={(err) => console.log(err)}
+						onFailure={(err) =>
+							this.addError(
+								400,
+								'The error occurred, please try again'
+							)
+						}
 						cookiePolicy={'single_host_origin'}
 					/>
 				</div>
