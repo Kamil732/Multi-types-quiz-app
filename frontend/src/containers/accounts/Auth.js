@@ -3,12 +3,15 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 
+import { IoLogoGoogle } from 'react-icons/io'
+import { FaFacebookF } from 'react-icons/fa'
+
 import login_img from '../../assets/images/login_img.jpg'
 import register_img from '../../assets/images/register_img.jpg'
 
 import LoginForm from '../../components/accounts/auth/LoginForm'
 import RegisterForm from '../../components/accounts/auth/RegisterForm'
-import FacebookLogin from 'react-facebook-login'
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import GoogleLogin from 'react-google-login'
 
 import axios from 'axios'
@@ -125,28 +128,48 @@ class Auth extends Component {
 					{form}
 
 					<div className="separator">or</div>
-					<FacebookLogin
-						appId={process.env.REACT_APP_FACEBOOK_ID}
-						fields="email,first_name"
-						callback={(data) => this.responseAuth(data, 'facebook')}
-						icon="fa-facebook"
-						textButton="&nbsp;&nbsp;Log In with Facebook"
-						cssClass="btnFacebook"
-					/>
-					<GoogleLogin
-						clientId={process.env.REACT_APP_GOOGLE_ID}
-						buttonText="Log In with Google"
-						onSuccess={(data) =>
-							this.responseAuth(data, 'google-oauth2')
-						}
-						onFailure={(err) =>
-							this.addError(
-								400,
-								'The error occurred with Google, please try again.'
-							)
-						}
-						cookiePolicy={'single_host_origin'}
-					/>
+					<div className="auth-form" style={{ flexDirection: 'row' }}>
+						<FacebookLogin
+							appId={process.env.REACT_APP_FACEBOOK_ID}
+							fields="email,first_name"
+							callback={(data) =>
+								this.responseAuth(data, 'facebook')
+							}
+							render={(renderProps) => (
+								<button
+									className="btnFacebook"
+									onClick={renderProps.onClick}
+									disabled={renderProps.disabled}
+								>
+									<FaFacebookF size="16" />
+									&nbsp;&nbsp;Log In with Facebook
+								</button>
+							)}
+						/>
+						<GoogleLogin
+							clientId={process.env.REACT_APP_GOOGLE_ID}
+							render={(renderProps) => (
+								<button
+									className="btnGoogle"
+									onClick={renderProps.onClick}
+									disabled={renderProps.disabled}
+								>
+									<IoLogoGoogle size="17" />
+									&nbsp;&nbsp;Log In with Google
+								</button>
+							)}
+							onSuccess={(data) =>
+								this.responseAuth(data, 'google-oauth2')
+							}
+							onFailure={(err) =>
+								this.addError(
+									400,
+									'The error occurred with Google, please try again.'
+								)
+							}
+							cookiePolicy={'single_host_origin'}
+						/>
+					</div>
 				</div>
 			</div>
 		)
