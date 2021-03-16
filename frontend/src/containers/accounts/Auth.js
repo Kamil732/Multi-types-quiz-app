@@ -9,6 +9,8 @@ import register_img from '../../assets/images/register_img.jpg'
 import LoginForm from '../../components/accounts/auth/LoginForm'
 import RegisterForm from '../../components/accounts/auth/RegisterForm'
 import FacebookLogin from 'react-facebook-login'
+import GoogleLogin from 'react-google-login'
+
 import axios from 'axios'
 import {
 	ADD_ERROR,
@@ -26,7 +28,13 @@ class Auth extends Component {
 		dispatch: PropTypes.func.isRequired,
 	}
 
-	responseFacebook = (data) => {
+	constructor(props) {
+		super(props)
+
+		this.responseAuth = this.responseAuth.bind(this)
+	}
+
+	responseAuth = (data, provider) => {
 		const config = {
 			headers: {
 				Accept: 'application/json',
@@ -36,7 +44,7 @@ class Auth extends Component {
 		}
 
 		const body = JSON.stringify({
-			provider: 'facebook',
+			provider: provider,
 			access_token: data.accessToken,
 		})
 
@@ -117,10 +125,19 @@ class Auth extends Component {
 					<FacebookLogin
 						appId={process.env.REACT_APP_FACEBOOK_ID}
 						fields="email,first_name"
-						callback={this.responseFacebook}
+						callback={(data) => this.responseAuth(data, 'facebook')}
 						icon="fa-facebook"
 						textButton="&nbsp;&nbsp;Log In with Facebook"
 						cssClass="btnFacebook"
+					/>
+					<GoogleLogin
+						clientId={process.env.REACT_APP_GOOGLE_ID}
+						buttonText="Log In with Google"
+						onSuccess={(data) =>
+							this.responseAuth(data, 'google-oauth2')
+						}
+						onFailure={(err) => console.log(err)}
+						cookiePolicy={'single_host_origin'}
 					/>
 				</div>
 			</div>
