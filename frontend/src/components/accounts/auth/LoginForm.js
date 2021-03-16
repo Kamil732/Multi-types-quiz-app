@@ -41,6 +41,11 @@ class LoginForm extends Component {
 						<p className="message-box__text">{errors.error}</p>
 					</div>
 				) : null}
+				{errors.detail ? (
+					<div className="message-box error">
+						<p className="message-box__text">{errors.detail}</p>
+					</div>
+				) : null}
 
 				{errors.email ? (
 					<div className="message-box error">

@@ -14,7 +14,6 @@ import CircleLoader from '../../../../components/loaders/CircleLoader'
 class Feedbacks extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
-		token: PropTypes.string.isRequired,
 		refreshToken: PropTypes.func.isRequired,
 	}
 
@@ -30,7 +29,8 @@ class Feedbacks extends Component {
 	}
 
 	componentDidMount = async () => {
-		const { data, token } = this.props
+		const { data } = this.props
+		const token = localStorage.getItem('token')
 
 		try {
 			const config = getAccessToken(token, true)
@@ -128,12 +128,8 @@ class Feedbacks extends Component {
 	}
 }
 
-const mapStateToProps = (state) => ({
-	token: state.auth.token,
-})
-
 const mapDispatchToProps = {
 	refreshToken,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Feedbacks)
+export default connect(null, mapDispatchToProps)(Feedbacks)
