@@ -6,7 +6,6 @@ from .models import (
     QuizPunctation,
     Question,
     Category,
-    Section,
     PsychologyResults,
     Answer
 )
@@ -28,7 +27,6 @@ admin.site.register(QuizFeedback)
 admin.site.register(QuizPunctation)
 admin.site.register(PsychologyResults)
 admin.site.register(Category)
-admin.site.register(Section)
 
 
 admin.site.register(Question)

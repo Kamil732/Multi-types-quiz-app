@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom'
 import { AiFillEdit } from 'react-icons/ai'
 import { RiImageEditFill } from 'react-icons/ri'
 
-import { getCategorySection, createQuiz } from '../../redux/actions/quizzes'
+import { getCategories, createQuiz } from '../../redux/actions/quizzes'
 import { clearErrors } from '../../redux/actions/errors'
 import ImageUrlPreview from './ImageUrlPreview'
 import Textarea from '../Textarea'
@@ -14,10 +14,9 @@ import Textarea from '../Textarea'
 class CreateForm extends Component {
 	static propTypes = {
 		quiz: PropTypes.object,
-		sections: PropTypes.array.isRequired,
 		categories: PropTypes.array.isRequired,
 		errors: PropTypes.object,
-		getCategorySection: PropTypes.func.isRequired,
+		getCategories: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
 		createQuiz: PropTypes.func.isRequired,
 	}
@@ -28,7 +27,7 @@ class CreateForm extends Component {
 		this.state = {
 			title: '',
 			description: 'Welcome to my quiz!',
-			section: '',
+			section: 'knowledge_quiz',
 			category: '',
 			image_url: '',
 		}
@@ -38,26 +37,13 @@ class CreateForm extends Component {
 	}
 
 	componentDidMount = () => {
-		if (
-			this.props.sections.length > 0 &&
-			this.props.categories.length > 0
-		) {
-			this.setState({
-				section: this.props.sections[0].name,
-				category: this.props.categories[0].name,
-			})
-		}
+		if (this.props.categories.length > 0)
+			this.setState({ category: this.props.categories[0].name })
 	}
 
 	componentDidUpdate(prevProps, _) {
-		if (
-			prevProps.categories !== this.props.categories &&
-			prevProps.sections !== this.props.sections
-		)
-			this.setState({
-				section: this.props.sections[0].name,
-				category: this.props.categories[0].name,
-			})
+		if (prevProps.categories !== this.props.categories)
+			this.setState({ category: this.props.categories[0].name })
 	}
 
 	componentWillUnmount = () => this.props.clearErrors()
@@ -82,10 +68,27 @@ class CreateForm extends Component {
 	}
 
 	render() {
-		const { errors, sections, categories } = this.props
+		const { errors, categories } = this.props
 		const { title, description, section, category, image_url } = this.state
 
-		const sectionOptions = sections.map((section, index) => (
+		const sectionOptions = [
+			{
+				name: 'knowledge_quiz',
+				display_name: 'Knowledge Quiz',
+			},
+			{
+				name: 'universal_quiz',
+				display_name: 'Universal Quiz',
+			},
+			{
+				name: 'psychology_quiz',
+				display_name: 'Psychology Quiz',
+			},
+			{
+				name: 'preferential_quiz',
+				display_name: 'Preferential Quiz',
+			},
+		].map((section, index) => (
 			<option value={section.name} key={index}>
 				{section.display_name}
 			</option>
@@ -274,13 +277,12 @@ class CreateForm extends Component {
 
 const mapStateToProps = (state) => ({
 	quiz: state.quizzes.quizzes.item.data,
-	sections: state.quizzes.sections.data,
 	categories: state.quizzes.categories.data,
 	errors: state.errors.messages,
 })
 
 const mapDispatchToProps = {
-	getCategorySection,
+	getCategories,
 	clearErrors,
 	createQuiz,
 }

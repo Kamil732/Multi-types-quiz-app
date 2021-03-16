@@ -154,11 +154,6 @@ class TestViews(TestSetUp):
 
         self.assertEqual(res.status_code, 200)
 
-    def test_get_sections(self):
-        res = self.client.get(self.sections_url)
-
-        self.assertEqual(res.status_code, 200)
-
     def test_get_categories(self):
         res = self.client.get(self.categories_url)
 

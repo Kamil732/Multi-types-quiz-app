@@ -1,12 +1,12 @@
 import {
 	GET_QUIZZES,
-	GET_CATEGORY_SECTION,
+	GET_CATEGORY,
 	QUIZZES_LOADING,
-	CATEGORY_SECTION_LOADING,
+	CATEGORY_LOADING,
 	GET_QUIZ_PUNCTATIONS_SUCCESS,
 	GET_QUIZ_PUNCTATIONS_FAIL,
 	QUIZZES_ERROR,
-	CATEGORY_SECTION_ERROR,
+	CATEGORY_ERROR,
 	CREATE_QUIZ,
 	CREATE_QUIZ_FAIL,
 	UPDATE_QUIZ,
@@ -32,10 +32,6 @@ const initialState = {
 		loading: false,
 		data: [],
 	},
-	sections: {
-		loading: false,
-		data: [],
-	},
 }
 
 // eslint-disable-next-line
@@ -49,15 +45,11 @@ export default function (state = initialState, action) {
 					loading: true,
 				},
 			}
-		case CATEGORY_SECTION_LOADING:
+		case CATEGORY_LOADING:
 			return {
 				...state,
 				categories: {
 					...initialState.categories,
-					loading: true,
-				},
-				sections: {
-					...initialState.sections,
 					loading: true,
 				},
 			}
@@ -70,16 +62,12 @@ export default function (state = initialState, action) {
 					data: action.payload,
 				},
 			}
-		case GET_CATEGORY_SECTION:
+		case GET_CATEGORY:
 			return {
 				...state,
-				sections: {
-					loading: false,
-					data: action.payload.sections,
-				},
 				categories: {
 					loading: false,
-					data: action.payload.categories,
+					data: action.payload,
 				},
 			}
 		case UPDATE_QUIZ_PUNCTATIONS:
@@ -110,11 +98,10 @@ export default function (state = initialState, action) {
 				...state,
 				quizzes: initialState.quizzes,
 			}
-		case CATEGORY_SECTION_ERROR:
+		case CATEGORY_ERROR:
 			return {
 				...state,
 				categories: initialState.categories,
-				sections: initialState.sections,
 			}
 		case UPDATE_QUIZ:
 		case CREATE_QUIZ:

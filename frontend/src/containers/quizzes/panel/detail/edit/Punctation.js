@@ -120,7 +120,7 @@ class Punctation extends Component {
 				section.name === 'knowledge_quiz' ||
 				section.name === 'universal_quiz'
 
-			if (section === 'psychology_quiz')
+			if (section.name === 'psychology_quiz')
 				data.push({
 					result: document.getElementById(`result-${i}`).value,
 					description: document.getElementById(`description-${i}`)

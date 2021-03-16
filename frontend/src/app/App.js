@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import store from '../redux/store'
 import { Provider } from 'react-redux'
 import { loadUser } from '../redux/actions/auth'
-import { getCategorySection } from '../redux/actions/quizzes'
+import { getCategories } from '../redux/actions/quizzes'
 
 import Header from '../containers/Header'
 import Routes from './Routes'
@@ -14,7 +14,7 @@ import Footer from '../containers/Footer'
 class App extends Component {
 	componentDidMount() {
 		store.dispatch(loadUser())
-		store.dispatch(getCategorySection())
+		store.dispatch(getCategories())
 		document.getElementById('page-loader').remove()
 	}
 

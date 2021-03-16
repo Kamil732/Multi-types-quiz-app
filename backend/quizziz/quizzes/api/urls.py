@@ -11,7 +11,6 @@ from quizzes.api.views import (
     QuizFinishAPIView,
     QuizFeedbacksAPIView,
     DeleteQuizFeedbackAPIView,
-    SectionViewSet,
     CategoryViewSet,
     QuestionListAPIView,
     QuestionDetailAPIView,
@@ -20,7 +19,6 @@ from quizzes.api.views import (
 )
 
 router = DefaultRouter()
-router.register('sections', SectionViewSet)
 router.register('categories', CategoryViewSet)
 
 urlpatterns = [

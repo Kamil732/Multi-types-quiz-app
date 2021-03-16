@@ -12,11 +12,11 @@ from . import serializers
 class QuizListMixin(object):
     serializer_class = serializers.QuizListSerializer
     pagination_class = QuizListPagination
-    filterset_fields = ('title', 'category__name', 'section__name',)
+    filterset_fields = ('title', 'category__name', 'section',)
     filterset_fields = {
         'title': ['istartswith'],
         'category__name': ['exact'],
-        'section__name': ['exact'],
+        'section': ['exact'],
     }
 
 

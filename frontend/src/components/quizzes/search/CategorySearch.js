@@ -11,70 +11,79 @@ import search from '../../../helpers/search'
 
 import ActiveTag from '../../navigation/ActiveTag'
 
-class SectionCategorySearch extends Component {
-    static propTypes = {
-        loading: PropTypes.bool,
-        categories: PropTypes.array.isRequired,
-    }
+class CategorySearch extends Component {
+	static propTypes = {
+		loading: PropTypes.bool,
+		categories: PropTypes.array.isRequired,
+	}
 
-    constructor(props) {
-        super(props)
+	constructor(props) {
+		super(props)
 
-        this.onClick = this.onClick.bind(this)
-    }
+		this.onClick = this.onClick.bind(this)
+	}
 
-    onClick = (key, value) => {
-        window.scrollTo({ top: 0, behavior: `smooth` })
-        setTimeout(search(this.props, key, value), 150)
-    }
+	onClick = (key, value) => {
+		window.scrollTo({ top: 0, behavior: `smooth` })
+		setTimeout(search(this.props, key, value), 150)
+	}
 
-    render() {
-        const query = queryString.parse(this.props.location.search)
-        const category = query.category__name
+	render() {
+		const query = queryString.parse(this.props.location.search)
+		const category = query.category__name
 
-        const categories = this.props.categories.map((item, index) => (
-            <ActiveTag
-                tag="li"
-                to_search={[`category__name=${item.name}`]}
-                jsx={{ onClick: () => this.onClick('category__name', item.name) }}
-                className="vertical-menu__item"
-                key={index}
-            >
-                {item.display_name}
-            </ActiveTag>
-        ))
+		const categories = this.props.categories.map((item, index) => (
+			<ActiveTag
+				tag="li"
+				to_search={[`category__name=${item.name}`]}
+				jsx={{
+					onClick: () => this.onClick('category__name', item.name),
+				}}
+				className="vertical-menu__item"
+				key={index}
+			>
+				{item.display_name}
+			</ActiveTag>
+		))
 
-        return (
-            <div className="card">
-                <div className="card__header">Choose Category</div>
-                <div className="card__body">
-                    {
-                        this.props.loading ? <SpinLoader /> : (
-                            <ul className="vertical-menu">
-                                <li
-                                    onClick={() => this.onClick('category__name', '') }
-                                    className={`vertical-menu__item ${!category ? 'active' : ''}`}
-                                >
-                                    All
-                                </li>
+		return (
+			<div className="card">
+				<div className="card__header">Choose Category</div>
+				<div className="card__body">
+					{this.props.loading ? (
+						<SpinLoader />
+					) : (
+						<ul className="vertical-menu">
+							<li
+								onClick={() =>
+									this.onClick('category__name', '')
+								}
+								className={`vertical-menu__item ${
+									!category ? 'active' : ''
+								}`}
+							>
+								All
+							</li>
 
-                                {categories}
-                            </ul>
-                        )
-                    }
-                </div>
-            </div>
-        )
-    }
+							{categories}
+						</ul>
+					)}
+				</div>
+			</div>
+		)
+	}
 }
 
-const mapStateToProps = state => ({
-    loading: state.quizzes.categories.loading,
-    categories: state.quizzes.categories.data,
+const mapStateToProps = (state) => ({
+	loading: state.quizzes.categories.loading,
+	categories: state.quizzes.categories.data,
 })
 
 const mapDispatchToProps = {
-    getQuizzes,
+	getQuizzes,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SectionCategorySearch))
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(withRouter(CategorySearch))

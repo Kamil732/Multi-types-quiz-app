@@ -12,7 +12,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 
-from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Section, Category, Question, PsychologyResults, Answer
+from quizzes.models import Quiz, QuizFeedback, QuizPunctation, Category, Question, PsychologyResults, Answer
 
 from . import serializers, permissions, mixins
 
@@ -25,12 +25,6 @@ class ImageValidatorAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class SectionViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = serializers.SectionSerializer
-    queryset = Section.objects.all()
-    lookup_field = 'name'
 
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
@@ -162,7 +156,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                     question=question_model,
                     answer=answer['answer'],
                     image_url=answer['image_url'],
-                    is_correct=index_ == 0 if quiz.section.name == 'knowledge_quiz' else False,
+                    is_correct=index_ == 0 if quiz.section == 'knowledge_quiz' else False,
                     points=answer['points'],
                     slug=str(index_))
                 for (index_, answer) in enumerate(question['answers'])
@@ -175,7 +169,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                 key_fields=('slug',)  # slug is index from enumerate
             )
 
-            if quiz.section.name == 'psychology_quiz':
+            if quiz.section == 'psychology_quiz':
                 # Set results to each answer
                 for answer_data in question['answers']:
                     # Get answer
@@ -192,8 +186,8 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                         raise ValidationError({'detail': _('Every answer have to have result to it')})
 
          #### Set punctations ####
-        if quiz.section.name == 'knowledge_quiz' or quiz.section.name == 'universal_quiz':
-            if quiz.section.name == 'knowledge_quiz':
+        if quiz.section == 'knowledge_quiz' or quiz.section == 'universal_quiz':
+            if quiz.section == 'knowledge_quiz':
                 max_score = Question.objects.filter(quiz=quiz).count()
             else:
                 questions = Question.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
@@ -345,7 +339,7 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         quiz_slug = self.kwargs.get('quiz_slug')
 
         section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
-            'section__name', flat=True).first()
+            'section', flat=True).first()
 
         if not(section == 'psychology_quiz'):
             return serializers.QuizPunctationSerializer
@@ -356,7 +350,7 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         quiz_slug = self.kwargs.get('quiz_slug')
 
         section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
-            'section__name', flat=True).first()
+            'section', flat=True).first()
 
         if not(section == 'psychology_quiz'):
             return QuizPunctation.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug).order_by('id')
@@ -374,7 +368,7 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         quiz_slug = self.kwargs.get('quiz_slug')
 
         section = Quiz.objects.filter(author__slug=author_slug, slug=quiz_slug).values_list(
-            'section__name', flat=True).first()
+            'section', flat=True).first()
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
         new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'],

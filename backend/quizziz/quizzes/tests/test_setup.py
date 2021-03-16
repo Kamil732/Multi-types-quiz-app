@@ -4,7 +4,7 @@ from rest_framework.test import APITestCase
 from faker import Faker
 
 from accounts.models import Account
-from quizzes.models import Quiz, QuizPunctation, Question, Answer, Section, Category
+from quizzes.models import Quiz, QuizPunctation, Question, Answer, Category
 
 
 class TestSetUp(APITestCase):
@@ -45,14 +45,9 @@ class TestSetUp(APITestCase):
             'password': password,
         }
 
-        for _ in range(4):
-            Section.objects.create(display_name=self.fake.unique.name())
-
         for _ in range(12):
             Category.objects.create(display_name=self.fake.unique.name())
 
-        sections = [section for section in Section.objects.all()]
-        section_names = [section.name for section in Section.objects.all()]
         categories = [category for category in Category.objects.all()]
         category_names = [category.name for category in Category.objects.all()]
 
@@ -65,7 +60,7 @@ class TestSetUp(APITestCase):
         user = Account.objects.create_user(**user_data)
 
         quiz = Quiz.objects.create(author=user, title=title, description=description, image_url=image_url,
-                                   section=self.fake.random.choice(sections), category=self.fake.random.choice(categories))
+                                   section=self.fake.random.choice(Quiz.SECTION), category=self.fake.random.choice(categories))
 
         questions = [Question.objects.create(
             quiz=quiz, question=self.fake.unique.sentence()) for _ in range(7)]
@@ -82,7 +77,7 @@ class TestSetUp(APITestCase):
             'title': title,
             'description': description,
             'image_url': image_url,
-            'section': self.fake.random.choice(section_names),
+            'section': self.fake.random.choice(Quiz.SECTION),
             'category': self.fake.random.choice(category_names),
         }
 
@@ -90,7 +85,7 @@ class TestSetUp(APITestCase):
             'title': title,
             'description': description,
             'image_url': '',
-            'section': self.fake.random.choice(section_names),
+            'section': self.fake.random.choice(Quiz.SECTION),
             'category': self.fake.random.choice(category_names),
         }
 
@@ -98,7 +93,7 @@ class TestSetUp(APITestCase):
             'title': title,
             'description': description,
             'image_url': title,
-            'section': self.fake.random.choice(section_names),
+            'section': self.fake.random.choice(Quiz.SECTION),
             'category': self.fake.random.choice(category_names),
         }
 
@@ -106,7 +101,7 @@ class TestSetUp(APITestCase):
             'title': description,
             'description': title,
             'image_url': '',
-            'section': self.fake.random.choice(section_names),
+            'section': self.fake.random.choice(Quiz.SECTION),
             'category': self.fake.random.choice(category_names),
         }
 
@@ -158,7 +153,6 @@ class TestSetUp(APITestCase):
             login_url, login_data_other, format='json').data.get('access')
 
         self.image_validator_url = reverse('image-validator')
-        self.sections_url = reverse('section-list')
         self.categories_url = reverse('category-list')
         self.quizzes_list_url = reverse('quiz-list')
         self.quizzes_detail_url = reverse(

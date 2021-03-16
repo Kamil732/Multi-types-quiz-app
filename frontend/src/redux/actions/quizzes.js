@@ -1,10 +1,10 @@
 import axios from 'axios'
 import {
-	CATEGORY_SECTION_ERROR,
-	CATEGORY_SECTION_LOADING,
+	CATEGORY_ERROR,
+	CATEGORY_LOADING,
 	CREATE_QUIZ,
 	CREATE_QUIZ_FAIL,
-	GET_CATEGORY_SECTION,
+	GET_CATEGORY,
 	GET_QUIZ_PUNCTATIONS_SUCCESS,
 	GET_QUIZ_PUNCTATIONS_FAIL,
 	GET_QUIZZES,
@@ -63,29 +63,21 @@ export const getQuizzes = (
 	}
 }
 
-export const getCategorySection = () => async (dispatch) => {
-	dispatch({ type: CATEGORY_SECTION_LOADING })
+export const getCategories = () => async (dispatch) => {
+	dispatch({ type: CATEGORY_LOADING })
 
 	try {
-		const categories = await axios.get(
+		const res = await axios.get(
 			`${process.env.REACT_APP_API_URL}/categories/`
 		)
-		const sections = await axios.get(
-			`${process.env.REACT_APP_API_URL}/sections/`
-		)
-
-		const res = await Promise.all([sections.data, categories.data])
 
 		dispatch({
-			type: GET_CATEGORY_SECTION,
-			payload: {
-				sections: res[0],
-				categories: res[1],
-			},
+			type: GET_CATEGORY,
+			payload: res.data,
 		})
 	} catch (err) {
 		dispatch({
-			type: CATEGORY_SECTION_ERROR,
+			type: CATEGORY_ERROR,
 		})
 	}
 }

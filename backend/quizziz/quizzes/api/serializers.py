@@ -13,7 +13,6 @@ from quizzes.models import (
     QuizPunctation,
     Question,
     Category,
-    Section,
     PsychologyResults,
     Answer,
 )
@@ -41,15 +40,9 @@ class ImageValidatorSerailizer(serializers.Serializer):
         read_only_fields = ('success',)
 
 
-class SectionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Section
-        fields = ('name', 'display_name')
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Section
+        model = Category
         fields = ('name', 'display_name')
 
 
@@ -127,8 +120,8 @@ class QuizSerializer(serializers.Serializer):
     max_score = serializers.SerializerMethodField('get_max_score')
     average_points = serializers.SerializerMethodField('get_average_points')
     image_url = serializers.CharField(allow_blank=True)
-    section = serializers.CharField(max_length=50)
     category = serializers.CharField(max_length=50)
+    section = serializers.CharField(max_length=50)
     question_amount = serializers.SerializerMethodField('get_question_amount')
 
     def get_pub_date(self, obj):
@@ -138,9 +131,9 @@ class QuizSerializer(serializers.Serializer):
         return Question.objects.filter(quiz_id=obj.id).count()
 
     def get_max_score(self, obj):
-        if obj.section.name == 'knowledge_quiz':
+        if obj.section == 'knowledge_quiz':
             return self.get_question_amount(obj)
-        elif obj.section.name == 'universal_quiz':
+        elif obj.section == 'universal_quiz':
             questions = Question.objects.filter(quiz__author__slug=obj.author.slug, quiz__slug=obj.slug)
 
             max_scores = []
@@ -159,10 +152,6 @@ class QuizSerializer(serializers.Serializer):
         except:
             return None
 
-    def validate_section(self, value):
-        return Section.objects.get(
-            name=value)
-
     def validate_category(self, value):
         return Category.objects.get(
             name=value)
@@ -174,10 +163,19 @@ class QuizSerializer(serializers.Serializer):
         return value
 
     def to_representation(self, instance):
-        self.fields['section'] = SectionSerializer(read_only=True)
-        self.fields['category'] = CategorySerializer(read_only=True)
+        representation = super(QuizSerializer, self).to_representation(instance)
 
-        return super(QuizSerializer, self).to_representation(instance)
+        representation['category'] = {
+            'name': instance.category.name,
+            'display_name': instance.category.display_name,
+        }
+
+        representation['section'] = {
+            'name': instance.section,
+            'display_name': instance.get_section_display(),
+        }
+
+        return representation
 
 
 class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
@@ -202,7 +200,6 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
             'slug',
             'author',
             'author_slug',
-            'section',
             'category',
             'question_amount',
         )
@@ -211,7 +208,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
     def create(self, data):
         quiz = Quiz.objects.create(**data)
 
-        if data['section'].name == 'psychology_quiz':
+        if data['section'] == 'psychology_quiz':
             PsychologyResults.objects.bulk_create(
                 [PsychologyResults(quiz=quiz, result=f'You are {str(i + 1)}...') for i in range(4)])
         else:

@@ -93,7 +93,9 @@ class List extends Component {
 					<span style={{ fontSize: '11px' }}>
 						{quiz.pub_date}
 						&ensp; &bull; &ensp;
-						<Link to={`/?category__name=${quiz.category.name}`}>
+						<Link
+							to={`/panel/dashboard/?category__name=${quiz.category.name}`}
+						>
 							{quiz.category.display_name}
 						</Link>
 					</span>{' '}

@@ -31,9 +31,7 @@ class List extends Component {
 						<header className="quiz-card__header text-darken display-sm">
 							<span>
 								Section:&ensp;
-								<Link
-									to={`?section__name=${quiz.section.name}`}
-								>
+								<Link to={`?section=${quiz.section.name}`}>
 									{quiz.section.display_name}
 								</Link>
 							</span>

@@ -5,7 +5,7 @@ from autoslug import AutoSlugField
 from django.core.exceptions import ValidationError
 
 
-class DisplayNameAbstract(models.Model):
+class Category(models.Model):
     display_name = models.CharField(max_length=50, unique=True)
     name = models.SlugField(max_length=50, blank=True, unique=True)
 
@@ -15,27 +15,17 @@ class DisplayNameAbstract(models.Model):
     def save(self, *args, **kwargs):
         self.name = slugify(self.display_name)
 
-        return super(DisplayNameAbstract, self).save(*args, **kwargs)
-
-    class Meta:
-        abstract = True
-
-
-class Section(DisplayNameAbstract):
-    pass
-
-
-class Category(DisplayNameAbstract):
-    pass
-
-
-"""
-TODO:
-Make a model for each type of quiz
-"""
+        return super(Category, self).save(*args, **kwargs)
 
 
 class Quiz(models.Model):
+    SECTION = (
+        ('knowledge_quiz', 'Knowledge Quiz'),
+        ('universal_quiz', 'Universal Quiz'),
+        ('psychology_quiz', 'Psychology Quiz'),
+        ('preferential_quiz', 'Preferential Quiz'),
+    )
+
     DEFAULT_IMAGE = 'https://cdn.pixabay.com/photo/2017/01/24/00/21/question-2004314_960_720.jpg'
 
     DEFAULT_DESCRIPTION = _('Welcome to my quiz!')
@@ -45,8 +35,7 @@ class Quiz(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=100)
     description = models.TextField(default=DEFAULT_DESCRIPTION)
-    section = models.ForeignKey(
-        Section, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
+    section = models.CharField(max_length=17, choices=SECTION)
     category = models.ForeignKey(
         Category, on_delete=models.DO_NOTHING, default=1, related_name='quizzes')
     one_page_questions = models.BooleanField(default=False)
