@@ -142,7 +142,7 @@ class Auth extends Component {
 						onFailure={(err) =>
 							this.addError(
 								400,
-								'The error occurred, please try again'
+								'The error occurred with Google, please try again.'
 							)
 						}
 						cookiePolicy={'single_host_origin'}

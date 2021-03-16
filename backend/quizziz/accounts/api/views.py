@@ -56,6 +56,10 @@ class SocialLoginView(generics.GenericAPIView):
                 return Response({
                     "error": "Please log in to your account with Google.",
                 }, status=status.HTTP_400_BAD_REQUEST)
+            elif provider == 'google-oauth2':
+                return Response({
+                    "error": "Error occurred while logging with Google, try again.",
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             authenticated_user = backend.do_auth(access_token, user=user)

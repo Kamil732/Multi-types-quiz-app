@@ -56,8 +56,10 @@ export const loadUser = () => async (dispatch, getState) => {
 			payload: res.data,
 		})
 	} catch (err) {
-		await dispatch(refreshToken())
-		if (getState().auth.token) await dispatch(loadUser())
+		if (err.response.status === 401) {
+			await dispatch(refreshToken())
+			if (getState().auth.token) await dispatch(loadUser())
+		}
 	}
 }
 
