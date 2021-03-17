@@ -371,9 +371,8 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
             'section', flat=True).first()
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'],
-                                     to_score=model['to_score'], slug=str(index)) for (index, model) in enumerate(request.data)] if not(section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'],
-                                                                                                                                                                                              description=model['description'], slug=str(index)) for (index, model) in enumerate(request.data)]
+        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'], to_score=model['to_score'], id=model['id'] if model['id'] else int(QuizPunctation.objects.last().id) + index) for (index, model) in enumerate(request.data)] if not(
+            section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'], description=model['description'], id=model['id'] if model['id'] else int(PsychologyResults.objects.last().id) + index) for (index, model) in enumerate(request.data)]
 
         # Check if result is unique
         for model in new_models:
@@ -383,12 +382,15 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         fields = ['result', 'description', 'from_score', 'to_score'] if not(
             section == 'psychology_quiz') else ['result', 'description']
 
-        bulk_sync(
+        ret = bulk_sync(
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
             fields=fields,
-            key_fields=('slug',)  # slug is index from enumerate
+            key_fields=('id',)  # slug is index from enumerate
         )
+
+        print("\n\n\Saved punctations: {created} created, {updated} updated, {deleted} deleted.\n".format(
+            **ret['stats']))
 
         if section == 'psychology_quiz':
             questions = Question.objects.filter(quiz_id=quiz.id).prefetch_related('answers')

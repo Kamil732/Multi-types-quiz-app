@@ -11,21 +11,20 @@ from .models import (
 )
 
 
-class QuestionAdminInline(admin.StackedInline):
-    model = Question
-    extra = 0
+class QuizPunctationAdmin(admin.ModelAdmin):
+    model = QuizPunctation
+    readonly_fields = ('id', 'slug',)
 
 
-class QuizAdmin(admin.ModelAdmin):
-    model = Quiz
-    inlines = [QuestionAdminInline]
-    readonly_fields = ('id',)
+class PsychologyResultsAdmin(admin.ModelAdmin):
+    model = QuizPunctation
+    readonly_fields = ('id', 'slug',)
 
 
-admin.site.register(Quiz, QuizAdmin)
+admin.site.register(Quiz)
 admin.site.register(QuizFeedback)
-admin.site.register(QuizPunctation)
-admin.site.register(PsychologyResults)
+admin.site.register(QuizPunctation, QuizPunctationAdmin)
+admin.site.register(PsychologyResults, PsychologyResultsAdmin)
 admin.site.register(Category)
 
 

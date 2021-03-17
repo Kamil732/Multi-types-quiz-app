@@ -210,7 +210,7 @@ class QuizListSerializer(QuizSerializer, serializers.ModelSerializer):
 
         if data['section'] == 'psychology_quiz':
             PsychologyResults.objects.bulk_create(
-                [PsychologyResults(quiz=quiz, result=f'You are {str(i + 1)}...') for i in range(4)])
+                [PsychologyResults(quiz=quiz, result=f'You are {str(i + 1)}...', description=f'Not everyone is {str(i+ 1)}...') for i in range(4)])
         else:
             QuizPunctation.objects.create(quiz=quiz, from_score=0, to_score=0, result='Bravo!',
                                           description="That's the end of hard questions :)")
