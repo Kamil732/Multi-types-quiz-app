@@ -29,6 +29,11 @@ class UserData extends Component {
 			picturePreview: this.props.picture,
 			username: this.props.username,
 			bio: this.props.bio,
+
+			pictureHasChanged: false,
+			usernameHasChanged: false,
+			bioHasChanged: false,
+
 			picture_edit_mode: false,
 			username_edit_mode: false,
 			bio_edit_mode: false,
@@ -52,7 +57,10 @@ class UserData extends Component {
 
 	cancelEdit = (field) => {
 		this.setEdit(field)
-		this.setState({ [field]: this.props[field] })
+		this.setState({
+			[field]: this.props[field],
+			[`${field}HasChanged`]: false,
+		})
 	}
 
 	cancelEditImage = () => {
@@ -60,10 +68,16 @@ class UserData extends Component {
 		this.setState({
 			picture: null,
 			picturePreview: this.props.picture,
+			pictureHasChanged: false,
 		})
 	}
 
-	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
+	onChange = (e) =>
+		this.setState({
+			[e.target.name]: e.target.value,
+			[`${e.target.name}HasChanged`]:
+				e.target.value !== this.props[e.target.name],
+		})
 
 	handleImageChange = (e) => {
 		const file = e.target.files[0]
@@ -76,6 +90,7 @@ class UserData extends Component {
 			this.setState({
 				picture: file,
 				picturePreview: reader.result,
+				pictureHasChanged: e.target.value !== this.props[e.target.name],
 			})
 	}
 
@@ -108,7 +123,10 @@ class UserData extends Component {
 		await this.props.updateUserData({ [field]: this.state[field] })
 
 		if (this.props.errors[field] === undefined)
-			this.setState({ [`${field}_edit_mode`]: false })
+			this.setState({
+				[`${field}_edit_mode`]: false,
+				[`${field}HasChanged`]: false,
+			})
 	}
 
 	componentDidUpdate(prevProps, prevState) {
@@ -130,6 +148,9 @@ class UserData extends Component {
 			picturePreview,
 			username,
 			bio,
+			pictureHasChanged,
+			usernameHasChanged,
+			bioHasChanged,
 			picture_edit_mode,
 			username_edit_mode,
 			bio_edit_mode,
@@ -211,7 +232,13 @@ class UserData extends Component {
 											>
 												delete
 											</button>
-											<button className="btn btn__contrast">
+											<button
+												className={`btn btn__contrast ${
+													pictureHasChanged
+														? ''
+														: 'btn__disabled'
+												}`}
+											>
 												Save
 											</button>
 										</div>
@@ -274,7 +301,13 @@ class UserData extends Component {
 												>
 													Cancel
 												</button>
-												<button className="btn btn__contrast">
+												<button
+													className={`btn btn__contrast ${
+														usernameHasChanged
+															? ''
+															: 'btn__disabled'
+													}`}
+												>
 													Save
 												</button>
 											</div>
@@ -334,7 +367,13 @@ class UserData extends Component {
 												>
 													Cancel
 												</button>
-												<button className="btn btn__contrast">
+												<button
+													className={`btn btn__contrast ${
+														bioHasChanged
+															? ''
+															: 'btn__disabled'
+													}`}
+												>
 													Save
 												</button>
 											</div>
