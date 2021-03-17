@@ -125,6 +125,7 @@ class Punctation extends Component {
 					result: document.getElementById(`result-${i}`).value,
 					description: document.getElementById(`description-${i}`)
 						.value,
+					id: document.getElementById(`punctation-id-${i}`).value,
 				})
 			else
 				data.push({
@@ -141,6 +142,7 @@ class Punctation extends Component {
 					result: document.getElementById(`result-${i}`).value,
 					description: document.getElementById(`description-${i}`)
 						.value,
+					id: document.getElementById(`punctation-id-${i}`).value,
 				})
 		}
 

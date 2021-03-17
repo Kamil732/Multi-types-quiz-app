@@ -145,6 +145,12 @@ class PunctationList extends Component {
 
 		const punctationList = punctations.map((punctation, index) => (
 			<div key={index}>
+				<input
+					type="hidden"
+					value={punctation.id || ''}
+					id={`punctation-id-${index}`}
+				/>
+
 				<div className="card__body">
 					{section_name === 'knowledge_quiz' ||
 					section_name === 'universal_quiz' ? (
