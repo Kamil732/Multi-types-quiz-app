@@ -119,14 +119,16 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'],
-                                  image_url=question['image_url'] if valid_url_extension(question['image_url']) else '', slug=str(index)) for (index, question) in enumerate(questions)]
+        new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'], image_url=question['image_url'] if valid_url_extension(
+            question['image_url']) else '', id=question['id'] if question['id'] else int(Question.objects.last().id) + index + 1) for (index, question) in enumerate(questions)]
 
-        # TODO: Questions should NOT be unique
-        # Check if question is unique
-        for model in new_questions:
-            if ([x.question for x in new_questions].count(model.question) > 1):
-                raise ValidationError({'detail': _('There cannot be more than 1 question with the same text')})
+        if quiz.section == 'psychology_quiz':
+            # If there are no results than error should be thrown
+
+            for question in questions:
+                for answer_data in question['answers']:
+                    if not(answer_data['results']):
+                        raise ValidationError({'detail': _('Every answer have to have at least 1 result')})
 
         #### Save answers ####
         for (index, question) in enumerate(questions):
@@ -142,14 +144,18 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
 
             # If there is no error than save questions
             if index == 0:
-                bulk_sync(
+                ret = bulk_sync(
                     new_models=new_questions,
                     filters=Q(quiz_id=quiz.id),
                     fields=['question', 'summery', 'image_url'],
-                    key_fields=('slug',)  # slug is index from enumerate
+                    key_fields=('id',)  # slug is index from enumerate
                 )
 
-            question_model = Question.objects.get(quiz=quiz, question=question['question'])
+                print("\n\nSaved punctations: {created} created, {updated} updated, {deleted} deleted.\n\n".format(
+                    **ret['stats']))
+
+            question_model = Question.objects.get(
+                quiz=quiz, id=new_questions[index].id)
 
             new_answers = [
                 Answer(
@@ -170,11 +176,6 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
             )
 
             if quiz.section == 'psychology_quiz':
-                # If there are no results than error should be thrown
-                for answer_data in question['answers']:
-                    if not(answer_data['results']):
-                        raise ValidationError({'detail': _('Every answer have to have at least 1 result')})
-
                 # Set results to each answer
                 for answer_data in question['answers']:
                     # Get answer
@@ -257,7 +258,7 @@ class QuizFinishAPIView(views.APIView):
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
             # Add 1 to solved_times
             quiz.solved_times += 1
-            quiz.save
+            quiz.save()
         except ObjectDoesNotExist:
             raise NotFound(
                 _('The quiz you are looking for does not exist'))
@@ -383,15 +384,12 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
         fields = ['result', 'description', 'from_score', 'to_score'] if not(
             section == 'psychology_quiz') else ['result', 'description']
 
-        ret = bulk_sync(
+        bulk_sync(
             new_models=new_models,
             filters=Q(quiz_id=quiz.id),
             fields=fields,
             key_fields=('id',)  # slug is index from enumerate
         )
-
-        print("\n\n\Saved punctations: {created} created, {updated} updated, {deleted} deleted.\n".format(
-            **ret['stats']))
 
         if section == 'psychology_quiz':
             questions = Question.objects.filter(quiz_id=quiz.id).prefetch_related('answers')
