@@ -38,10 +38,31 @@ class Questions extends Component {
 			hasChanged: false,
 		}
 
+		this.getQuestions = this.getQuestions.bind(this)
 		this.onSubmit = this.onSubmit.bind(this)
 		this.resetForm = this.resetForm.bind(this)
 		this.addQuestion = this.addQuestion.bind(this)
 		this.removeQuestion = this.removeQuestion.bind(this)
+	}
+
+	getQuestions = async () => {
+		try {
+			const res = await axios.get(
+				`${process.env.REACT_APP_API_URL}/quizzes/${this.props.data.author_slug}/${this.props.data.slug}/questions/update-list/`
+			)
+
+			this.setState({
+				loading: false,
+				questions: res.data,
+			})
+
+			this.initialQuestions = res.data
+		} catch (err) {
+			this.setState({
+				loading: false,
+				questions: [],
+			})
+		}
 	}
 
 	resetForm = () => {
@@ -80,6 +101,7 @@ class Questions extends Component {
 							results: [],
 						},
 					],
+					id: null,
 					question: '',
 					image_url: '',
 					summery: '',
@@ -100,31 +122,14 @@ class Questions extends Component {
 		}
 	}
 
-	componentDidMount = async () => {
+	componentDidMount = () => {
 		const { data, punctations } = this.props
 		const { questions } = this.state
 
 		if (punctations.length === 0)
-			await this.props.getQuizPunctations(data.author_slug, data.slug)
+			this.props.getQuizPunctations(data.author_slug, data.slug)
 
-		if (questions.length === 0)
-			try {
-				const res = await axios.get(
-					`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/questions/update-list/`
-				)
-
-				this.setState({
-					loading: false,
-					questions: res.data,
-				})
-
-				this.initialQuestions = res.data
-			} catch (err) {
-				this.setState({
-					loading: false,
-					questions: [],
-				})
-			}
+		if (questions.length === 0) this.getQuestions()
 	}
 
 	onSubmit = async (e) => {
@@ -138,6 +143,7 @@ class Questions extends Component {
 		)
 
 		if (Object.keys(this.props.errors).length === 0) {
+			await this.getQuestions()
 			this.setState({ hasChanged: false })
 			this.initialQuestions = this.state.questions
 		}
