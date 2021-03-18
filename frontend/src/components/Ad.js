@@ -1,27 +1,50 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 // import AdSense from 'react-adsense'
 
 class Ad extends Component {
-    // componentDidMount () {
-    //     (window.adsbygoogle = window.adsbygoogle || []).push({})
-    // }
+	googleInit = null
 
-    render () {
-        const image_url = 'https://fakeimg.pl/250x100/'
+	static propTypes = {
+		className: PropTypes.string,
+		slot: PropTypes.string,
+		timeout: PropTypes.number,
+	}
 
-        return (
-            <div className='ad'>
-                <img src={image_url} alt="" className="ad__img" />
-            </div>
-            // <ins className="adsbygoogle"
-            //     style={{display :'block', backgroundColor: 'black'}}
-            //     data-adtest="on"
-            //     data-ad-client="ca-pub-0000000000000000"
-            //     data-ad-slot="0000000000"
-            //     data-ad-format="auto"
-            //     data-full-width-responsive="true"></ins>
-        );
-    }
+	static defaultProps = {
+		classNames: '',
+		timeout: 200,
+	}
+
+	componentDidMount() {
+		const { timeout } = this.props
+
+		this.googleInit = setTimeout(() => {
+			if (typeof window !== 'undefined')
+				(window.adsbygoogle = window.adsbygoogle || []).push({})
+		}, timeout)
+	}
+
+	componentWillUnmount() {
+		if (this.googleInit) clearTimeout(this.googleInit)
+	}
+
+	render() {
+		const { className, slot } = this.props
+
+		return (
+			<div className={className}>
+				<ins
+					className="adsbygoogle"
+					style={{ display: 'block' }}
+					data-ad-client={process.env.REACT_APP_GOOGLE_ADSENSE_ID}
+					data-ad-slot={slot}
+					data-ad-format="auto"
+					data-full-width-responsive="true"
+				></ins>
+			</div>
+		)
+	}
 }
 
 export default Ad
