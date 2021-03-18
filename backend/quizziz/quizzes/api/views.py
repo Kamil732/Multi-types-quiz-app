@@ -170,6 +170,11 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
             )
 
             if quiz.section == 'psychology_quiz':
+                # If there are no results than error should be thrown
+                for answer_data in question['answers']:
+                    if not(answer_data['results']):
+                        raise ValidationError({'detail': _('Every answer have to have at least 1 result')})
+
                 # Set results to each answer
                 for answer_data in question['answers']:
                     # Get answer
@@ -179,13 +184,9 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                     results = [PsychologyResults.objects.get(quiz=quiz, id=result['id'])
                                for result in answer_data['results']]
 
-                    if results:
-                        answer.results.set(results)
-                    else:
-                        # If there are no results than error should be thrown
-                        raise ValidationError({'detail': _('Every answer have to have result to it')})
+                    answer.results.set(results)
 
-         #### Set punctations ####
+        #### Set punctations ####
         if quiz.section == 'knowledge_quiz' or quiz.section == 'universal_quiz':
             if quiz.section == 'knowledge_quiz':
                 max_score = Question.objects.filter(quiz=quiz).count()
@@ -423,6 +424,33 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
                 # Add all new_results to first answer
                 for result in new_results:
                     first_answer.results.add(result)
+
+            # Check if punctations were deleted so answer was left with no results
+            # If so then we need to take punctations from the answer that has more than 1 of them and add it to the answer with no punctations
+            for question in questions:
+                # All psychology results from quiz
+                punctations = PsychologyResults.objects.filter(quiz=quiz)
+
+                # Answer id with more than 1 punctation
+                answer_id_more_punctations = None
+
+                for answer in question.answers.prefetch_related('results').all():
+                    # if answer has more then 1 result then set answer_id_more_punctations to its id
+                    if (answer.results.count() > 1):
+                        answer_id_more_punctations = answer.id
+
+                    # If answer has no results
+                    elif not(answer.results.all().exists()):
+                        # Get answer with more than 1 punctation
+                        answer_more_punctations = Answer.objects.get(id=answer_id_more_punctations)
+
+                        # Get last punctation from that answer
+                        punctation = answer_more_punctations.results.last()
+                        # Remove last punctation from that answer
+                        answer_more_punctations.results.remove(punctation)
+
+                        # Add punctation to answer with no punctations
+                        answer.results.add(punctation)
 
         return Response(request.data, status=status.HTTP_200_OK)
 

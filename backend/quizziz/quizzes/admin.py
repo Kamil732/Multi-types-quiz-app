@@ -21,6 +21,16 @@ class PsychologyResultsAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'slug',)
 
 
+class AnswerAdmin(admin.ModelAdmin):
+    model = Answer
+    readonly_fields = ('id', 'slug',)
+
+
+class QuestionAdmin(admin.ModelAdmin):
+    model = Question
+    readonly_fields = ('id', 'slug',)
+
+
 admin.site.register(Quiz)
 admin.site.register(QuizFeedback)
 admin.site.register(QuizPunctation, QuizPunctationAdmin)
@@ -28,6 +38,6 @@ admin.site.register(PsychologyResults, PsychologyResultsAdmin)
 admin.site.register(Category)
 
 
-admin.site.register(Question)
+admin.site.register(Question, QuestionAdmin)
 
-admin.site.register(Answer)
+admin.site.register(Answer, AnswerAdmin)
