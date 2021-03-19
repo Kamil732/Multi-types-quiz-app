@@ -119,8 +119,10 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
+        last_question_id = int(Question.objects.last().id) if Question.objects.exists() else 0
+
         new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'], image_url=question['image_url'] if valid_url_extension(
-            question['image_url']) else '', id=question['id'] if question['id'] else int(Question.objects.last().id) + index + 1) for (index, question) in enumerate(questions)]
+            question['image_url']) else '', id=question['id'] if question['id'] else last_question_id + index + 1) for (index, question) in enumerate(questions)]
 
         if quiz.section == 'psychology_quiz':
             # If there are no results than error should be thrown
@@ -144,15 +146,12 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
 
             # If there is no error than save questions
             if index == 0:
-                ret = bulk_sync(
+                bulk_sync(
                     new_models=new_questions,
                     filters=Q(quiz_id=quiz.id),
                     fields=['question', 'summery', 'image_url'],
                     key_fields=('id',)  # slug is index from enumerate
                 )
-
-                print("\n\nSaved punctations: {created} created, {updated} updated, {deleted} deleted.\n\n".format(
-                    **ret['stats']))
 
             question_model = Question.objects.get(
                 quiz=quiz, id=new_questions[index].id)
@@ -437,18 +436,22 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
                     if (answer.results.count() > 1):
                         answer_id_more_punctations = answer.id
 
+                for answer in question.answers.prefetch_related('results').all():
                     # If answer has no results
-                    elif not(answer.results.all().exists()):
-                        # Get answer with more than 1 punctation
-                        answer_more_punctations = Answer.objects.get(id=answer_id_more_punctations)
+                    if not(answer.results.all().exists()):
+                        if answer_id_more_punctations:
+                            # Get answer with more than 1 punctation
+                            answer_more_punctations = Answer.objects.get(id=answer_id_more_punctations)
 
-                        # Get last punctation from that answer
-                        punctation = answer_more_punctations.results.last()
-                        # Remove last punctation from that answer
-                        answer_more_punctations.results.remove(punctation)
+                            # Get last punctation from that answer
+                            punctation = answer_more_punctations.results.last()
+                            # Remove last punctation from that answer
+                            answer_more_punctations.results.remove(punctation)
 
-                        # Add punctation to answer with no punctations
-                        answer.results.add(punctation)
+                            # Add punctation to answer with no punctations
+                            answer.results.add(punctation)
+                        else:
+                            answer.delete()
 
         return Response(request.data, status=status.HTTP_200_OK)
 
