@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import objectsEquals from '../../../../../helpers/objectsEquals'
 import Textarea from '../../../../Textarea'
 import ImageUrlPreview from '../../../ImageUrlPreview'
 
@@ -48,7 +47,10 @@ class QuestionList extends Component {
 
 	componentDidUpdate(prevProps, _) {
 		// Check if form has changed
-		if (prevProps.questions !== this.props.questions) {
+		if (
+			JSON.stringify(prevProps.questions) !==
+			JSON.stringify(this.props.questions)
+		) {
 			const { hasChanged, initialQuestions, questions } = this.props
 
 			if (
@@ -77,12 +79,6 @@ class QuestionList extends Component {
 					image_url: question.image_url,
 				}))
 
-				// array of booleans, true if object has change and false if not
-				const hasChangedArray1 = questions.map(
-					(_, index) =>
-						!objectsEquals(questions1[index], questions2[index])
-				)
-
 				// Check if answers has changed
 				const answers1 = initialQuestions.map((question) => ({
 					...question.answers,
@@ -92,20 +88,9 @@ class QuestionList extends Component {
 					...question.answers,
 				}))
 
-				// array of booleans, true if object has change and false if not
-				const hasChangedArray2 = questions.map(
-					(_, index) =>
-						!objectsEquals(answers1[index], answers2[index])
-				)
-
-				// If true in array than the form has changed
 				hasChanged(
-					hasChangedArray1.some(
-						(hasChanged) => hasChanged === true
-					) ||
-						hasChangedArray2.some(
-							(hasChanged) => hasChanged === true
-						)
+					JSON.stringify(questions1) !== JSON.stringify(questions2) ||
+						JSON.stringify(answers1) !== JSON.stringify(answers2)
 				)
 			}
 		}

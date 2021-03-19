@@ -126,7 +126,7 @@ class Questions extends Component {
 		const { data, punctations } = this.props
 		const { questions } = this.state
 
-		if (punctations.length === 0)
+		if (punctations === undefined || punctations.length === 0)
 			this.props.getQuizPunctations(data.author_slug, data.slug)
 
 		if (questions.length === 0) this.getQuestions()

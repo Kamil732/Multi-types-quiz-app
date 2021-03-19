@@ -79,7 +79,7 @@ class Answer extends Component {
 									id: uuid(),
 									answer: '',
 									image_url: '',
-									points: 0,
+									points: '0',
 									results: [],
 								},
 							],
@@ -176,9 +176,10 @@ class Answer extends Component {
 			e.target.value
 		)
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(prevProps, _) {
 		// Update answers when questions changes
 		if (prevProps.questionIndex !== this.props.questionIndex) {
+			console.log('xd')
 			this.initialAnswers = this.props.answers
 			this.setState({ hasChanged: false })
 		}
@@ -189,20 +190,32 @@ class Answer extends Component {
 		) {
 			// Check if form has changed
 			if (this.initialAnswers.length === this.props.answers.length) {
-				// array of booleans, true if object has change and false if not
-				const hasChangedArray = this.props.answers.map(
-					(_, index) =>
-						!objectsEquals(
-							this.initialAnswers[index],
-							this.props.answers[index]
-						)
-				)
+				const initialAnswers = this.initialAnswers.map((answer) => ({
+					answer: answer.answer,
+					points: answer.points,
+					image_url: answer.image_url,
+				}))
 
-				// If true in array than the form has changed
+				const answers = this.props.answers.map((answer) => ({
+					answer: answer.answer,
+					points: answer.points,
+					image_url: answer.image_url,
+				}))
+
+				const initialResults = this.initialAnswers.map((answer) => ({
+					...answer.results,
+				}))
+
+				const results = this.props.answers.map((answer) => ({
+					...answer.results,
+				}))
+
 				this.setState({
-					hasChanged: hasChangedArray.some(
-						(hasChanged) => hasChanged === true
-					),
+					hasChanged:
+						JSON.stringify(initialAnswers) !==
+							JSON.stringify(answers) ||
+						JSON.stringify(initialResults) !==
+							JSON.stringify(results),
 				})
 			}
 			// If lengths of two arrays are diffrent then of course form has changed
