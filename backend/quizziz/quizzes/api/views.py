@@ -372,8 +372,8 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
             'section', flat=True).first()
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'], to_score=model['to_score'], id=model['id'] if model['id'] else int(QuizPunctation.objects.last().id) + index) for (index, model) in enumerate(request.data)] if not(
-            section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'], description=model['description'], id=model['id'] if model['id'] else int(PsychologyResults.objects.last().id) + index) for (index, model) in enumerate(request.data)]
+        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'], to_score=model['to_score'], id=model['id'] if model['id'] else int(QuizPunctation.objects.last().id) + index + 1) for (index, model) in enumerate(request.data)] if not(
+            section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'], description=model['description'], id=model['id'] if model['id'] else int(PsychologyResults.objects.last().id) + index + 1) for (index, model) in enumerate(request.data)]
 
         # Check if result is unique
         for model in new_models:
