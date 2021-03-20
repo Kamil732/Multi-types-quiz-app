@@ -53,10 +53,7 @@ class QuestionList extends Component {
 		) {
 			const { hasChanged, initialQuestions, questions } = this.props
 
-			if (
-				this.props.initialQuestions.length !==
-				this.props.questions.length
-			) {
+			if (initialQuestions.length !== questions.length) {
 				hasChanged(true)
 				return
 			}
@@ -99,6 +96,7 @@ class QuestionList extends Component {
 	render() {
 		const {
 			questions,
+			initialQuestions,
 			removeQuestion,
 			hasChanged,
 			setQuestions,
@@ -109,9 +107,16 @@ class QuestionList extends Component {
 		const questionList = questions.map((question, index) => {
 			let answers
 
+			const initialAnswers = initialQuestions[index].answers.map(
+				(answer) => ({
+					...answer,
+				})
+			)
+
 			if (section_name === 'knowledge_quiz')
 				answers = (
 					<KnowledgeAnswers
+						initialAnswers={initialAnswers}
 						answers={question.answers}
 						questions={questions}
 						questionIndex={index}
@@ -122,6 +127,7 @@ class QuestionList extends Component {
 			else if (section_name === 'universal_quiz')
 				answers = (
 					<UniversalAnswers
+						initialAnswers={initialAnswers}
 						answers={question.answers}
 						questions={questions}
 						questionIndex={index}
@@ -132,6 +138,7 @@ class QuestionList extends Component {
 			else if (section_name === 'preferential_quiz')
 				answers = (
 					<PreferentialAnswers
+						initialAnswers={initialAnswers}
 						answers={question.answers}
 						questions={questions}
 						questionIndex={index}
@@ -142,6 +149,7 @@ class QuestionList extends Component {
 			else if (section_name === 'psychology_quiz')
 				answers = (
 					<PsychologyAnswers
+						initialAnswers={initialAnswers}
 						answers={question.answers}
 						punctationLength={punctations.length}
 						section_name={section_name}

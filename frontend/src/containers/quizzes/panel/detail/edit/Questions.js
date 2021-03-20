@@ -51,12 +51,12 @@ class Questions extends Component {
 				`${process.env.REACT_APP_API_URL}/quizzes/${this.props.data.author_slug}/${this.props.data.slug}/questions/update-list/`
 			)
 
+			this.initialQuestions = res.data
+
 			this.setState({
 				loading: false,
 				questions: res.data,
 			})
-
-			this.initialQuestions = res.data
 		} catch (err) {
 			this.setState({
 				loading: false,

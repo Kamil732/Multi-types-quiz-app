@@ -5,6 +5,7 @@ import uuid from 'uuid/dist/v4'
 
 class Answer extends Component {
 	static propTypes = {
+		initialAnswers: PropTypes.array,
 		answers: PropTypes.array,
 		questions: PropTypes.array,
 		questionIndex: PropTypes.number,
@@ -16,8 +17,6 @@ class Answer extends Component {
 
 	constructor(props) {
 		super(props)
-
-		this.initialAnswers = props.answers
 
 		this.state = {
 			hasChanged: false,
@@ -36,7 +35,7 @@ class Answer extends Component {
 				if (index === this.props.questionIndex)
 					return {
 						...question,
-						answers: this.initialAnswers,
+						answers: this.props.initialAnswers,
 					}
 
 				return question
@@ -138,10 +137,8 @@ class Answer extends Component {
 	}
 
 	onChange = (id, name, value) => {
-		let answers = this.props.answers
-
 		// Change answers
-		answers = answers.map((answer, index) => {
+		const answers = this.props.answers.map((answer, index) => {
 			if (index === parseInt(id))
 				return {
 					...answer,
@@ -176,23 +173,27 @@ class Answer extends Component {
 
 	componentDidUpdate(prevProps, _) {
 		// Update answers when questions changes
-		if (prevProps.questionIndex !== this.props.questionIndex) {
-			console.log('xd')
-			this.initialAnswers = this.props.answers
+		if (
+			JSON.stringify(prevProps.initialAnswers) !==
+			JSON.stringify(this.props.initialAnswers)
+		)
 			this.setState({ hasChanged: false })
-		}
 
 		if (
 			JSON.stringify(prevProps.answers) !==
 			JSON.stringify(this.props.answers)
 		) {
 			// Check if form has changed
-			if (this.initialAnswers.length === this.props.answers.length) {
-				const initialAnswers = this.initialAnswers.map((answer) => ({
-					answer: answer.answer,
-					points: answer.points,
-					image_url: answer.image_url,
-				}))
+			if (
+				this.props.initialAnswers.length === this.props.answers.length
+			) {
+				const initialAnswers = this.props.initialAnswers.map(
+					(answer) => ({
+						answer: answer.answer,
+						points: answer.points,
+						image_url: answer.image_url,
+					})
+				)
 
 				const answers = this.props.answers.map((answer) => ({
 					answer: answer.answer,
@@ -200,9 +201,11 @@ class Answer extends Component {
 					image_url: answer.image_url,
 				}))
 
-				const initialResults = this.initialAnswers.map((answer) => ({
-					...answer.results,
-				}))
+				const initialResults = this.props.initialAnswers.map(
+					(answer) => ({
+						...answer.results,
+					})
+				)
 
 				const results = this.props.answers.map((answer) => ({
 					...answer.results,
