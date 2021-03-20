@@ -165,6 +165,15 @@ class Questions extends Component {
 		)
 	}
 
+	componentDidUpdate(_, prevState) {
+		if (
+			prevState.hasChanged !== this.state.hasChanged &&
+			!this.state.hasChanged &&
+			Object.keys(this.props.errors).length > 0
+		)
+			this.props.clearErrors()
+	}
+
 	render() {
 		const { data, errors } = this.props
 		const { loading, questions, hasChanged } = this.state
