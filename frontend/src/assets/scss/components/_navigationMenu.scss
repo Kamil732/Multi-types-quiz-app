@@ -1,159 +1,159 @@
 .mobile-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .nav-background {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    opacity: 0.5;
-    background-color: #000;
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	opacity: 0.5;
+	background-color: #000;
 }
 
 .nav {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 75vw;
-    transform: translate3d(100vw, 0, 0);
-    transition: transform .3s cubic-bezier(0, .52, 0, 1);
+	z-index: 1;
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 75vw;
+	transform: translate3d(100vw, 0, 0);
+	transition: transform 0.3s cubic-bezier(0, 0.52, 0, 1);
 
+	&.opened {
+		transform: translate3d(0vw, 0, 0);
+	}
 
-    &.opened {
-        transform: translate3d(0vw, 0, 0);
-    }
+	.menu-nav {
+		display: flex;
+		flex-flow: column wrap;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		background: $surface-color;
+		list-style-type: none;
+		@include shadow-sm;
 
-    .menu-nav {
-        display: flex;
-        flex-flow: column wrap;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-        background: $surface-color;
-        list-style-type: none;
-        @include shadow-sm;
+		&__item {
+			margin: 7px 0;
+			padding: 0 5px 0 5px;
+			width: 100%;
+			text-align: center;
 
-        &__item {
-            margin: 7px 0;
-            padding: 0 5px 0 5px;
-            width: 100%;
-            text-align: center;
+			&.active {
+				background-color: $secondary-color;
+			}
+		}
 
-            &.active {
-                background-color: $secondary-color;
-            }
-        }
+		& .icon-text {
+			display: initial;
 
-        & .icon-text {
-            display: initial;
+			&__icon {
+				display: none;
+			}
+		}
 
-            &__icon {
-                display: none;
-            }
-        }
-
-        &__link {
-            font-weight: 550;
-            text-transform: uppercase;
-            color: set-text-color($surface-color);
-            background-color: $surface-color;
-            padding: 0 1rem;
-            font-size: 1.7rem;
-        }
-    }
+		&__link {
+			font-weight: 550;
+			text-transform: uppercase;
+			color: set-text-color($surface-color);
+			background-color: $surface-color;
+			padding: 0 1rem;
+			font-size: 1.7rem;
+		}
+	}
 }
 
 .dropdown {
-    background: transparent !important;
-    position: absolute;
-    top: 10px;
-    display: flex;
-    flex-direction: column;
-    order: 999;
-    z-index: 999;
+	background: transparent !important;
+	position: absolute;
+	top: 10px;
+	display: flex;
+	flex-direction: column;
+	order: 999;
+	z-index: 999;
 
-    &__btn {
-        border: none;
-        outline: none;
-        text-transform: none !important;
-    }
+	&__btn {
+		border: none;
+		outline: none;
+		text-transform: none !important;
+	}
 
-    &__menu {
-        z-index: 1;
-        padding: 0;
-        border-bottom: 1px solid set-text-color($surface-color);
-        border-top: 1px solid set-text-color($surface-color);
-        padding: 20px;
+	&__menu {
+		z-index: 1;
+		padding: 0;
+		border-bottom: 1px solid set-text-color($surface-color);
+		border-top: 1px solid set-text-color($surface-color);
+		padding: 20px;
 
-        &__link {
-            width: 100%;
-            color: set-text-color($surface-color);
-            padding: 12px 16px;
-            text-decoration: none;
-            text-transform: uppercase;
-            display: block;
-            margin-top: 10px;
+		&__link {
+			width: 100%;
+			color: set-text-color($surface-color);
+			padding: 12px 16px;
+			text-decoration: none;
+			text-transform: uppercase;
+			display: block;
+			margin-top: 10px;
 
-            &:first-child {
-                margin-top: 0;
-            }
+			&:first-child {
+				margin-top: 0;
+			}
 
-            &.active {
-                color: set-text-color($secondary-color);
-                background-color: $secondary-color;
-            }
-        }
-    }
+			&.active {
+				color: set-text-color($secondary-color);
+				background-color: $secondary-color;
+			}
+		}
+	}
 }
 
 .horizontal-menu {
-    display: inline-flex;
-    flex-direction: row;
-    overflow-x: auto;
-    width: min-content;
+	display: inline-flex;
+	flex-direction: row;
+	overflow-x: auto;
+	width: min-content;
 }
 
 .vertical-menu {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
-.horizontal-menu__item, .vertical-menu__item {
-    list-style: none;
-    padding: 10px;
-    text-align: center;
-    letter-spacing: 2px;
-    background-color: $background-color;
-    color: set-text-color($background-color);
-    cursor: pointer;
+.horizontal-menu__item,
+.vertical-menu__item {
+	list-style: none;
+	padding: 10px;
+	text-align: center;
+	letter-spacing: 2px;
+	background-color: $background-color;
+	color: set-text-color($background-color);
+	cursor: pointer;
 
-    &:not(.active):hover {
-        background-color: rgba($secondary-variant-color, 0.4);
-        color: set-text-color($secondary-variant-color)
-    }
+	&:not(.active):hover {
+		background-color: rgba($secondary-variant-color, 0.4);
+		color: set-text-color($secondary-variant-color);
+	}
 
-    &.active {
-        cursor: default;
-        background-color: $secondary-variant-color;
-        color: set-text-color($secondary-variant-color);
-        pointer-events: none;
-    }
+	&.active {
+		cursor: default;
+		background-color: $secondary-variant-color;
+		color: set-text-color($secondary-variant-color);
+		pointer-events: none;
+	}
 
-    &.contrast {
-        &:not(.active):hover {
-            background-color: rgba($secondary-color, 0.4);
-            color: set-text-color($secondary-color)
-        }
+	&.contrast {
+		&:not(.active):hover {
+			background-color: rgba($secondary-color, 0.4);
+			color: set-text-color($secondary-color);
+		}
 
-        &.active {
-            background-color: $secondary-color;
-            color: set-text-color($secondary-color);
-        }
-    }
+		&.active {
+			background-color: $secondary-color;
+			color: set-text-color($secondary-color);
+		}
+	}
 }
