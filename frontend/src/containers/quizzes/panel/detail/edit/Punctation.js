@@ -38,18 +38,6 @@ class Punctation extends Component {
 		this.onSubmit = this.onSubmit.bind(this)
 	}
 
-	static getDerivedStateFromProps(nextProps, prevState) {
-		if (
-			prevState.hasChanged === false &&
-			prevState.punctations !== nextProps.punctations
-		)
-			return {
-				punctations: nextProps.punctations,
-			}
-
-		return null
-	}
-
 	resetForm = () => {
 		const { punctations } = this.props
 
@@ -97,12 +85,10 @@ class Punctation extends Component {
 		const { punctations } = this.state
 		const section_name = this.props.data.section.name
 
-		if (section_name === 'psychology_quiz' && punctations.length > 2)
-			this.setState({
-				hasChanged: true,
-				punctations: punctations.slice(0, -1),
-			})
-		else if (section_name !== 'psychology_quiz' && punctations.length > 1)
+		if (
+			(section_name === 'psychology_quiz' && punctations.length > 2) ||
+			(section_name !== 'psychology_quiz' && punctations.length > 1)
+		)
 			this.setState({
 				hasChanged: true,
 				punctations: punctations.slice(0, -1),
@@ -154,22 +140,40 @@ class Punctation extends Component {
 		)
 
 		if (Object.keys(this.props.errors).length === 0) {
+			this.setState({ hasChanged: false })
 			await this.props.getQuizPunctations(
 				this.props.data.author_slug,
 				this.props.data.slug
 			)
-			this.setState({ hasChanged: false })
 		}
 	}
 
 	componentDidMount = async () => {
 		const { data } = this.props
+
 		await this.props.clearErrors()
-
-		this.setState({ loading: true })
 		await this.props.getQuizPunctations(data.author_slug, data.slug)
+	}
 
-		this.setState({ loading: false })
+	componentDidUpdate(prevProps, prevState) {
+		if (prevProps.punctations !== this.props.punctations) {
+			console.log('New Punctation')
+			this.setState({
+				punctations: this.props.punctations,
+				loading: false,
+			})
+		} else if (
+			JSON.stringify(prevState.punctations) !==
+				JSON.stringify(this.state.punctations) &&
+			prevState.punctations.length > 0
+		) {
+			console.log('Has Changed')
+			this.setState({
+				hasChanged:
+					JSON.stringify(this.props.punctations) !==
+					JSON.stringify(this.state.punctations),
+			})
+		}
 	}
 
 	render() {
@@ -195,8 +199,8 @@ class Punctation extends Component {
 								punctations={punctations}
 								section_name={section_name}
 								max_score={data.max_score}
-								hasChanged={(state) =>
-									this.setState({ hasChanged: state })
+								setPunctations={(state) =>
+									this.setState({ punctations: state })
 								}
 							/>
 

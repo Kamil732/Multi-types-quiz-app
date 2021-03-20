@@ -4,44 +4,69 @@ import Textarea from '../../../../Textarea'
 
 import { IoMdArrowDropup, IoMdArrowDropdown } from 'react-icons/io'
 
-import objectsEquals from '../../../../../helpers/objectsEquals'
-
 class PunctationList extends Component {
 	static propTypes = {
 		max_score: PropTypes.number.isRequired,
 		section_name: PropTypes.string.isRequired,
 		punctations: PropTypes.array,
-		hasChanged: PropTypes.func,
+		setPunctations: PropTypes.func.isRequired,
 	}
 
 	constructor(props) {
 		super(props)
 
-		this.data = Object.values(this.props.punctations)
-		this.dataRefs = []
-
 		this.recalculateRatings = this.recalculateRatings.bind(this)
-		this.hasChanged = this.hasChanged.bind(this)
+		this.onChange = this.onChange.bind(this)
 		this.setInput = this.setInput.bind(this)
 	}
 
-	recalculateRatings() {
-		const { max_score, section_name } = this.props
+	onChange = (e) => {
+		const punctations = this.props.punctations.map((punctation, index) => {
+			if (index === parseInt(e.target.getAttribute('data-id'))) {
+				return {
+					...punctation,
+					[e.target.name]: e.target.value,
+				}
+			}
 
-		const shown = this.dataRefs.length
+			return punctation
+		})
+
+		this.props.setPunctations(punctations)
+	}
+
+	recalculateRatings(punctations) {
+		const { max_score } = this.props
+		const shown = punctations.length
 		let expectedFrom = 0
 
-		if (section_name === 'psychology_quiz') return
-
 		for (let i = 0; i < shown; i++) {
-			const { from_score, to_score } = this.dataRefs[i]
+			const { to_score } = punctations[i]
 
-			from_score.value = expectedFrom
-			let expectedTo = parseInt(to_score.value)
+			// eslint-disable-next-line
+			punctations = punctations.map((punctation, index) => {
+				if (index === i)
+					return {
+						...punctation,
+						from_score: expectedFrom,
+					}
+
+				return punctation
+			})
+			let expectedTo = to_score
 
 			if (expectedTo < expectedFrom) {
 				expectedTo = expectedFrom
-				to_score.value = expectedTo
+
+				punctations = punctations.map((punctation, index) => {
+					if (index === i)
+						return {
+							...punctation,
+							to_score: expectedTo,
+						}
+
+					return punctation
+				})
 			}
 
 			expectedFrom = expectedTo + 1
@@ -50,95 +75,60 @@ class PunctationList extends Component {
 
 		let expectedTo = max_score
 		for (let i = shown - 1; i >= 0; --i) {
-			const { from_score, to_score } = this.dataRefs[i]
+			const { from_score } = punctations[i]
+			// eslint-disable-next-line
+			punctations = punctations.map((punctation, index) => {
+				if (index === i)
+					return {
+						...punctation,
+						to_score: expectedTo,
+					}
 
-			to_score.value = expectedTo
-			let expectedFrom = parseInt(from_score.value)
+				return punctation
+			})
+
+			let expectedFrom = from_score
 			if (expectedFrom > expectedTo) {
 				expectedFrom = expectedTo
-				from_score.value = expectedFrom
+
+				punctations = punctations.map((punctation, index) => {
+					if (index === i)
+						return {
+							...punctation,
+							from_score: expectedFrom,
+						}
+
+					return punctation
+				})
 			}
 
 			expectedTo = expectedFrom - 1 >= 0 ? expectedFrom - 1 : 0
 		}
-	}
 
-	hasChanged = () => {
-		const { hasChanged, punctations, section_name, max_score } = this.props
-
-		// Set the hasChanged
-		if (hasChanged) {
-			const sectionKnowledgeOrUniversal =
-				section_name === 'knowledge_quiz' ||
-				section_name === 'universal_quiz'
-
-			// Update data
-			for (let i = 0; i < this.dataRefs.length; i++) {
-				if (section_name === 'psychology_quiz')
-					this.data[i] = {
-						result: this.dataRefs[i].result.value,
-						description: this.dataRefs[i].description.value(), // .value() is function because summery is component
-					}
-				else
-					this.data[i] = {
-						result: this.dataRefs[i].result.value,
-						description: this.dataRefs[i].description.value(), // .value() is function because summery is component
-						from_score: sectionKnowledgeOrUniversal
-							? parseInt(this.dataRefs[i].from_score.value)
-							: 0,
-						to_score: sectionKnowledgeOrUniversal
-							? parseInt(this.dataRefs[i].to_score.value)
-							: max_score,
-					}
-			}
-
-			if (this.data.length === punctations.length) {
-				// array of booleans, true if object has change otherwise false
-				const hasChangedArray = this.data.map(
-					(_, index) =>
-						!objectsEquals(punctations[index], this.data[index])
-				)
-
-				// If true in array than the form has changed
-				hasChanged(
-					hasChangedArray.some((hasChanged) => hasChanged === true)
-				)
-			} else hasChanged(true)
-		}
+		this.props.setPunctations(punctations)
 	}
 
 	componentDidUpdate(prevProps, _) {
-		if (prevProps.punctations.length !== this.props.punctations.length) {
-			if (prevProps.punctations.length > this.props.punctations.length) {
-				// Delete unnecessary data
-				for (
-					let i = 0;
-					i <
-					prevProps.punctations.length -
-						this.props.punctations.length;
-					i++
-				) {
-					this.dataRefs.pop()
-					this.data.pop()
+		if (
+			prevProps.punctations.length !== this.props.punctations.length &&
+			this.props.section_name !== 'psychology_quiz'
+		)
+			this.recalculateRatings(this.props.punctations)
+	}
+
+	setInput = (index, add) =>
+		this.recalculateRatings(
+			this.props.punctations.map((punctation, index_) => {
+				if (index_ === index) {
+					return {
+						...punctation,
+						to_score: this.props.punctations[index].to_score + add,
+					}
 				}
-			}
 
-			this.recalculateRatings()
-		}
-	}
-
-	setInput = (e, index, add = true) => {
-		e.preventDefault()
-
-		const to_score = this.dataRefs[index].to_score
-
-		to_score.value = add
-			? parseInt(to_score.value) + 1
-			: parseInt(to_score.value) - 1
-
-		this.recalculateRatings()
-		this.hasChanged()
-	}
+				return punctation
+			})
+		)
 
 	render() {
 		const { section_name, punctations } = this.props
@@ -165,15 +155,10 @@ class PunctationList extends Component {
 									type="text"
 									name="from_score"
 									className="form-inline__input number-field__input"
-									defaultValue={punctation.from_score}
+									value={punctation.from_score}
+									onChange={this.onChange}
 									readOnly
 									required
-									ref={(ref) =>
-										(this.dataRefs[index] = {
-											...this.dataRefs[index],
-											from_score: ref,
-										})
-									}
 								/>
 							</div>
 							<div className="number-field">
@@ -183,30 +168,22 @@ class PunctationList extends Component {
 									type="text"
 									name="to_score"
 									className="form-inline__input number-field__input"
-									ref={(ref) =>
-										(this.dataRefs[index] = {
-											...this.dataRefs[index],
-											to_score: ref,
-										})
-									}
-									defaultValue={punctation.to_score}
+									value={punctation.to_score}
 									required
 									readOnly
 								/>
 								<div className="number-field__btns">
 									<button
+										type="button"
 										className="number-field__btn"
-										onClick={(e) =>
-											this.setInput(e, index, true)
-										}
+										onClick={() => this.setInput(index, 1)}
 									>
 										<IoMdArrowDropup />
 									</button>
 									<button
+										type="button"
 										className="number-field__btn"
-										onClick={(e) =>
-											this.setInput(e, index, false)
-										}
+										onClick={() => this.setInput(index, -1)}
 									>
 										<IoMdArrowDropdown />
 									</button>
@@ -221,16 +198,10 @@ class PunctationList extends Component {
 							type="text"
 							id={`result-${index}`}
 							data-id={index}
-							onChange={this.hasChanged}
+							onChange={this.onChange}
 							name="result"
 							className="form-control__input"
-							ref={(ref) =>
-								(this.dataRefs[index] = {
-									...this.dataRefs[index],
-									result: ref,
-								})
-							}
-							defaultValue={punctation.result}
+							value={punctation.result}
 							maxLength="100"
 							required
 						/>
@@ -243,19 +214,13 @@ class PunctationList extends Component {
 						<Textarea
 							id={`description-${index}`}
 							data-id={index}
-							onChange={this.hasChanged}
+							onChange={this.onChange}
 							name="description"
-							defaultValue={punctation.description}
+							value={punctation.description}
 							className="form-control__input form-control__textarea"
 							placeholder="Pass the description..."
 							rows="3"
 							required
-							ref={(ref) =>
-								(this.dataRefs[index] = {
-									...this.dataRefs[index],
-									description: ref,
-								})
-							}
 						/>
 					</div>
 				</div>

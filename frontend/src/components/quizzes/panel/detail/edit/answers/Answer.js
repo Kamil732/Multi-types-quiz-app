@@ -3,8 +3,6 @@ import PropTypes from 'prop-types'
 
 import uuid from 'uuid/dist/v4'
 
-import objectsEquals from '../../../../../../helpers/objectsEquals'
-
 class Answer extends Component {
 	static propTypes = {
 		answers: PropTypes.array,
