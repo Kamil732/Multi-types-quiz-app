@@ -9,6 +9,7 @@ import { getQuiz } from '../../../redux/actions/quizzes'
 import Start from '../../../containers/quizzes/detail/Start'
 import Detail from '../../../containers/quizzes/detail/Detail'
 import AboutUser from '../../accounts/profile/AboutUser'
+import Ad from '../../Ad'
 
 class Routes extends Component {
 	static propTypes = {
@@ -98,6 +99,7 @@ class Routes extends Component {
 				</div>
 				<div className="col col-sm-3">
 					<AboutUser accountUrl={data.author} />
+					<Ad />
 				</div>
 			</div>
 		)

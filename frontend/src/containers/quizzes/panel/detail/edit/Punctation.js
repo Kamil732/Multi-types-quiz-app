@@ -156,24 +156,21 @@ class Punctation extends Component {
 	}
 
 	componentDidUpdate(prevProps, prevState) {
-		if (prevProps.punctations !== this.props.punctations) {
-			console.log('New Punctation')
+		if (prevProps.punctations !== this.props.punctations)
 			this.setState({
 				punctations: this.props.punctations,
 				loading: false,
 			})
-		} else if (
+		else if (
 			JSON.stringify(prevState.punctations) !==
 				JSON.stringify(this.state.punctations) &&
 			prevState.punctations.length > 0
-		) {
-			console.log('Has Changed')
+		)
 			this.setState({
 				hasChanged:
 					JSON.stringify(this.props.punctations) !==
 					JSON.stringify(this.state.punctations),
 			})
-		}
 	}
 
 	render() {

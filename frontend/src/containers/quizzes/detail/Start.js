@@ -8,6 +8,7 @@ import CircleLoader from '../../../components/loaders/CircleLoader'
 import OnePageQuiz from './OnePageQuiz'
 import MultiPageQuiz from './MultiPageQuiz'
 import FeedbackForm from '../../../components/quizzes/panel/detail/FeedbackForm'
+import Ad from '../../../components/Ad'
 
 class Start extends Component {
 	static propTypes = {
@@ -158,43 +159,46 @@ class Start extends Component {
 
 		if (data.password && !correctPassword)
 			return (
-				<div className="card">
-					<div className="card__body">
-						<form
-							onSubmit={this.matchPasswords}
-							className="auth-form"
-						>
-							{passwordError ? (
-								<div className="message-box error">
-									<p className="message-box__text">
-										{passwordError}
-									</p>
-								</div>
-							) : null}
-							<div className="form-inline">
-								<label className="form-inline__label">
-									Password:
-								</label>
-								<input
-									type="password"
-									value={password}
-									onChange={this.onChangePassword}
-									className="form-inline__input"
-									placeholder="Pass the password..."
-									maxLength="20"
-									required
-								/>
-							</div>
-
-							<button
-								type="submit"
-								className="btn btn__submit btn__contrast"
+				<>
+					<div className="card">
+						<div className="card__body">
+							<form
+								onSubmit={this.matchPasswords}
+								className="auth-form"
 							>
-								Submit
-							</button>
-						</form>
+								{passwordError ? (
+									<div className="message-box error">
+										<p className="message-box__text">
+											{passwordError}
+										</p>
+									</div>
+								) : null}
+								<div className="form-inline">
+									<label className="form-inline__label">
+										Password:
+									</label>
+									<input
+										type="password"
+										value={password}
+										onChange={this.onChangePassword}
+										className="form-inline__input"
+										placeholder="Pass the password..."
+										maxLength="20"
+										required
+									/>
+								</div>
+
+								<button
+									type="submit"
+									className="btn btn__submit btn__contrast"
+								>
+									Submit
+								</button>
+							</form>
+						</div>
 					</div>
-				</div>
+					<Ad />
+				</>
 			)
 
 		return (

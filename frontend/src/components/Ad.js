@@ -36,7 +36,7 @@ class Ad extends Component {
 			<div className={className}>
 				<ins
 					className="adsbygoogle"
-					style={{ display: 'block' }}
+					style={{ display: 'block', backgroundColor: '#eee' }}
 					data-ad-client={process.env.REACT_APP_GOOGLE_ADSENSE_ID}
 					data-ad-slot={slot}
 					data-ad-format="auto"
