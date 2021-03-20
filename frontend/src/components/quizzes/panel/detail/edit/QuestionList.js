@@ -107,11 +107,11 @@ class QuestionList extends Component {
 		const questionList = questions.map((question, index) => {
 			let answers
 
-			const initialAnswers = initialQuestions[index].answers.map(
-				(answer) => ({
-					...answer,
-				})
-			)
+			const initialAnswers = initialQuestions[index]
+				? initialQuestions[index].answers.map((answer) => ({
+						...answer,
+				  }))
+				: []
 
 			if (section_name === 'knowledge_quiz')
 				answers = (
@@ -151,7 +151,7 @@ class QuestionList extends Component {
 					<PsychologyAnswers
 						initialAnswers={initialAnswers}
 						answers={question.answers}
-						punctationLength={punctations.length}
+						punctations={punctations}
 						section_name={section_name}
 						questions={questions}
 						questionIndex={index}

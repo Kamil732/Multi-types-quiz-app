@@ -9,7 +9,7 @@ class Answer extends Component {
 		answers: PropTypes.array,
 		questions: PropTypes.array,
 		questionIndex: PropTypes.number,
-		punctationLength: PropTypes.number,
+		punctations: PropTypes.array,
 		section_name: PropTypes.string,
 		errors: PropTypes.object,
 		setQuestions: PropTypes.func.isRequired,
@@ -56,7 +56,7 @@ class Answer extends Component {
 		)
 			shouldAdd = true
 		else if (
-			this.props.answers.length < this.props.punctationLength &&
+			this.props.answers.length < this.props.punctations.length &&
 			this.props.section_name === 'psychology_quiz'
 		)
 			shouldAdd = true
@@ -77,7 +77,12 @@ class Answer extends Component {
 									answer: '',
 									image_url: '',
 									points: '0',
-									results: [],
+									results:
+										this.props.section_name ===
+											'psychology_quiz' &&
+										question.answers.length === 0
+											? this.props.punctations
+											: [],
 								},
 							],
 						}
