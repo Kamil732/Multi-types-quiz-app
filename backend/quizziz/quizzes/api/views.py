@@ -465,12 +465,13 @@ class QuizFeedbacksAPIView(generics.ListCreateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
 
         try:
-            quiz = QuizFeedback.objects.filter(quiz__author__slug=author_slug, quiz__slug=quiz_slug)
+            feedbacks = QuizFeedback.objects.filter(
+                quiz__author__slug=author_slug, quiz__slug=quiz_slug).order_by('-pub_date')
         except ObjectDoesNotExist:
             raise NotFound(
                 _('The quiz you are looking for does not exist'))
 
-        return quiz
+        return feedbacks
 
     def get_serializer_context(self):
         author_slug = self.kwargs.get('author_slug')
@@ -492,6 +493,7 @@ class QuizFeedbacksAPIView(generics.ListCreateAPIView):
 
 
 class DeleteQuizFeedbackAPIView(generics.DestroyAPIView):
+    permission_classes = (permissions.IsOwnerEverything,)
     lookup_field = 'id'
     lookup_url_kwarg = 'feedback_id'
 
