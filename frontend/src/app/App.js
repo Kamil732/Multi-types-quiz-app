@@ -15,7 +15,9 @@ class App extends Component {
 	componentDidMount() {
 		store.dispatch(loadUser())
 		store.dispatch(getCategories())
-		document.getElementById('page-loader').remove()
+
+		const loader = document.getElementById('page-loader')
+		if (loader) loader.remove()
 	}
 
 	render() {
