@@ -31,10 +31,12 @@
 	}
 
 	&__grippie {
+		z-index: 2;
 		background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSIjODg4Ij48L3JlY3Q+Cjwvc3ZnPg==');
 		margin-top: -4px;
 		cursor: s-resize;
 		height: 12px;
+		width: 100%;
 		overflow: hidden;
 		background-color: #ddd;
 		border: 1px solid #aaa;

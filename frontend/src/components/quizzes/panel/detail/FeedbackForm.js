@@ -230,7 +230,7 @@ class FeedbackForm extends Component {
 							<Textarea
 								id="opinion"
 								name="opinion"
-								className="form-inline__input"
+								className="form-control__input form-control__textarea"
 								onChange={this.onChange}
 								value={opinion}
 							/>
