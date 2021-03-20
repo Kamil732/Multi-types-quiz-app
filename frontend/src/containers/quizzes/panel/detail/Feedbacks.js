@@ -69,34 +69,39 @@ class Feedbacks extends Component {
 			},
 			buttonsStyling: false,
 			confirmButtonText: 'delete',
-		}).then(async (res) => {
+		}).then((res) => {
 			if (res.isConfirmed) {
-				const { data, token } = this.props
+				const { data } = this.props
 
-				const config = getAccessToken(token, true)
+				const token = localStorage.getItem('token')
 
-				try {
-					await axios.delete(
-						`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/feedbacks/${feedbackId}/`,
-						config
-					)
+				const deleteFeedback = async () => {
+					try {
+						const config = getAccessToken(token, true)
 
-					const feedbacks = Array.from(this.state.feedbacks)
-					feedbacks.splice(index, 1)
-
-					this.setState({ feedbacks })
-				} catch (err) {
-					if (err.response.status === 401) {
-						await this.props.deleteFeedback(index)
-
-						if (token) await this.componentDidMount()
-					} else
-						Swal.fire(
-							'The error has occurred',
-							'The error occurred while deleting the feedback, try again',
-							'error'
+						await axios.delete(
+							`${process.env.REACT_APP_API_URL}/quizzes/${data.author_slug}/${data.slug}/feedbacks/${feedbackId}/`,
+							config
 						)
+
+						const feedbacks = Array.from(this.state.feedbacks)
+						feedbacks.splice(index, 1)
+
+						this.setState({ feedbacks })
+					} catch (err) {
+						if (err.response.status === 401) {
+							await this.props.refreshToken()
+
+							if (token) deleteFeedback()
+						} else
+							Swal.fire(
+								'The error has occurred',
+								'The error occurred while deleting the feedback, try again',
+								'error'
+							)
+					}
 				}
+				deleteFeedback()
 			}
 		})
 	}
