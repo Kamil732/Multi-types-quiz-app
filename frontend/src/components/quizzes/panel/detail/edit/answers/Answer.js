@@ -195,33 +195,23 @@ class Answer extends Component {
 				const initialAnswers = this.props.initialAnswers.map(
 					(answer) => ({
 						answer: answer.answer,
-						points: answer.points,
+						points: parseInt(answer.points),
 						image_url: answer.image_url,
+						results: answer.results,
 					})
 				)
 
 				const answers = this.props.answers.map((answer) => ({
 					answer: answer.answer,
-					points: answer.points,
+					points: parseInt(answer.points),
 					image_url: answer.image_url,
-				}))
-
-				const initialResults = this.props.initialAnswers.map(
-					(answer) => ({
-						...answer.results,
-					})
-				)
-
-				const results = this.props.answers.map((answer) => ({
-					...answer.results,
+					results: answer.results,
 				}))
 
 				this.setState({
 					hasChanged:
 						JSON.stringify(initialAnswers) !==
-							JSON.stringify(answers) ||
-						JSON.stringify(initialResults) !==
-							JSON.stringify(results),
+						JSON.stringify(answers),
 				})
 			}
 			// If lengths of two arrays are diffrent then of course form has changed
