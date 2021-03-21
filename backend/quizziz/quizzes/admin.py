@@ -11,6 +11,11 @@ from .models import (
 )
 
 
+class QuizAdmin(admin.ModelAdmin):
+    model = Quiz,
+    readonly_fields = ('id', 'slug',)
+
+
 class QuizPunctationAdmin(admin.ModelAdmin):
     model = QuizPunctation
     readonly_fields = ('id', 'slug',)
@@ -31,7 +36,7 @@ class QuestionAdmin(admin.ModelAdmin):
     readonly_fields = ('id', 'slug',)
 
 
-admin.site.register(Quiz)
+admin.site.register(Quiz, QuizAdmin)
 admin.site.register(QuizFeedback)
 admin.site.register(QuizPunctation, QuizPunctationAdmin)
 admin.site.register(PsychologyResults, PsychologyResultsAdmin)

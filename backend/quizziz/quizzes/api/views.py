@@ -119,40 +119,38 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz_slug = self.kwargs.get('quiz_slug')
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        last_question_id = int(Question.objects.last().id) if Question.objects.exists() else 0
+        last_question_id = int(Question.objects.latest('id').id) + 1 if Question.objects.exists() else 0
 
         new_questions = [Question(quiz=quiz, question=question['question'], summery=question['summery'], image_url=question['image_url'] if valid_url_extension(
-            question['image_url']) else '', id=question['id'] if question['id'] else last_question_id + index + 1) for (index, question) in enumerate(questions)]
+            question['image_url']) else '', id=question['id'] if question['id'] else last_question_id + index) for (index, question) in enumerate(questions)]
 
-        if quiz.section == 'psychology_quiz':
-            # If there are no results than error should be thrown
-
-            for question in questions:
-                for answer_data in question['answers']:
-                    if not(answer_data['results']):
-                        raise ValidationError({'detail': _('Every answer have to have at least 1 result')})
-
-        #### Save answers ####
-        for (index, question) in enumerate(questions):
+        # Validate answers
+        for question in questions:
+            # Validate length of answers
             if not(question['answers']) or len(question['answers']) < 2:
                 raise ValidationError({'detail': _('Every question should have at least 2 answers')})
             elif len(question['answers']) > 8:
                 raise ValidationError({'detail': _('Questions should have maxiumum 8 answers')})
 
-            # Check if answer is unique
-            for answer in question['answers']:
-                if ([answer_['answer'] for answer_ in question['answers']].count(answer['answer']) > 1):
+            for answer_data in question['answers']:
+                # Check if answer is unique
+                if ([answer['answer'] for answer in question['answers']].count(answer_data['answer']) > 1):
                     raise ValidationError({'detail': _('There cannot be more than 1 answer with the same text')})
 
-            # If there is no error than save questions
-            if index == 0:
-                bulk_sync(
-                    new_models=new_questions,
-                    filters=Q(quiz_id=quiz.id),
-                    fields=['question', 'summery', 'image_url'],
-                    key_fields=('id',)  # slug is index from enumerate
-                )
+                if quiz.section == 'psychology_quiz' and not(answer_data['results']):
+                    # If there are no results than throw error
+                    raise ValidationError({'detail': _('Every answer have to have at least 1 result')})
 
+        # If there are no errors than save questions
+        bulk_sync(
+            new_models=new_questions,
+            filters=Q(quiz_id=quiz.id),
+            fields=['question', 'summery', 'image_url'],
+            key_fields=('id',)  # slug is index from enumerate
+        )
+
+        #### Save answers ####
+        for (index, question) in enumerate(questions):
             question_model = Question.objects.get(
                 quiz=quiz, id=new_questions[index].id)
 
@@ -163,7 +161,8 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
                     image_url=answer['image_url'],
                     is_correct=index_ == 0 if quiz.section == 'knowledge_quiz' else False,
                     points=answer['points'],
-                    slug=str(index_))
+                    slug=str(index_)
+                )
                 for (index_, answer) in enumerate(question['answers'])
             ]
 
@@ -372,8 +371,8 @@ class QuizPunctationListAPIView(generics.ListCreateAPIView, generics.UpdateAPIVi
             'section', flat=True).first()
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
-        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'], to_score=model['to_score'], id=model['id'] if model['id'] else int(QuizPunctation.objects.last().id) + index + 1) for (index, model) in enumerate(request.data)] if not(
-            section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'], description=model['description'], id=model['id'] if model['id'] else int(PsychologyResults.objects.last().id) + index + 1) for (index, model) in enumerate(request.data)]
+        new_models = [QuizPunctation(quiz=quiz, result=model['result'], description=model['description'], from_score=model['from_score'], to_score=model['to_score'], id=model['id'] if model['id'] else int(QuizPunctation.objects.latest('id').id) + index + 1) for (index, model) in enumerate(request.data)] if not(
+            section == 'psychology_quiz') else [PsychologyResults(quiz=quiz, result=model['result'], description=model['description'], id=model['id'] if model['id'] else int(PsychologyResults.objects.latest('id').id) + index + 1) for (index, model) in enumerate(request.data)]
 
         # Check if result is unique
         for model in new_models:
