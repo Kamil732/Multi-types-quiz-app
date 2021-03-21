@@ -162,12 +162,12 @@ class Auth extends Component {
 								this.responseAuth(data, 'google-oauth2')
 							}
 							onFailure={(err) =>
-								this.addError(
-									400,
-									'The error occurred with Google, please try again.'
-								)
+								this.addError(400, {
+									detail:
+										'The error occurred with Google, please try again.',
+								})
 							}
-							cookiePolicy={'single_host_origin'}
+							cookiePolicy="single_host_origin"
 						/>
 					</div>
 				</div>
