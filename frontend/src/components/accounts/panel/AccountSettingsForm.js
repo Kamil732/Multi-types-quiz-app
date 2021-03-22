@@ -100,6 +100,7 @@ class AccountSettingsForm extends Component {
 
 			this.setState({
 				hasChanged:
+					this.state.data.password &&
 					JSON.stringify(initialData) !== JSON.stringify(data),
 			})
 		}
