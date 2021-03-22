@@ -157,6 +157,15 @@ class Start extends Component {
 			passwordError,
 		} = this.state
 
+		if (data.question_amount === 0)
+			return (
+				<div className="message-box info">
+					<span className="message-box__text">
+						You can't solve this quiz, because it has no questions
+					</span>
+				</div>
+			)
+
 		if (data.password && !correctPassword)
 			return (
 				<>

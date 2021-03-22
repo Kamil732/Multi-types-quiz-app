@@ -46,6 +46,16 @@ class Detail extends Component {
 						/>
 					</div>
 				</div>
+
+				{data.question_amount === 0 ? (
+					<div className="message-box info">
+						<span className="message-box__text">
+							You can't solve this quiz, because it has no
+							questions
+						</span>
+					</div>
+				) : null}
+
 				<div className="card__footer inline-btns f-w">
 					{isOwner ? (
 						<Link to={`/panel/dashboard/${data.slug}/summery`}>
@@ -55,7 +65,13 @@ class Detail extends Component {
 						</Link>
 					) : null}
 					<Link to={`/quizzes/${author_slug}/${data.slug}/start`}>
-						<button className="btn btn__submit btn__contrast">
+						<button
+							className={`btn btn__submit btn__contrast ${
+								data.question_amount === 0
+									? 'btn__disabled'
+									: ''
+							}`}
+						>
 							START
 						</button>
 					</Link>
