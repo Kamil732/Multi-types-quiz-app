@@ -1,39 +1,28 @@
-.img-rounded {
-    border-radius: 100%;
-    padding: 0.3rem;
-    border: 1px solid grey;
-    background-color: $background-color;
-    height: 8.5rem;
-    width: 8.5rem;
-
-    @include shadow-sm;
-}
-
 .profile {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 
-    &__img {
-        justify-content: center;
-        margin-bottom: 20px;
-    }
+	&__img {
+		justify-content: center;
+		margin-bottom: 20px;
+	}
 
-    &__username {
-        font-size: 1.6rem;
-        font-weight: 600;
-    }
+	&__username {
+		font-size: 1.6rem;
+		font-weight: 600;
+	}
 
-    &__bio {
-        margin: 15px 0;
-        font-size: 1rem;
-    }
+	&__bio {
+		margin: 15px 0;
+		font-size: 1rem;
+	}
 }
 
 .about-user {
-    display: flex;
-    flex-direction: column;
-    // justify-content: center;
-    align-items: center;
-    gap: 0.8rem;
+	display: flex;
+	flex-direction: column;
+	// justify-content: center;
+	align-items: center;
+	gap: 0.8rem;
 }

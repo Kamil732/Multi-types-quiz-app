@@ -1,44 +1,57 @@
 .site-header {
-    background-color: $primary-color;
-    margin-bottom: 2rem;
-    z-index: 999;
-    width: 100%;
-    padding: 1rem 1rem;
+	background-color: $primary-color;
+	margin-bottom: 2rem;
+	z-index: 999;
+	width: 100%;
+	padding: 1rem 1rem;
 
-    @include shadow-md;
+	@include shadow-md;
 }
 
 .site-footer {
-    background-color: $primary-variant-color;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    padding: 2.5rem;
-    text-align: center;
-    box-shadow: 0 -5px 8px rgba(0,0,0,.3);
+	background-color: $primary-variant-color;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 2.5rem;
+	text-align: center;
+	box-shadow: 0 -5px 8px rgba(0, 0, 0, 0.3);
 }
 
 .content-wrap {
-    padding-bottom: 12rem;
+	padding-bottom: 12rem;
 }
 
-.container-tablet, .container-laptop, .container-laptop-lg {
-    margin: 0 auto;
-    max-width: 100%;
-    min-height: 100%;
+.container-tablet,
+.container-laptop,
+.container-laptop-lg {
+	margin: 0 auto;
+	max-width: 100%;
+	min-height: 100%;
 }
 
 .container-mobile {
-    margin: 0 auto;
-    max-width: 370px;
-    min-height: 100%;
+	margin: 0 auto;
+	max-width: 370px;
+	min-height: 100%;
+}
+
+.img-rounded {
+	border-radius: 100%;
+	padding: 0.3rem;
+	border: 1px solid grey;
+	background-color: $background-color;
+	height: 8.5rem;
+	width: 8.5rem;
+
+	box-shadow: 0 0 5px grey;
 }
 
 .text-darken {
-    font-size: 0.9rem;
-    opacity: 0.8;
+	font-size: 0.9rem;
+	opacity: 0.8;
 }
 
 .display-sm {
-    display: none;
+	display: none;
 }
