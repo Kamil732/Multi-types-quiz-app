@@ -82,7 +82,7 @@ class AccountSettingsForm extends Component {
 
 	componentWillUnmount = () => this.props.clearErrors()
 
-	componentDidUpdate(prevProps, prevState) {
+	componentDidUpdate(_, prevState) {
 		if (
 			JSON.stringify(prevState.data) !== JSON.stringify(this.state.data)
 		) {

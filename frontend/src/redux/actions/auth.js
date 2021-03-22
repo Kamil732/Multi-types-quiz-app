@@ -59,7 +59,10 @@ export const loadUser = () => async (dispatch, getState) => {
 		if (err.response.status === 401) {
 			await dispatch(refreshToken())
 			if (getState().auth.token) await dispatch(loadUser())
-		}
+		} else
+			dispatch({
+				type: AUTH_ERROR,
+			})
 	}
 }
 
