@@ -131,7 +131,7 @@ class Auth extends Component {
 					<div className="auth-form" style={{ flexDirection: 'row' }}>
 						<FacebookLogin
 							appId={process.env.REACT_APP_FACEBOOK_ID}
-							fields="email,first_name"
+							fields="email"
 							callback={(data) =>
 								this.responseAuth(data, 'facebook')
 							}

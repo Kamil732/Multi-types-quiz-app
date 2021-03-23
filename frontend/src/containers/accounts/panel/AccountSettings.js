@@ -12,7 +12,7 @@ class AccountSettings extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
-		updateUserEmail: PropTypes.func.isRequired,
+		updateUserDatal: PropTypes.func.isRequired,
 		refreshToken: PropTypes.func.isRequired,
 		addError: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
@@ -26,7 +26,7 @@ class AccountSettings extends Component {
 					<AccountSettingsForm
 						data={this.props.data}
 						errors={this.props.errors}
-						updateUserEmail={this.props.updateUserEmail}
+						updateUserData={this.props.updateUserData}
 						refreshToken={this.props.refreshToken}
 						addError={this.props.addError}
 						clearErrors={this.props.clearErrors}
@@ -46,10 +46,10 @@ const mapDispatchToProps = (dispatch) => ({
 	addError: (data, status) => dispatch(addError(data, status)),
 	clearErrors: () => dispatch(clearErrors()),
 	refreshToken: () => dispatch(refreshToken()),
-	updateUserEmail: (email) =>
+	updateUserData: (data) =>
 		dispatch({
 			type: USER_UPDATE,
-			payload: { email },
+			payload: data,
 		}),
 })
 

@@ -8,7 +8,7 @@ class AccountSettingsForm extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
-		updateUserEmail: PropTypes.func.isRequired,
+		updateUserData: PropTypes.func.isRequired,
 		refreshToken: PropTypes.func.isRequired,
 		addError: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
@@ -42,11 +42,14 @@ class AccountSettingsForm extends Component {
 			},
 		})
 
-	cancel = () =>
+	cancel = () => {
+		this.props.clearErrors()
+
 		this.setState({
 			hasChanged: false,
 			data: this.initialData,
 		})
+	}
 
 	onSubmit = async (e) => {
 		e.preventDefault()
@@ -70,7 +73,10 @@ class AccountSettingsForm extends Component {
 				data: this.initialData,
 			})
 
-			await this.props.updateUserEmail(res.data.email)
+			await this.props.updateUserData({
+				email: res.data.email,
+				has_usable_password: true,
+			})
 		} catch (err) {
 			if (err.response.status === 401) {
 				await this.props.refreshToken()
@@ -120,6 +126,19 @@ class AccountSettingsForm extends Component {
 					</div>
 				) : null}
 
+				{!this.props.data.has_usable_password ? (
+					<div
+						className="message-box info"
+						style={{ margin: '20px 0' }}
+					>
+						<span className="message-box__text">
+							Your account is passwordless, that means you can
+							only login through social media. <br />
+							If you want to change your password, in field
+							Current Password pass anything
+						</span>
+					</div>
+				) : null}
 				{errors.password ? (
 					<div className="message-box error">
 						{errors.password.map((error, index) => (
