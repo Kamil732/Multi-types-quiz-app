@@ -133,9 +133,22 @@ class List extends Component {
 					{quiz.is_published === false ? (
 						<div className="message-box info">
 							<span className="message-box__text">
-								This quiz is private. To change that click{' '}
+								This quiz is private. To change that click
 								<Link
 									to={`/panel/dashboard/${quiz.slug}/settings`}
+								>
+									Here
+								</Link>
+							</span>
+						</div>
+					) : null}
+					{quiz.question_amount === 0 ? (
+						<div className="message-box info">
+							<span className="message-box__text">
+								This quiz has no questions, so nobody can solve
+								it, add some questions{' '}
+								<Link
+									to={`/panel/dashboard/${quiz.slug}/edit/questions`}
 								>
 									Here
 								</Link>
