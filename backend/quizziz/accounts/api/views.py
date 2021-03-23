@@ -112,8 +112,15 @@ class AccountQuizzesAPIView(QuizListMixin, generics.ListAPIView):
     lookup_field = 'slug'
     lookup_url_kwarg = 'account_slug'
 
-    def get_queryset(self, *args, **kwargs):
-        return Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg), is_published=True).order_by('-pub_date')
+    def get_queryset(self):
+        quizzes = Quiz.objects.filter(author__slug=self.kwargs.get(self.lookup_url_kwarg),
+                                      is_published=True).order_by('-pub_date', '-solved_times')
+
+        for quiz in quizzes:
+            if not(quiz.questions.exists()):
+                quizzes = quizzes.exclude(id=quiz.id)
+
+        return quizzes
 
 
 class CurrentAccountAPIView(generics.RetrieveUpdateDestroyAPIView):

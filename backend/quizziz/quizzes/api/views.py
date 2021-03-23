@@ -99,9 +99,16 @@ class QuizDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
 
 class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
-    queryset = Quiz.objects.order_by(
-        '-pub_date', '-solved_times').filter(is_published=True)
     permission_classes = (permissions.CreateIsAuthenticated,)
+
+    def get_queryset(self):
+        quizzes = Quiz.objects.order_by('-pub_date', '-solved_times').filter(is_published=True, )
+
+        for quiz in quizzes:
+            if not(quiz.questions.exists()):
+                quizzes = quizzes.exclude(id=quiz.id)
+
+        return quizzes
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
