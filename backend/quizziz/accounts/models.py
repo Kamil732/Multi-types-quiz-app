@@ -10,13 +10,22 @@ class AccountManager(BaseUserManager):
         if not username:
             username = email.split('@')[0][:12]
 
+        # Validate email is unique in database
+        if Account.objects.filter(email=self.normalize_email(email).lower()).exists():
+            raise ValueError('This email has already been registered.')
+
         user = self.model(
             email=self.normalize_email(email),
             username=username,
         )
 
         user.set_password(password)
-        user.save(using=self._db)
+
+        # Save and catch IntegrityError (due to email being unique)
+        try:
+            user.save(using=self._db)
+        except:
+            raise ValueError('This email has already been registered.')
 
         return user
 

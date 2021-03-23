@@ -1,17 +1,21 @@
-def create_user(strategy, details, backend, user=None, *args, **kwargs):
-    if user:
-        return {'is_new': False}
+from rest_framework.exceptions import ValidationError
 
-    fields = dict((name, kwargs.get(name, details.get(name)))
-                  for name in ['email', 'first_name'])
 
-    if not(fields):
-        return
+def get_username(strategy, details, backend, user=None, *args, **kwargs):
+    # Get the logged in user (if any)
+    logged_in_user = strategy.storage.user.get_username(user)
 
-    fields['username'] = fields['first_name'][:12]
-    del fields['first_name']
+    # Custom: check for email being provided
+    if not details.get('email'):
+        error = "Sorry, but your social network (Facebook or Google) needs to provide us your email address."
+        raise ValidationError({'detail': error})
+
+    # Custom: if user is already logged in, double check his email matches the social network email
+    if logged_in_user:
+        if not(logged_in_user.lower() == details.get('email').lower()):
+            error = "Sorry, but you are already logged in with another account, and the email addresses do not match. Try logging out first, please."
+            raise ValidationError({'detail': error})
 
     return {
-        'is_new': True,
-        'user': strategy.create_user(**fields)
+        'username': details.get('email')[:12].lower(),
     }

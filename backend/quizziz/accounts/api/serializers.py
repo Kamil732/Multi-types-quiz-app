@@ -24,6 +24,10 @@ class AccountSerializer(serializers.ModelSerializer):
         required=False, allow_null=True, default=Account.DEFAULT_PROFILE_PICTURE)
     quizzes_count = serializers.SerializerMethodField('get_quizzes_count')
     quizzes_solves = serializers.SerializerMethodField('get_quizzes_solves')
+    has_usable_password = serializers.SerializerMethodField('get_has_usable_password')
+
+    def get_has_usable_password(self, obj):
+        return obj.has_usable_password()
 
     def get_quizzes_count(self, obj):
         return Quiz.objects.filter(author__email=obj.email).count()
@@ -37,7 +41,7 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('slug', 'email', 'username', 'picture', 'bio',
-                  'quizzes_count', 'quizzes_solves',)
+                  'quizzes_count', 'quizzes_solves', 'has_usable_password',)
 
 
 class RegisterSerializer(serializers.ModelSerializer):

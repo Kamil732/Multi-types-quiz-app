@@ -150,7 +150,7 @@ class UpdateCurrentAccountSettingsAPIView(generics.UpdateAPIView):
         newPassword = request.data['newPassword']
         newPassword2 = request.data['newPassword2']
 
-        if not(request.user.check_password(password)):
+        if not(request.user.check_password(password)) and request.user.has_usable_password():
             raise ValidationError({'password': [_('Incorrect password')]})
 
         if newPassword or newPassword2:
