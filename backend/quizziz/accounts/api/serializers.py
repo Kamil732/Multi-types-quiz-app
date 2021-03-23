@@ -10,6 +10,15 @@ class SocialSerializer(serializers.Serializer):
     access_token = serializers.CharField(max_length=4096, required=True, trim_whitespace=True)
 
 
+class UpdateCurrentAccountSettingsSerializer(serializers.ModelSerializer):
+    newPassword = serializers.CharField(required=False, allow_blank=True)
+    newPassword2 = serializers.CharField(required=False, allow_blank=True)
+
+    class Meta:
+        model = Account
+        fields = ('email', 'newPassword', 'newPassword2',)
+
+
 class AccountSerializer(serializers.ModelSerializer):
     picture = serializers.ImageField(
         required=False, allow_null=True, default=Account.DEFAULT_PROFILE_PICTURE)

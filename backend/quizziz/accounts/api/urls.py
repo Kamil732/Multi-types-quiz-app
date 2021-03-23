@@ -7,6 +7,7 @@ from accounts.api.views import (
     AccountAPIView,
     AccountQuizzesAPIView,
     CurrentAccountAPIView,
+    UpdateCurrentAccountSettingsAPIView,
     CurrentAccountQuizzesAPIView,
 )
 
@@ -24,7 +25,7 @@ urlpatterns = [
     ])),
     path('current/', include([
         path('', CurrentAccountAPIView.as_view(), name='current-account'),
-        path('quizzes/', CurrentAccountQuizzesAPIView.as_view(),
-             name='current-account-quizzes')
+        path('quizzes/', CurrentAccountQuizzesAPIView.as_view(), name='current-account-quizzes'),
+        path('update-settings/', UpdateCurrentAccountSettingsAPIView.as_view(), name='current-account-update-settings'),
     ])),
 ]

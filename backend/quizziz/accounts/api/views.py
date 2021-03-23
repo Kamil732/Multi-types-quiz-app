@@ -1,7 +1,9 @@
 from django.contrib.auth import login
+from django.utils.translation import gettext as _
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from rest_framework.status import HTTP_201_CREATED
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -12,7 +14,7 @@ from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import MissingBackend, AuthTokenError, AuthForbidden
 
 from quizzes.api.mixins import QuizListMixin
-from accounts.api.serializers import AccountSerializer, RegisterSerializer, SocialSerializer
+from accounts.api.serializers import AccountSerializer, UpdateCurrentAccountSettingsSerializer, RegisterSerializer, SocialSerializer
 
 from quizzes.models import Quiz
 from accounts.models import Account
@@ -126,6 +128,31 @@ class AccountQuizzesAPIView(QuizListMixin, generics.ListAPIView):
 class CurrentAccountAPIView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = AccountSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_object(self):
+        return self.request.user
+
+
+class UpdateCurrentAccountSettingsAPIView(generics.UpdateAPIView):
+    serializer_class = UpdateCurrentAccountSettingsSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        password = request.data['password']
+        newPassword = request.data['newPassword']
+        newPassword2 = request.data['newPassword2']
+
+        if not(request.user.check_password(password)):
+            raise ValidationError({'password': [_('Incorrect password')]})
+
+        if newPassword or newPassword2:
+            if not(newPassword == newPassword2):
+                raise ValidationError({'newPassword': [_('Password do not match')]})
+
+            request.user.set_password(newPassword)
+            request.user.save()
+
+        return super(UpdateCurrentAccountSettingsAPIView, self).update(request, *args, **kwargs)
 
     def get_object(self):
         return self.request.user
