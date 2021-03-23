@@ -261,7 +261,10 @@ class QuizFinishAPIView(views.APIView):
         # Check if quiz exists
         try:
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
-            # Add 1 to solved_times
+
+            if not(quiz.questions.exists()):
+                raise ValidationError({'detail': _('This quiz has no quesitons, so you cannot solve it')})
+
             quiz.solved_times += 1
             quiz.save()
         except ObjectDoesNotExist:
@@ -273,8 +276,7 @@ class QuizFinishAPIView(views.APIView):
             answer_slug = answer.get('answer')
 
             if not(answer_slug):
-                raise ValidationError(
-                    _('You have not answered all the questions'))
+                raise ValidationError({'detail': _('You have not answered all the questions')})
 
             if section == 'knowledge_quiz':
                 correct_answers = [answer_.get('slug') for answer_ in Answer.objects.filter(
