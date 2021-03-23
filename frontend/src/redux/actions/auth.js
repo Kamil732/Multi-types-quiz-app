@@ -99,10 +99,17 @@ export const login = (email, password) => async (dispatch) => {
 	}
 }
 
-export const signUp = ({ email, username, password, password2 }) => async (
-	dispatch
-) => {
-	const body = JSON.stringify({ email, username, password, password2 })
+export const signUp = (
+	token,
+	{ email, username, password, password2 }
+) => async (dispatch) => {
+	const body = JSON.stringify({
+		email,
+		username,
+		password,
+		password2,
+		'g-recaptcha-response': token,
+	})
 
 	const config = {
 		headers: {

@@ -17,21 +17,34 @@ class RegisterForm extends Component {
 		errors: PropTypes.object,
 	}
 
-	state = {
-		email: '',
-		username: '',
-		password: '',
-		password2: '',
-	}
+	constructor(props) {
+		super(props)
 
-	componentWillUnmount = () => this.props.clearErrors()
+		this.state = {
+			email: '',
+			username: '',
+			password: '',
+			password2: '',
+		}
+
+		this.onChange = this.onChange.bind(this)
+		this.onSubmit = this.onSubmit.bind(this)
+	}
 
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
 	onSubmit = (e) => {
 		e.preventDefault()
 
-		this.props.signUp(this.state)
+		window.grecaptcha.ready(() => {
+			window.grecaptcha
+				.execute(process.env.REACT_APP_RECAPTCHA_SITE_KEY, {
+					action: 'submit',
+				})
+				.then((token) => {
+					this.props.signUp(token, this.state)
+				})
+		})
 	}
 
 	render() {

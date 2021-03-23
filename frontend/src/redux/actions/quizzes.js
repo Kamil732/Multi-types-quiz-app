@@ -153,13 +153,10 @@ export const updatePunctations = (data, author_slug, quiz_slug) => async (
 	}
 }
 
-export const createQuiz = ({
-	title,
-	description,
-	section,
-	category,
-	image_url,
-}) => async (dispatch, getState) => {
+export const createQuiz = (
+	token,
+	{ title, description, section, category, image_url }
+) => async (dispatch, getState) => {
 	try {
 		const body = JSON.stringify({
 			title,
@@ -167,6 +164,7 @@ export const createQuiz = ({
 			section,
 			category,
 			image_url,
+			'g-recaptcha-response': token,
 		})
 
 		const config = getAccessToken(getState)

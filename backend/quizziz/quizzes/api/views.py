@@ -1,10 +1,11 @@
 import random
+import requests
 
 from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
-from quizziz.utils import valid_url_extension
+from quizziz.utils import valid_url_extension, validate_recaptcha
 
 from bulk_sync import bulk_sync
 from rest_framework import views, generics, viewsets, permissions
@@ -112,6 +113,11 @@ class QuizListAPIView(mixins.QuizListMixin, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        validate_recaptcha(request.data)
+
+        return super(QuizListAPIView, self).create(request, *args, **kwargs)
 
 
 class QuizUpdateAPIView(generics.UpdateAPIView):

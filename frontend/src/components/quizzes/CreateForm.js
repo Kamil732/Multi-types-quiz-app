@@ -50,21 +50,30 @@ class CreateForm extends Component {
 
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
-	onSubmit = async (e) => {
+	onSubmit = (e) => {
 		e.preventDefault()
 
 		const { title, description, section, category, image_url } = this.state
 		const quiz = { title, description, section, category, image_url }
 
 		this.props.clearErrors()
-		await this.props.createQuiz(quiz)
 
-		if (this.props.quiz.slug)
-			this.props.history.push(
-				section === 'psychology_quiz'
-					? `/panel/dashboard/${this.props.quiz.slug}/edit/punctation`
-					: `/panel/dashboard/${this.props.quiz.slug}/edit/questions`
-			)
+		window.grecaptcha.ready(() => {
+			window.grecaptcha
+				.execute(process.env.REACT_APP_RECAPTCHA_SITE_KEY, {
+					action: 'submit',
+				})
+				.then(async (token) => {
+					await this.props.createQuiz(token, quiz)
+
+					if (this.props.quiz)
+						this.props.history.push(
+							section === 'psychology_quiz'
+								? `/panel/dashboard/${this.props.quiz.slug}/edit/punctation`
+								: `/panel/dashboard/${this.props.quiz.slug}/edit/questions`
+						)
+				})
+		})
 	}
 
 	render() {

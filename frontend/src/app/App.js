@@ -18,6 +18,18 @@ class App extends Component {
 
 		const loader = document.getElementById('page-loader')
 		if (loader) loader.remove()
+
+		// Add recaptcha script
+		const recaptchaId = 'recaptcha-key'
+		const isScriptExist = document.getElementById(recaptchaId)
+
+		if (!isScriptExist) {
+			var script = document.createElement('script')
+			script.type = 'text/javascript'
+			script.src = `https://www.google.com/recaptcha/api.js?render=${process.env.REACT_APP_RECAPTCHA_SITE_KEY}`
+			script.id = recaptchaId
+			document.body.appendChild(script)
+		}
 	}
 
 	render() {

@@ -214,3 +214,5 @@ SOCIAL_AUTH_PIPELINE = (
 
     'accounts.api.pipline.create_user',
 )
+
+RECAPTCHA_SECRET_KEY = env('RECAPTCHA_SECRET_KEY')

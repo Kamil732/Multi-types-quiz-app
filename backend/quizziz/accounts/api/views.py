@@ -1,5 +1,8 @@
 from django.contrib.auth import login
 from django.utils.translation import gettext as _
+from django.conf import settings
+
+from quizziz.utils import validate_recaptcha
 
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -7,6 +10,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.status import HTTP_201_CREATED
 
 from rest_framework_simplejwt.tokens import RefreshToken
+
+import requests
 from requests.exceptions import HTTPError
 
 from social_django.utils import load_strategy, load_backend
@@ -96,8 +101,11 @@ class SignupAPIView(generics.CreateAPIView):
     serializer_class = RegisterSerializer
 
     def create(self, request, *args, **kwargs):
+        validate_recaptcha(request.data)
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+
         user = serializer.save()
 
         return Response(AccountSerializer(user, context=self.get_serializer_context()).data, status=HTTP_201_CREATED)
