@@ -8,7 +8,8 @@ class AccountSettingsForm extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
-		updateUserData: PropTypes.func.isRequired,
+		updateUserEmail: PropTypes.func.isRequired,
+		refreshToken: PropTypes.func.isRequired,
 		addError: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
 	}
@@ -57,19 +58,19 @@ class AccountSettingsForm extends Component {
 			const config = getAccessToken(token, true)
 
 			const res = await axios.patch(
-				`${process.env.REACT_APP_API_URL}/accounts/account/update-settings/`,
+				`${process.env.REACT_APP_API_URL}/accounts/current/update-settings/`,
 				this.state.data,
 				config
 			)
 
-			this.initialData = res.data
+			this.initialData.email = res.data.email
 
 			this.setState({
 				hasChanged: false,
-				data: res.data,
+				data: this.initialData,
 			})
 
-			await this.props.updateUserData({ email: res.data.email })
+			await this.props.updateUserEmail(res.data.email)
 		} catch (err) {
 			if (err.response.status === 401) {
 				await this.props.refreshToken()

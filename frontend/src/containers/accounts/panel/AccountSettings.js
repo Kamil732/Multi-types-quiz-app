@@ -3,14 +3,17 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
 import { addError, clearErrors } from '../../../redux/actions/errors'
-import { updateUserData } from '../../../redux/actions/auth'
+import { refreshToken } from '../../../redux/actions/auth'
 
 import AccountSettingsForm from '../../../components/accounts/panel/AccountSettingsForm'
+import { USER_UPDATE } from '../../../redux/actions/types'
 
 class AccountSettings extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
+		updateUserEmail: PropTypes.func.isRequired,
+		refreshToken: PropTypes.func.isRequired,
 		addError: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
 	}
@@ -23,7 +26,8 @@ class AccountSettings extends Component {
 					<AccountSettingsForm
 						data={this.props.data}
 						errors={this.props.errors}
-						updateUserData={this.props.updateUserData}
+						updateUserEmail={this.props.updateUserEmail}
+						refreshToken={this.props.refreshToken}
 						addError={this.props.addError}
 						clearErrors={this.props.clearErrors}
 					/>
@@ -38,10 +42,15 @@ const mapStateToProps = (state) => ({
 	errors: state.errors.messages,
 })
 
-const mapDispatchToProps = {
-	addError,
-	clearErrors,
-	updateUserData,
-}
+const mapDispatchToProps = (dispatch) => ({
+	addError: (data, status) => dispatch(addError(data, status)),
+	clearErrors: () => dispatch(clearErrors()),
+	refreshToken: () => dispatch(refreshToken()),
+	updateUserEmail: (email) =>
+		dispatch({
+			type: USER_UPDATE,
+			payload: { email },
+		}),
+})
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountSettings)
