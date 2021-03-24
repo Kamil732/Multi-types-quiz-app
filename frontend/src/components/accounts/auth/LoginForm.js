@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
+import { Link } from 'react-router-dom'
+
 import { BsFillLockFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 
@@ -103,6 +105,11 @@ class LoginForm extends Component {
 				<button type="submit" className="btn btn__submit">
 					Sign In
 				</button>
+
+				<p>
+					Forgot password? Reset password{' '}
+					<Link to="/reset-password">Here</Link>
+				</p>
 			</form>
 		)
 	}

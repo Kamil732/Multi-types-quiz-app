@@ -7,6 +7,7 @@ import Home from '../containers/quizzes/Home'
 import { default as QuizDetailRoutes } from '../components/quizzes/detail/Routes'
 
 import Auth from '../containers/accounts/Auth'
+import ResetPassword from '../containers/accounts/ResetPassword'
 import Profile from '../containers/accounts/Profile'
 import PrivateRoute from '../common/PrivateRoute'
 import Panel from '../components/quizzes/panel/Panel'
@@ -26,6 +27,7 @@ function Routes() {
 					path="/login"
 					component={() => <Auth type="login" />}
 				/>
+				<Route path="/reset-password" exact component={ResetPassword} />
 				<Route
 					exact
 					path="/register"
