@@ -3,12 +3,11 @@
 	background-color: $secondary-variant-color;
 	color: set-text-color($secondary-variant-color);
 	outline: none;
-	border: none;
+	border: 1px solid #aaa;
 	border-radius: 6px;
 	display: block;
 	cursor: pointer;
-	transition: transform 0.2s ease-in;
-	@include shadow-sm;
+	transition: transform 0.2s ease-in, box-shadow 0.1s ease-in;
 
 	&__edit {
 		outline: none;
@@ -66,23 +65,26 @@
 		color: set-text-color($secondary-color);
 	}
 
+	&:hover,
+	&:focus {
+		border-color: black;
+	}
+
 	&__disabled,
 	&__disabled * {
 		position: relative;
 		opacity: 0.7;
 		cursor: not-allowed !important;
 
-		&:hover {
+		&:hover,
+		&:focus {
 			transform: none !important;
+			border-color: #aaa;
 		}
 
 		&:active {
 			pointer-events: none;
 		}
-	}
-
-	&:hover {
-		opacity: 0.7;
 	}
 }
 
