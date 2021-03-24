@@ -246,14 +246,19 @@ class QuestionList extends Component {
 								/>
 							</div>
 						</div>
-
+					</div>
+					<div className="card__footer">
 						<button
 							type="button"
-							className="btn btn__danger"
-							style={{ float: 'right', marginTop: '15px' }}
+							className={`btn btn__danger ${
+								questions.length === 1 ? 'btn__disabled' : ''
+							}`}
+							style={{
+								margin: '0 auto',
+							}}
 							onClick={() => removeQuestion(index)}
 						>
-							Delete
+							Delete Question
 						</button>
 					</div>
 				</div>
