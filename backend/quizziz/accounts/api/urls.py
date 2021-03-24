@@ -26,6 +26,9 @@ urlpatterns = [
     path('current/', include([
         path('', CurrentAccountAPIView.as_view(), name='current-account'),
         path('quizzes/', CurrentAccountQuizzesAPIView.as_view(), name='current-account-quizzes'),
-        path('update-settings/', UpdateCurrentAccountSettingsAPIView.as_view(), name='current-account-update-settings'),
+        path('update-settings/', include([
+            path('', UpdateCurrentAccountSettingsAPIView.as_view(), name='current-account-update-settings'),
+            path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
+        ])),
     ])),
 ]

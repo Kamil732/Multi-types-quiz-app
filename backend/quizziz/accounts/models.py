@@ -1,3 +1,7 @@
+from django.dispatch import receiver
+from django.core.mail import send_mail
+from django_rest_passwordreset.signals import reset_password_token_created
+from django.urls import reverse
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.template.defaultfilters import slugify
@@ -73,3 +77,22 @@ class Account(AbstractBaseUser, PermissionsMixin):
             self.picture = self.DEFAULT_PROFILE_PICTURE
 
         return super(self.__class__, self).save(*args, **kwargs)
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
+
+    email_plaintext_message = f"""
+        TOKEN: <b>{reset_password_token.key}</b>
+    """
+
+    send_mail(
+        # title:
+        "Password Reset for {title}".format(title="Quizzer"),
+        # message:
+        email_plaintext_message,
+        # from:
+        "noreply@app.com",
+        # to:
+        [reset_password_token.user.email]
+    )

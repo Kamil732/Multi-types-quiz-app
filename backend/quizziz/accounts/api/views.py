@@ -1,3 +1,6 @@
+import requests
+from requests.exceptions import HTTPError
+
 from django.contrib.auth import login
 from django.utils.translation import gettext as _
 from django.conf import settings
@@ -5,21 +8,24 @@ from django.conf import settings
 from quizziz.utils import validate_recaptcha
 
 from rest_framework import generics, permissions, status
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.status import HTTP_201_CREATED
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
-import requests
-from requests.exceptions import HTTPError
-
 from social_django.utils import load_strategy, load_backend
 from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import MissingBackend, AuthTokenError, AuthForbidden
 
 from quizzes.api.mixins import QuizListMixin
-from accounts.api.serializers import AccountSerializer, UpdateCurrentAccountSettingsSerializer, RegisterSerializer, SocialSerializer
+from accounts.api.serializers import (
+    AccountSerializer,
+    UpdateCurrentAccountSettingsSerializer,
+    RegisterSerializer,
+    SocialSerializer,
+)
 
 from quizzes.models import Quiz
 from accounts.models import Account
