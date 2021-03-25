@@ -146,7 +146,7 @@ class PunctationList extends Component {
 					section_name === 'universal_quiz' ? (
 						<div className="form-inline">
 							<label className="form-inline__label">
-								Grand range:
+								Point scope:
 							</label>
 							<div className="number-field">
 								<input

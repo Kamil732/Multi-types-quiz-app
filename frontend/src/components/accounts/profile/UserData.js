@@ -176,6 +176,7 @@ class UserData extends Component {
 										onSubmit={(e) =>
 											this.onSubmit(e, 'picture')
 										}
+										style={{ marginTop: '8px' }}
 									>
 										{errors.picture ? (
 											<div className="message-box error">
@@ -218,7 +219,10 @@ class UserData extends Component {
 												}
 											/>
 										</label>
-										<div className="inline-btns">
+										<div
+											className="inline-btns"
+											style={{ padding: '0 auto' }}
+										>
 											<button
 												className="btn"
 												onClick={this.cancelEditImage}
@@ -243,20 +247,15 @@ class UserData extends Component {
 											</button>
 										</div>
 									</form>
-								) : (
-									<>
-										{isOwner ? (
-											<button
-												className="btn"
-												onClick={() =>
-													this.setEdit('picture')
-												}
-											>
-												Edit <FaEdit />
-											</button>
-										) : null}
-									</>
-								)}
+								) : isOwner ? (
+									<button
+										className="btn"
+										style={{ marginTop: '8px' }}
+										onClick={() => this.setEdit('picture')}
+									>
+										Edit <FaEdit />
+									</button>
+								) : null}
 							</div>
 
 							<div className="profile__content">
@@ -355,7 +354,7 @@ class UserData extends Component {
 													value={bio}
 													onChange={this.onChange}
 													className="form-control__input form-control__textarea"
-													rows="10"
+													rows="8"
 												/>
 											</div>
 											<div className="inline-btns">

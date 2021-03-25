@@ -90,6 +90,7 @@
 
 .inline-btns {
 	display: inline-flex;
+	justify-content: space-between;
 	gap: 10px;
 	width: 100%;
 	flex-wrap: wrap;
