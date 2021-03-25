@@ -5,6 +5,8 @@ import { connect } from 'react-redux'
 import { clearErrors, addError } from '../../redux/actions/errors'
 import { login } from '../../redux/actions/auth'
 import axios from 'axios'
+
+import CircleLoader from '../../components/loaders/CircleLoader'
 import { Redirect } from 'react-router'
 
 class ResetPassword extends Component {
@@ -20,6 +22,7 @@ class ResetPassword extends Component {
 		super(props)
 
 		this.state = {
+			loading: false,
 			email: '',
 			password1: '',
 			password2: '',
@@ -38,6 +41,7 @@ class ResetPassword extends Component {
 		e.preventDefault()
 
 		this.props.clearErrors()
+		this.setState({ loading: true })
 
 		try {
 			const config = {
@@ -56,8 +60,12 @@ class ResetPassword extends Component {
 				config
 			)
 
-			this.setState({ sent: true })
+			this.setState({
+				sent: true,
+				loading: false,
+			})
 		} catch (err) {
+			this.setState({ loading: false })
 			if (err.response)
 				this.props.addError(err.response.data, err.response.status)
 		}
@@ -69,6 +77,7 @@ class ResetPassword extends Component {
 
 		if (sent) {
 			this.props.clearErrors()
+			this.setState({ loading: true })
 
 			if (password1 !== password2)
 				this.props.addError({ detail: 'Passwords do not match' }, 400)
@@ -95,6 +104,7 @@ class ResetPassword extends Component {
 
 				this.props.login(email, password2)
 			} catch (err) {
+				this.setState({ loading: false })
 				if (err.response)
 					this.props.addError(err.response.data, err.response.status)
 			}
@@ -103,14 +113,32 @@ class ResetPassword extends Component {
 
 	render() {
 		const { errors, isAuthenticated } = this.props
-		const { email, password1, password2, token, sent } = this.state
+		const { email, password1, password2, token, sent, loading } = this.state
 
 		if (isAuthenticated) return <Redirect to="/" />
+
+		if (loading)
+			return (
+				<div className="card" style={{ margin: 'auto' }}>
+					<div className="card__header">Reset Your Password</div>
+					<div className="card__body">
+						<CircleLoader />
+					</div>
+				</div>
+			)
 
 		return (
 			<div className="card" style={{ margin: 'auto' }}>
 				<div className="card__header">Reset Your Password</div>
 				<div className="card__body">
+					{errors.status ? (
+						<div className="message-box error">
+							<p className="message-box__text">
+								Something went wrong. The token might be expired
+								or incorrect
+							</p>
+						</div>
+					) : null}
 					{!sent ? (
 						<form onSubmit={this.sendEmail} className="auth-form">
 							{errors.email ? (
@@ -136,6 +164,7 @@ class ResetPassword extends Component {
 									onChange={this.onChange}
 									className="form-inline__input"
 									placeholder="Your email..."
+									required
 								/>
 							</div>
 
@@ -171,6 +200,7 @@ class ResetPassword extends Component {
 									onChange={this.onChange}
 									className="form-inline__input"
 									placeholder="Token from sent email..."
+									required
 								/>
 							</div>
 
@@ -197,6 +227,7 @@ class ResetPassword extends Component {
 									onChange={this.onChange}
 									className="form-inline__input"
 									placeholder="New password..."
+									required
 								/>
 							</div>
 
@@ -211,11 +242,28 @@ class ResetPassword extends Component {
 									onChange={this.onChange}
 									className="form-inline__input"
 									placeholder="Confirm new password..."
+									required
 								/>
 							</div>
-							<button type="submit" className="btn">
+
+							<button type="submit" className="btn btn__contrast">
 								Save
 							</button>
+							<div
+								style={{
+									marginTop: '10px',
+								}}
+								className="auth-form"
+							>
+								<p>Did not recive the token?</p>
+								<button
+									type="button"
+									className="btn"
+									onClick={this.sendEmail}
+								>
+									Send email again
+								</button>
+							</div>
 						</form>
 					)}
 				</div>

@@ -11,6 +11,7 @@ import { clearErrors } from '../../../redux/actions/errors'
 
 class RegisterForm extends Component {
 	static propTypes = {
+		setLoading: PropTypes.func.isRequired,
 		signUp: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,
 		isAuthenticated: PropTypes.bool,
@@ -35,6 +36,7 @@ class RegisterForm extends Component {
 
 	onSubmit = (e) => {
 		e.preventDefault()
+		this.props.setLoading(true)
 
 		window.grecaptcha.ready(() => {
 			window.grecaptcha
@@ -43,6 +45,7 @@ class RegisterForm extends Component {
 				})
 				.then((token) => {
 					this.props.signUp(token, this.state)
+					this.props.setLoading(false)
 				})
 		})
 	}

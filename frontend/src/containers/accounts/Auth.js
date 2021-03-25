@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 import { IoLogoGoogle } from 'react-icons/io'
 import { FaFacebookF } from 'react-icons/fa'
@@ -23,6 +23,7 @@ import {
 	USER_LOADING,
 } from '../../redux/actions/types'
 import Title from '../../common/Title'
+import CircleLoader from '../../components/loaders/CircleLoader'
 
 class Auth extends Component {
 	static propTypes = {
@@ -33,6 +34,10 @@ class Auth extends Component {
 
 	constructor(props) {
 		super(props)
+
+		this.state = {
+			loading: false,
+		}
 
 		this.responseAuth = this.responseAuth.bind(this)
 	}
@@ -47,6 +52,8 @@ class Auth extends Component {
 		})
 
 	responseAuth = (data, provider) => {
+		this.setState({ loading: true })
+
 		const config = {
 			headers: {
 				Accept: 'application/json',
@@ -80,6 +87,8 @@ class Auth extends Component {
 					type: USER_LOADED,
 					payload: res.data.user,
 				})
+
+				this.setState({ loading: false })
 			})
 			.catch((err) => {
 				this.props.dispatch({
@@ -88,6 +97,8 @@ class Auth extends Component {
 
 				if (err.response)
 					this.addError(err.response.status, err.response.data)
+
+				this.setState({ loading: false })
 			})
 	}
 
@@ -95,8 +106,18 @@ class Auth extends Component {
 		if (this.props.isAuthenticated) return <Redirect to="/" />
 
 		let form
-		if (this.props.type === 'login') form = <LoginForm />
-		else if (this.props.type === 'register') form = <RegisterForm />
+		if (this.props.type === 'login')
+			form = (
+				<LoginForm
+					setLoading={(state) => this.setState({ loading: state })}
+				/>
+			)
+		else if (this.props.type === 'register')
+			form = (
+				<RegisterForm
+					setLoading={(state) => this.setState({ loading: state })}
+				/>
+			)
 		else
 			throw Error(
 				'Bad Type of Authentication. You must define in props either type="login" or type="register".'
@@ -125,51 +146,65 @@ class Auth extends Component {
 				)}
 
 				<div className="card-inline__body auth-form">
-					{form}
+					{this.state.loading ? (
+						<CircleLoader />
+					) : (
+						<>
+							{form}
 
-					<div className="separator">or</div>
-					<div className="auth-form" style={{ flexDirection: 'row' }}>
-						<FacebookLogin
-							appId={process.env.REACT_APP_FACEBOOK_ID}
-							fields="email"
-							callback={(data) =>
-								this.responseAuth(data, 'facebook')
-							}
-							render={(renderProps) => (
-								<button
-									className="btnFacebook"
-									onClick={renderProps.onClick}
-									disabled={renderProps.disabled}
-								>
-									<FaFacebookF size="16" />
-									&nbsp;&nbsp;Log In with Facebook
-								</button>
-							)}
-						/>
-						<GoogleLogin
-							clientId={process.env.REACT_APP_GOOGLE_ID}
-							render={(renderProps) => (
-								<button
-									className="btnGoogle"
-									onClick={renderProps.onClick}
-									disabled={renderProps.disabled}
-								>
-									<IoLogoGoogle size="17" />
-									&nbsp;&nbsp;Log In with Google
-								</button>
-							)}
-							onSuccess={(data) =>
-								this.responseAuth(data, 'google-oauth2')
-							}
-							onFailure={(err) =>
-								this.addError(400, {
-									detail:
-										'The error occurred with Google, please try again.',
-								})
-							}
-							cookiePolicy="single_host_origin"
-						/>
-					</div>
+							<div className="separator">or</div>
+							<div
+								className="auth-form"
+								style={{ flexDirection: 'row' }}
+							>
+								<FacebookLogin
+									appId={process.env.REACT_APP_FACEBOOK_ID}
+									fields="email"
+									callback={(data) =>
+										this.responseAuth(data, 'facebook')
+									}
+									render={(renderProps) => (
+										<button
+											className="btnFacebook"
+											onClick={renderProps.onClick}
+											disabled={renderProps.disabled}
+										>
+											<FaFacebookF size="16" />
+											&nbsp;&nbsp;Log In with Facebook
+										</button>
+									)}
+								/>
+								<GoogleLogin
+									clientId={process.env.REACT_APP_GOOGLE_ID}
+									render={(renderProps) => (
+										<button
+											className="btnGoogle"
+											onClick={renderProps.onClick}
+											disabled={renderProps.disabled}
+										>
+											<IoLogoGoogle size="17" />
+											&nbsp;&nbsp;Log In with Google
+										</button>
+									)}
+									onSuccess={(data) =>
+										this.responseAuth(data, 'google-oauth2')
+									}
+									onFailure={(err) =>
+										this.addError(400, {
+											detail:
+												'The error occurred with Google, please try again.',
+										})
+									}
+									cookiePolicy="single_host_origin"
+								/>
+							</div>
+
+							<p style={{ marginTop: '10px' }}>
+								Forgot password? Reset password{' '}
+								<Link to="/reset-password">here</Link>
+							</p>
+						</>
+					)}
 				</div>
 			</div>
 		)

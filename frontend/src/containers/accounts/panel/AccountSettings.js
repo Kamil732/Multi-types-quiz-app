@@ -12,7 +12,7 @@ class AccountSettings extends Component {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		errors: PropTypes.object,
-		updateUserDatal: PropTypes.func.isRequired,
+		updateUserData: PropTypes.func.isRequired,
 		refreshToken: PropTypes.func.isRequired,
 		addError: PropTypes.func.isRequired,
 		clearErrors: PropTypes.func.isRequired,

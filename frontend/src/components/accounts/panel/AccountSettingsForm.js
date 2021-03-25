@@ -34,13 +34,16 @@ class AccountSettingsForm extends Component {
 		this.onSubmit = this.onSubmit.bind(this)
 	}
 
-	onChange = (e) =>
+	onChange = (e) => {
+		if (Object.keys(this.props.errors).length > 0) this.props.clearErrors()
+
 		this.setState({
 			data: {
 				...this.state.data,
 				[e.target.name]: e.target.value,
 			},
 		})
+	}
 
 	cancel = () => {
 		this.props.clearErrors()

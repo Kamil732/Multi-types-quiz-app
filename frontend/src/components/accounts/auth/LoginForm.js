@@ -2,8 +2,6 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { Link } from 'react-router-dom'
-
 import { BsFillLockFill } from 'react-icons/bs'
 import { MdEmail } from 'react-icons/md'
 
@@ -12,6 +10,7 @@ import { clearErrors } from '../../../redux/actions/errors'
 
 class LoginForm extends Component {
 	static propTypes = {
+		setLoading: PropTypes.func.isRequired,
 		errors: PropTypes.object,
 		clearErrors: PropTypes.func.isRequired,
 		login: PropTypes.func.isRequired,
@@ -29,7 +28,9 @@ class LoginForm extends Component {
 	onSubmit = (e) => {
 		e.preventDefault()
 
+		this.props.setLoading(true)
 		this.props.login(this.state.email, this.state.password)
+		this.props.setLoading(false)
 	}
 
 	render() {
@@ -105,11 +106,6 @@ class LoginForm extends Component {
 				<button type="submit" className="btn btn__submit">
 					Sign In
 				</button>
-
-				<p>
-					Forgot password? Reset password{' '}
-					<Link to="/reset-password">Here</Link>
-				</p>
 			</form>
 		)
 	}
