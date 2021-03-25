@@ -6,8 +6,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { IoLogoGoogle } from 'react-icons/io'
 import { FaFacebookF } from 'react-icons/fa'
 
-import login_img from '../../assets/images/login_img.jpg'
-import register_img from '../../assets/images/register_img.jpg'
+import auth from '../../assets/images/auth.jpg'
 
 import LoginForm from '../../components/accounts/auth/LoginForm'
 import RegisterForm from '../../components/accounts/auth/RegisterForm'
@@ -125,25 +124,11 @@ class Auth extends Component {
 
 		return (
 			<div className="card-inline">
-				{this.props.type === 'login' ? (
-					<>
-						<Title title="Login" />
-						<img
-							className="card-inline__img"
-							src={login_img}
-							alt="login"
-						/>
-					</>
-				) : (
-					<>
-						<Title title="Sign up" />
-						<img
-							className="card-inline__img"
-							src={register_img}
-							alt="register"
-						/>
-					</>
-				)}
+				<Title
+					title={this.props.type === 'login' ? 'Login' : 'Register'}
+				/>
+
+				<img className="card-inline__img" src={auth} alt="login" />
 
 				<div className="card-inline__body auth-form">
 					{this.state.loading ? (
