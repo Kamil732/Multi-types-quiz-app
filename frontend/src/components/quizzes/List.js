@@ -80,7 +80,7 @@ class List extends Component {
 							</footer>
 						</section>
 					</article>
-					{index % 6 === 0 ? <Ad /> : null}
+					{index % 4 === 0 && index !== 0 ? <Ad /> : null}
 				</>
 			))
 

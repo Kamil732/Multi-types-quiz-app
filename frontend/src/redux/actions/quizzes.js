@@ -184,7 +184,7 @@ export const createQuiz = (
 			await dispatch(refreshToken())
 			if (getState().auth.token)
 				await dispatch(
-					createQuiz({
+					createQuiz(token, {
 						title,
 						description,
 						section,
