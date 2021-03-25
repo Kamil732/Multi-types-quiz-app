@@ -2,6 +2,7 @@ import requests
 from requests.exceptions import HTTPError
 
 from django.contrib.auth import login
+from django.contrib.auth import password_validation
 from django.utils.translation import gettext as _
 from django.conf import settings
 
@@ -162,6 +163,11 @@ class UpdateCurrentAccountSettingsAPIView(generics.UpdateAPIView):
         if newPassword or newPassword2:
             if not(newPassword == newPassword2):
                 raise ValidationError({'newPassword': [_('Password do not match')]})
+
+            try:
+                password_validation.validate_password(newPassword, self.get_object())
+            except Exception as error:
+                raise ValidationError({'newPassword': list(error)})
 
             request.user.set_password(newPassword)
             request.user.save()
