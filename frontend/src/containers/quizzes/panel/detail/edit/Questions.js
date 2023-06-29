@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import Title from '../../../../../common/Title'
 
-import uuid from 'uuid/dist/v4'
+import { v4 as uuid } from 'uuid'
 
 import { clearErrors } from '../../../../../redux/actions/errors'
 import {

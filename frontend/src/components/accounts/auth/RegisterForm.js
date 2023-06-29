@@ -9,6 +9,8 @@ import { MdEmail } from 'react-icons/md'
 import { signUp } from '../../../redux/actions/auth'
 import { clearErrors } from '../../../redux/actions/errors'
 
+import CSRFToken from '../../CSRFToken'
+
 class RegisterForm extends Component {
 	static propTypes = {
 		setLoading: PropTypes.func.isRequired,
@@ -56,6 +58,8 @@ class RegisterForm extends Component {
 
 		return (
 			<form onSubmit={this.onSubmit}>
+				<CSRFToken />
+
 				{errors.error ? (
 					<div className="message-box error">
 						<p className="message-box__text">{errors.error}</p>

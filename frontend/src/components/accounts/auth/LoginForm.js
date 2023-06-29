@@ -8,6 +8,8 @@ import { MdEmail } from 'react-icons/md'
 import { login } from '../../../redux/actions/auth'
 import { clearErrors } from '../../../redux/actions/errors'
 
+import CSRFToken from '../../CSRFToken'
+
 class LoginForm extends Component {
 	static propTypes = {
 		setLoading: PropTypes.func.isRequired,
@@ -25,11 +27,11 @@ class LoginForm extends Component {
 
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
-	onSubmit = (e) => {
+	onSubmit = async (e) => {
 		e.preventDefault()
 
 		this.props.setLoading(true)
-		this.props.login(this.state.email, this.state.password)
+		await this.props.login(this.state.email, this.state.password)
 		this.props.setLoading(false)
 	}
 
@@ -39,6 +41,8 @@ class LoginForm extends Component {
 
 		return (
 			<form onSubmit={this.onSubmit}>
+				<CSRFToken />
+
 				{errors.error ? (
 					<div className="message-box error">
 						<p className="message-box__text">{errors.error}</p>

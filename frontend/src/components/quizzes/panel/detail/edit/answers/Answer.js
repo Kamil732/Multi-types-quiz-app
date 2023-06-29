@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import uuid from 'uuid/dist/v4'
+import { v4 as uuid } from 'uuid'
 
 class Answer extends Component {
 	static propTypes = {
@@ -106,9 +106,8 @@ class Answer extends Component {
 						let answers = this.props.answers.slice(0, -1)
 
 						if (this.props.section_name === 'psychology_quiz') {
-							const removed_results = this.props.answers.slice(
-								-1
-							)[0].results
+							const removed_results =
+								this.props.answers.slice(-1)[0].results
 
 							answers = answers.map((answer, index) => {
 								if (index === answers.length - 1)

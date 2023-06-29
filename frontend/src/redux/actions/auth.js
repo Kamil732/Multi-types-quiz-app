@@ -19,7 +19,8 @@ export const refreshToken = () => async (dispatch, getState) => {
 	const config = getAccessToken(getState)
 
 	try {
-		const refresh = getState().auth.refresh
+		const refresh =
+			getState().auth.refresh || localStorage.getItem('refresh')
 		const body = refresh ? JSON.stringify({ refresh }) : {}
 
 		const res = await axios.post(
@@ -43,12 +44,10 @@ export const loadUser = () => async (dispatch, getState) => {
 	// User Loading
 	dispatch({ type: USER_LOADING })
 
-	const config = getAccessToken(getState)
-
 	try {
 		const res = await axios.get(
 			`${process.env.REACT_APP_API_URL}/accounts/current/`,
-			config
+			getAccessToken(getState)
 		)
 
 		dispatch({
@@ -56,32 +55,23 @@ export const loadUser = () => async (dispatch, getState) => {
 			payload: res.data,
 		})
 	} catch (err) {
-		if (err.response.status === 401) {
+		const refresh = localStorage.getItem('refresh')
+
+		if (err.response.status === 401 && refresh) {
 			await dispatch(refreshToken())
 			if (getState().auth.token) await dispatch(loadUser())
-		} else
-			dispatch({
-				type: AUTH_ERROR,
-			})
+		} else dispatch({ type: AUTH_ERROR })
 	}
 }
 
-export const login = (email, password) => async (dispatch) => {
+export const login = (email, password) => async (dispatch, getState) => {
 	const body = JSON.stringify({ email, password })
-
-	const config = {
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			'Accept-Language': 'en',
-		},
-	}
 
 	try {
 		const res = await axios.post(
 			`${process.env.REACT_APP_API_URL}/accounts/login/`,
 			body,
-			config
+			getAccessToken(getState)
 		)
 
 		dispatch({
@@ -99,47 +89,38 @@ export const login = (email, password) => async (dispatch) => {
 	}
 }
 
-export const signUp = (
-	token,
-	{ email, username, password, password2 }
-) => async (dispatch) => {
-	const body = JSON.stringify({
-		email,
-		username,
-		password,
-		password2,
-		'g-recaptcha-response': token,
-	})
-
-	const config = {
-		headers: {
-			Accept: 'application/json',
-			'Content-Type': 'application/json',
-			'Accept-Language': 'en',
-		},
-	}
-
-	try {
-		await axios.post(
-			`${process.env.REACT_APP_API_URL}/accounts/signup/`,
-			body,
-			config
-		)
-
-		dispatch({
-			type: SIGNUP_SUCCESS,
+export const signUp =
+	(token, { email, username, password, password2 }) =>
+	async (dispatch) => {
+		const body = JSON.stringify({
+			email,
+			username,
+			password,
+			password2,
+			// 'g-recaptcha-response': token,
 		})
 
-		dispatch(login(email, password))
-	} catch (err) {
-		if (err.response)
-			dispatch(addError(err.response.data, err.response.status))
+		try {
+			await axios.post(
+				`${process.env.REACT_APP_API_URL}/accounts/signup/`,
+				body,
+				getAccessToken()
+			)
 
-		dispatch({
-			type: SIGNUP_FAIL,
-		})
+			dispatch({
+				type: SIGNUP_SUCCESS,
+			})
+
+			dispatch(login(email, password))
+		} catch (err) {
+			if (err.response)
+				dispatch(addError(err.response.data, err.response.status))
+
+			dispatch({
+				type: SIGNUP_FAIL,
+			})
+		}
 	}
-}
 
 export const updateUserData = (data) => async (dispatch, getState) => {
 	try {
