@@ -8,12 +8,9 @@ verify_ssl = true
 [packages]
 django = "*"
 djangorestframework = "*"
-django-cors-headers = "*"
 psycopg2 = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
-factory-boy = "*"
-faker = "*"
 requests = "*"
 django-autoslug = "*"
 django-bulk-sync = "*"
@@ -21,8 +18,8 @@ django-environ = "*"
 python-social-auth = "*"
 social-auth-app-django = "*"
 social-auth-core = "*"
-pyjwt = "*"
 django-rest-passwordreset = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.8"
