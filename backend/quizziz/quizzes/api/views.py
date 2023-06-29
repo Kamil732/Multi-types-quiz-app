@@ -8,8 +8,7 @@ from django.db.models import Q
 from quizziz.utils import valid_url_extension, validate_recaptcha
 
 from bulk_sync import bulk_sync
-from rest_framework import views, generics, viewsets, permissions
-from rest_framework import status
+from rest_framework import views, generics, viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError, NotFound
 

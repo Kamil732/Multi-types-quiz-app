@@ -2,9 +2,10 @@ from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.exceptions import NotFound
+# from django_filters.rest_framework import DjangoFilterBackend
 
-from quizzes.models import Quiz, QuizPunctation, Question, Answer
-from .permissions import IsOwner, IsOwnerEverything
+from quizzes.models import Quiz, Question, Answer
+from .permissions import IsOwner
 from .pagination import QuizListPagination
 from . import serializers
 
@@ -12,7 +13,7 @@ from . import serializers
 class QuizListMixin(object):
     serializer_class = serializers.QuizListSerializer
     pagination_class = QuizListPagination
-    filterset_fields = ('title', 'category__name', 'section',)
+    # filter_backends = [DjangoFilterBackend]
     filterset_fields = {
         'title': ['istartswith'],
         'category__name': ['exact'],
@@ -21,7 +22,7 @@ class QuizListMixin(object):
 
 
 class QuestionMixin(object):
-    permission_classes = (IsOwner,)
+    permission_classes = (IsOwner, )
     serializer_class = serializers.QuestionSerializer
 
     def get_queryset(self, *args, **kwargs):
@@ -31,14 +32,13 @@ class QuestionMixin(object):
         try:
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
         except ObjectDoesNotExist:
-            raise NotFound(
-                _('The quiz you are looking for does not exist'))
+            raise NotFound(_('The quiz you are looking for does not exist'))
 
         return Question.objects.filter(quiz=quiz)
 
 
 class AnswerMixin(object):
-    permission_classes = (IsOwner,)
+    permission_classes = (IsOwner, )
     serializer_class = serializers.AnswerSerializer
 
     def get_queryset(self):
@@ -50,7 +50,6 @@ class AnswerMixin(object):
             quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
             question = Question.objects.get(quiz=quiz, slug=question_slug)
         except ObjectDoesNotExist:
-            raise NotFound(
-                _('The quiz you are looking for does not exist'))
+            raise NotFound(_('The quiz you are looking for does not exist'))
 
         return Answer.objects.filter(question=question)
