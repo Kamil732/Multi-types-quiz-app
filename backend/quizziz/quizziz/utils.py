@@ -28,8 +28,10 @@ def validate_recaptcha(data):
         'response': data.get('g-recaptcha-response'),
         'secret': settings.RECAPTCHA_SECRET_KEY
     }
-    res = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data).json()
+    res = requests.post('https://www.google.com/recaptcha/api/siteverify',
+                        data=data).json()
     print(res)
 
-    if not(res.get('success')):
-        raise ValidationError({'detail': _('Our system detected that you are a robot')})
+    # if not (res.get('success')):
+    #     raise ValidationError(
+    #         {'detail': _('Our system detected that you are a robot')})
