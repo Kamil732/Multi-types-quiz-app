@@ -57,7 +57,7 @@ export const loadUser = () => async (dispatch, getState) => {
 	} catch (err) {
 		const refresh = localStorage.getItem('refresh')
 
-		if (err.response.status === 401 && refresh) {
+		if (err?.response?.status === 401 && refresh) {
 			await dispatch(refreshToken())
 			if (getState().auth.token) await dispatch(loadUser())
 		} else dispatch({ type: AUTH_ERROR })
@@ -89,38 +89,33 @@ export const login = (email, password) => async (dispatch, getState) => {
 	}
 }
 
-export const signUp =
-	(token, { email, username, password, password2 }) =>
-	async (dispatch) => {
-		const body = JSON.stringify({
-			email,
-			username,
-			password,
-			password2,
-			// 'g-recaptcha-response': token,
+export const signUp = (token, data) => async (dispatch, getState) => {
+	const body = JSON.stringify({
+		...data,
+		// 'g-recaptcha-response': token,
+	})
+
+	try {
+		await axios.post(
+			`${process.env.REACT_APP_API_URL}/accounts/signup/`,
+			body,
+			getAccessToken(getState)
+		)
+
+		dispatch({
+			type: SIGNUP_SUCCESS,
 		})
 
-		try {
-			await axios.post(
-				`${process.env.REACT_APP_API_URL}/accounts/signup/`,
-				body,
-				getAccessToken()
-			)
+		dispatch(login(data.email, data.password))
+	} catch (err) {
+		if (err.response)
+			dispatch(addError(err.response.data, err.response.status))
 
-			dispatch({
-				type: SIGNUP_SUCCESS,
-			})
-
-			dispatch(login(email, password))
-		} catch (err) {
-			if (err.response)
-				dispatch(addError(err.response.data, err.response.status))
-
-			dispatch({
-				type: SIGNUP_FAIL,
-			})
-		}
+		dispatch({
+			type: SIGNUP_FAIL,
+		})
 	}
+}
 
 export const updateUserData = (data) => async (dispatch, getState) => {
 	try {

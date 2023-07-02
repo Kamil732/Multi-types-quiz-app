@@ -36,20 +36,23 @@ class RegisterForm extends Component {
 
 	onChange = (e) => this.setState({ [e.target.name]: e.target.value })
 
-	onSubmit = (e) => {
+	onSubmit = async (e) => {
 		e.preventDefault()
 		this.props.setLoading(true)
 
-		window.grecaptcha.ready(() => {
-			window.grecaptcha
-				.execute(process.env.REACT_APP_RECAPTCHA_SITE_KEY, {
-					action: 'submit',
-				})
-				.then((token) => {
-					this.props.signUp(token, this.state)
-					this.props.setLoading(false)
-				})
-		})
+		// window.grecaptcha.ready(() => {
+		// 	window.grecaptcha
+		// 		.execute(process.env.REACT_APP_RECAPTCHA_SITE_KEY, {
+		// 			action: 'submit',
+		// 		})
+		// 		.then((token) => {
+		// 			this.props.signUp(token, this.state)
+		// 			this.props.setLoading(false)
+		// 		})
+		// })
+
+		await this.props.signUp(null, this.state)
+		this.props.setLoading(false)
 	}
 
 	render() {
