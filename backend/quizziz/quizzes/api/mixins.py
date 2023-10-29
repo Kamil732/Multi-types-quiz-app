@@ -2,7 +2,6 @@ from django.utils.translation import gettext as _
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.exceptions import NotFound
-# from django_filters.rest_framework import DjangoFilterBackend
 
 from quizzes.models import Quiz, Question, Answer
 from .permissions import IsOwner
@@ -13,7 +12,6 @@ from . import serializers
 class QuizListMixin(object):
     serializer_class = serializers.QuizListSerializer
     pagination_class = QuizListPagination
-    # filter_backends = [DjangoFilterBackend]
     filterset_fields = {
         'title': ['istartswith'],
         'category__name': ['exact'],
