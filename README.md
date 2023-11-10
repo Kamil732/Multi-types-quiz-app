@@ -1,6 +1,8 @@
 # What is Quizzer
 Quizzer is a web application where you can create and solve quizzes
 
+# https://kamil732.pythonanywhere.com/
+
 ## Requirements
 * Python 3.8
 	* Pipenv (package) 
