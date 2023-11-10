@@ -128,7 +128,7 @@ class QuizUpdateAPIView(generics.UpdateAPIView):
         quiz = Quiz.objects.get(author__slug=author_slug, slug=quiz_slug)
 
         last_question_id = int(Question.objects.latest(
-            'id').id) + 1 if Question.objects.exists() else 0
+            'id').id) + 1 if Question.objects.exists() else 1
 
         new_questions = [
             Question(
