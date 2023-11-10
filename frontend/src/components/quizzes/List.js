@@ -76,6 +76,8 @@ class List extends Component {
 										Solved {quiz.solved_times} time
 										{quiz.solved_times !== 1 ? 's' : ''}
 									</span>
+									&ensp;&bull;&ensp;
+									<span>{quiz.pub_date}</span>
 								</p>
 							</footer>
 						</section>
